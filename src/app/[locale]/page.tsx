@@ -77,14 +77,14 @@ export default function Home() {
       </ul>
 
       {/* Static navigation buttons */}
-      <button onClick={() => router.push(`/${language}/flights`)}>
+      {/* <button onClick={() => router.push(`/${language}/flights`)}>
         Перейти на страницу 1
       </button>
       <br />
       <button onClick={() => router.push(`/${language}/news`)}>
         Перейти на страницу 2
       </button>
-      <TestComponent text={"Hello"} />
+      <TestComponent text={"Hello"} /> */}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { adapters } from "../adapters/adapter"; // adjust path as needed
 import { Page } from "../adapters/types"; // adjust path as needed
+import TestComponent from "@/components/atoms/testcomponent";
 
 const { getPages } = adapters.cms();
 
@@ -68,6 +69,7 @@ export default function Home() {
       <button onClick={() => router.push("/news")}>
         Перейти на страницу 2
       </button>
+      <TestComponent text={"Hello"} />
     </div>
   );
 }

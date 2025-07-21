@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import TestComponent from "@/components/atoms/testcomponent";
 import { adapters } from "@/adapters/adapter";
 import { Page } from "@/adapters/types";
 

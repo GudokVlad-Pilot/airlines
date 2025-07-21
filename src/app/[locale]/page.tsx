@@ -1,14 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { adapters } from "../adapters/adapter"; // adjust path as needed
-import { Page } from "../adapters/types"; // adjust path as needed
+import { useParams, useRouter } from "next/navigation";
 import TestComponent from "@/components/atoms/testcomponent";
+import { adapters } from "@/adapters/adapter";
+import { Page } from "@/adapters/types";
 
 const { getPages } = adapters.cms();
 
 export default function Home() {
+  const params = useParams();
+  console.log(params);
   const router = useRouter();
 
   const [pages, setPages] = useState<Page[]>([]);
@@ -54,7 +56,11 @@ export default function Home() {
       <ul style={{ listStyle: "none", padding: 0 }}>
         {pages.map((page) => (
           <li key={page.slug.current} style={{ margin: "10px 0" }}>
-            <button onClick={() => router.push(`/${page.slug.current}`)}>
+            <button
+              onClick={() =>
+                router.push(`/${params.locale}/${page.slug.current}`)
+              }
+            >
               {page.title[language]}
             </button>
           </li>
@@ -62,11 +68,11 @@ export default function Home() {
       </ul>
 
       {/* Static navigation buttons */}
-      <button onClick={() => router.push("/flights")}>
+      <button onClick={() => router.push(`/${params.locale}/flights`)}>
         Перейти на страницу 1
       </button>
       <br />
-      <button onClick={() => router.push("/news")}>
+      <button onClick={() => router.push(`/${params.locale}/news`)}>
         Перейти на страницу 2
       </button>
       <TestComponent text={"Hello"} />

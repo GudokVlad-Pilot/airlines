@@ -131,16 +131,3 @@ This project is built using the following technologies:
 [![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Storybook](https://img.shields.io/badge/Storybook-FF4785?logo=storybook&logoColor=white)](https://storybook.js.org/)
 [![Sanity](https://img.shields.io/badge/Sanity-EF2D5E?logo=sanity&logoColor=white)](https://www.sanity.io/)
-
-## 📋 Credits
-
-- **Charlie**  
-  *UI/UX Designer & Frontend Stylist*  
-  Designed the user interface and authored the CSS for custom components.  
-  [Instagram →](https://www.instagram.com/charlieandarchitecture/?igsh=a3JjcTJjNzhiZmg1#)
-
-- **GudokVlad**  
-  *Technical Architect & Developer*  
-  Initialized the repository and configured core technologies, including Sanity, Firebase, and Storybook.  
-  [GitHub →](https://github.com/GudokVlad-Pilot)
-  [Portfolio →](https://gudokvlad.com/)

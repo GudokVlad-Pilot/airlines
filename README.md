@@ -1,6 +1,5 @@
 # ✈️ TiTim Airlines
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/a829f585-636e-4ed9-8bfe-656ae50143c0/deploy-status)](https://app.netlify.com/projects/titimairlines/deploys)
 This project was created as a birthday invitation for friends. The project is hosted by [Netlify](https://www.netlify.com/). Here is the link to the website (in Russian): [TiTim Airlines](https://titimairlines.gudokvlad.com/).
 
 > [!IMPORTANT]
@@ -131,3 +130,18 @@ This project is built using the following technologies:
 [![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Storybook](https://img.shields.io/badge/Storybook-FF4785?logo=storybook&logoColor=white)](https://storybook.js.org/)
 [![Sanity](https://img.shields.io/badge/Sanity-EF2D5E?logo=sanity&logoColor=white)](https://www.sanity.io/)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/a829f585-636e-4ed9-8bfe-656ae50143c0/deploy-status)](https://app.netlify.com/projects/titimairlines/deploys)
+
+
+## 📋 Credits
+
+- **Charlie**  
+  *UI/UX Designer & Frontend Stylist*  
+  Designed the user interface and authored the CSS for custom components.  
+  [Instagram →](https://www.instagram.com/charlieandarchitecture/?igsh=a3JjcTJjNzhiZmg1#)
+
+- **GudokVlad**  
+  *Technical Architect & Developer*  
+  Initialized the repository and configured core technologies, including Sanity, Firebase, and Storybook.  
+  [GitHub →](https://github.com/GudokVlad-Pilot)
+  [Portfolio →](https://gudokvlad.com/)

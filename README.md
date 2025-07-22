@@ -1,5 +1,7 @@
 # ✈️ TiTim Airlines
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/a829f585-636e-4ed9-8bfe-656ae50143c0/deploy-status)](https://app.netlify.com/projects/titimairlines/deploys)
+---
 This project was created as a birthday invitation for friends. The project is hosted by [Netlify](https://www.netlify.com/). Here is the link to the website (in Russian): [TiTim Airlines](https://titimairlines.gudokvlad.com/).
 
 > [!IMPORTANT]
@@ -126,12 +128,11 @@ The project's components were developed using [Storybook](https://storybook.js.o
 
 This project is built using the following technologies:
 
+[![Netlify](https://img.shields.io/badge/Netlify-00C7B7?logo=netlify&logoColor=white)](https://www.netlify.com/)
 [![Next.js](https://img.shields.io/badge/Next.js-000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Storybook](https://img.shields.io/badge/Storybook-FF4785?logo=storybook&logoColor=white)](https://storybook.js.org/)
 [![Sanity](https://img.shields.io/badge/Sanity-EF2D5E?logo=sanity&logoColor=white)](https://www.sanity.io/)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/a829f585-636e-4ed9-8bfe-656ae50143c0/deploy-status)](https://app.netlify.com/projects/titimairlines/deploys)
-
 
 ## 📋 Credits
 

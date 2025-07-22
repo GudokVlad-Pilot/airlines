@@ -2,7 +2,7 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/a829f585-636e-4ed9-8bfe-656ae50143c0/deploy-status)](https://app.netlify.com/projects/titimairlines/deploys)
 ---
-This project was created as a birthday invitation for friends. The project is hosted by [Netlify](https://www.netlify.com/). Here is the link to the website (in Russian): [TiTim Airlines](https://titimairlines.gudokvlad.com/).
+This project was created as a birthday invitation for friends. Later the project will be used for organising thematic events and as a template for aircompanies. The project is hosted by [Netlify](https://www.netlify.com/). Here is the link to the website: [TiTim Airlines](https://titimairlines.gudokvlad.com/).
 
 > [!IMPORTANT]
 > - The app was created for personal non-commercial use.

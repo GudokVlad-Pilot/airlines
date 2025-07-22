@@ -1,5 +1,6 @@
 # ✈️ TiTim Airlines
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/a829f585-636e-4ed9-8bfe-656ae50143c0/deploy-status)](https://app.netlify.com/projects/titimairlines/deploys)
 This project was created as a birthday invitation for friends. The project is hosted by [Netlify](https://www.netlify.com/). Here is the link to the website (in Russian): [TiTim Airlines](https://titimairlines.gudokvlad.com/).
 
 > [!IMPORTANT]
@@ -90,7 +91,7 @@ This project was created as a birthday invitation for friends. The project is ho
 
 ## 🏗️ The Architecture of the App
 
-### 💻 Language
+### 💻 Languages
 
 TBA
 
@@ -118,9 +119,18 @@ The project's components were developed using [Storybook](https://storybook.js.o
   3. `component.css` *(optional)* – custom styles specific to the component
 
 
-## References
+## 📑 References
 
 - Cloud video: [Pexels](https://www.pexels.com/video/cumulus-clouds-formation-in-the-sky-3129769/)
+
+## 🛠️ Tools
+
+This project is built using the following technologies:
+
+[![Next.js](https://img.shields.io/badge/Next.js-000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Storybook](https://img.shields.io/badge/Storybook-FF4785?logo=storybook&logoColor=white)](https://storybook.js.org/)
+[![Sanity](https://img.shields.io/badge/Sanity-EF2D5E?logo=sanity&logoColor=white)](https://www.sanity.io/)
 
 ## 📋 Credits
 
@@ -134,12 +144,3 @@ The project's components were developed using [Storybook](https://storybook.js.o
   Initialized the repository and configured core technologies, including Sanity, Firebase, and Storybook.  
   [GitHub →](https://github.com/GudokVlad-Pilot)
   [Portfolio →](https://gudokvlad.com/)
-
-## 🛠️ Tools
-
-This project is built using the following technologies:
-
-[![Next.js](https://img.shields.io/badge/Next.js-000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
-[![Storybook](https://img.shields.io/badge/Storybook-FF4785?logo=storybook&logoColor=white)](https://storybook.js.org/)
-[![Sanity](https://img.shields.io/badge/Sanity-EF2D5E?logo=sanity&logoColor=white)](https://www.sanity.io/)

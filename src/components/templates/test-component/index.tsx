@@ -5,5 +5,5 @@ type Props = {
 };
 
 export default function TestComponent({ text }: Props) {
-  return <div className="testbox">{text}</div>; //test
+  return <div className="testbox">{text}</div>; //test1
 }

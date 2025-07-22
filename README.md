@@ -1,4 +1,4 @@
-# TiTim Airlines
+# ✈️ TiTim Airlines
 
 This project was created as a birthday invitation for friends. The project is hosted by [Netlify](https://www.netlify.com/). Here is the link to the website (in Russian): [TiTim Airlines](https://titimairlines.gudokvlad.com/).
 
@@ -8,7 +8,7 @@ This project was created as a birthday invitation for friends. The project is ho
 > - All assets were created by developer's team or taken from open access
 > - If you found any violations, please contact me via email to resolve these problems: **vladislavpogudin.dev@gmail.com**.
 
-## Setting the environment
+## ⚙️ Setting the Environment
 
 1. Clone the repository.
 
@@ -40,15 +40,15 @@ This project was created as a birthday invitation for friends. The project is ho
     {
         "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
         "editor.formatOnType": false,
-        "editor.formatOnPaste": true, // optional
-        "editor.formatOnSave": true, // optional
-        "editor.formatOnSaveMode": "file", // required to format on save
-        "files.autoSave": "onFocusChange", // optional but recommended
-        "vs-code-prettier-eslint.prettierLast": false // set as "true" to run 'prettier' last not first
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "file",
+        "files.autoSave": "onFocusChange",
+        "vs-code-prettier-eslint.prettierLast": false
     }
     ```
 
-## Instructions to run the project
+## 🚀 Instructions to Run the Project
 
 1. Install dependencies.
 
@@ -70,9 +70,9 @@ This project was created as a birthday invitation for friends. The project is ho
 
 * Builds the app for production to the `.next` folder. It correctly bundles React in production mode and optimizes the build for the best performance.
 
-3. Local version is available via link in the output, but usually it is run on your [localhost](http://localhost:3000/).
+3. Local version is available via link in the output, but usually it is run on your [localhost:3000](http://localhost:3000/).
 
-## Instructions to run Storybook
+## 📘 Instructions to Run Storybook
 
 1. Install dependencies.
 
@@ -86,31 +86,60 @@ This project was created as a birthday invitation for friends. The project is ho
     npm run storybook
     ```
 
-3. Open Storybook on your [localhost](http://localhost:6006/).
+3. Open Storybook on your [localhost:6006](http://localhost:6006/).
 
-## The architecture of the app
+## 🏗️ The Architecture of the App
 
-### Language
-
-TBA
-
-### Data Storage and Management
+### 💻 Language
 
 TBA
 
-### App navigation structure
+### 🗄️ Data Storage and Management
 
 TBA
 
-### Design
+### 🧭 App Navigation Structure
 
 TBA
+
+### 🎨 Design
+
+TBA
+
+### 📘 Storybook
+
+The project's components were developed using [Storybook](https://storybook.js.org/), located in the `/src/components` directory.
+
+- The design system follows a simplified **Atomic Design** methodology (Atoms → Molecules → Pages).
+- Each level contains a set of components categorized by size and complexity.
+- Each component includes 2–3 files:
+  1. `index.tsx` – the component implementation
+  2. `index.stories.tsx` – the Storybook configuration and preview
+  3. `component.css` *(optional)* – custom styles specific to the component
+
 
 ## References
 
 - Cloud video: [Pexels](https://www.pexels.com/video/cumulus-clouds-formation-in-the-sky-3129769/)
 
-## Credits
+## 📋 Credits
 
-- UI/UX Design and CSS Components by [Charlie](https://www.instagram.com/charlieandarchitecture/?igsh=a3JjcTJjNzhiZmg1#).
-- Project Setup and Implementation by [GudokVlad](https://gudokvlad.com/).
+- **Charlie**  
+  *UI/UX Designer & Frontend Stylist*  
+  Designed the user interface and authored the CSS for custom components.  
+  [Instagram →](https://www.instagram.com/charlieandarchitecture/?igsh=a3JjcTJjNzhiZmg1#)
+
+- **GudokVlad**  
+  *Technical Architect & Developer*  
+  Initialized the repository and configured core technologies, including Sanity, Firebase, and Storybook.  
+  [GitHub →](https://github.com/GudokVlad-Pilot)
+  [Portfolio →](https://gudokvlad.com/)
+
+## 🛠️ Tools
+
+This project is built using the following technologies:
+
+[![Next.js](https://img.shields.io/badge/Next.js-000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Storybook](https://img.shields.io/badge/Storybook-FF4785?logo=storybook&logoColor=white)](https://storybook.js.org/)
+[![Sanity](https://img.shields.io/badge/Sanity-EF2D5E?logo=sanity&logoColor=white)](https://www.sanity.io/)

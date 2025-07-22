@@ -7,6 +7,6 @@ export default {
 
 export const Default = {
   args: {
-    text: "Press me",
+    text: "Press me", //test Vlad
   },
 };

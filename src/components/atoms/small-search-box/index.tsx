@@ -7,6 +7,7 @@ type Props = {
   arrival: string;
   departureDate: Date;
   arrivalDate: Date;
+  onChangeClick: () => void;
 };
 
 function formatDate(date: Date): string {
@@ -21,19 +22,22 @@ export default function SmallSearchBox({
   arrival,
   departureDate,
   arrivalDate,
+  onChangeClick
 }: Props) {
   return (
     <div className="box">
       <div className="leftGroup">
         <div className="airportText">{departure}</div>
-        <ArrowForwardIcon />
+        <ArrowForwardIcon className="arrowIcon"/>
         <div className="airportText">{arrival}</div>
       </div>
       <div className="rightGroup">
         <div className="departureDate">{formatDate(departureDate)}</div>
         <div className="dash">-</div>
         <div className="arrivalDate">{formatDate(arrivalDate)}</div>
-        <DriveFileRenameOutlineIcon />
+        <button className="changeButton" onClick={onChangeClick}>
+          <DriveFileRenameOutlineIcon className="changeIcon"/>
+        </button>
       </div>
     </div>
   );

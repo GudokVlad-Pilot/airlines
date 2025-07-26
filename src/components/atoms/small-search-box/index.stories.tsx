@@ -11,6 +11,7 @@ export const Default = {
     arrival: "Moscow",
     departureDate: new Date("2024-06-04"),
     arrivalDate: new Date("2024-06-04"),
+    onChangeClick: () => null,
   },
 };
 
@@ -20,5 +21,6 @@ export const Test = {
     arrival: "Saint Petersburg",
     departureDate: new Date("2025-08-25"),
     arrivalDate: new Date("2025-08-26"),
+    onChangeClick: () => null,
   },
 };

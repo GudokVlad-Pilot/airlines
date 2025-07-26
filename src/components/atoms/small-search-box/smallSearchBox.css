@@ -1,4 +1,41 @@
 .box {
   display: flex;
   justify-content: space-between;
+  width: 900px;
+  height: 50px;
+  background-color: grey;
+  border-radius: 20px;
+  font-size: 14px;
+  color: white;
+}
+.leftGroup {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+}
+.rightGroup {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+.changeIcon {
+  color: brown;
+}
+.airportText {
+  width: 150px;
+}
+.arrowIcon {
+  margin: 0 20px;
+}
+.changeButton {
+  background-color: transparent;
+  border: 0;
+  margin-left: 20px;
+  cursor: pointer;
+}
+.changeButton:hover .changeIcon{
+  color: white;
+}
+.changeButton:active .changeIcon {
+  color: black;
 }

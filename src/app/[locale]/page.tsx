@@ -65,10 +65,8 @@ export default function Home() {
       {/* Render pages in selected language */}
       <ul style={{ listStyle: "none", padding: 0 }}>
         {pages.map((page) => (
-          <li key={page.slug.current} style={{ margin: "10px 0" }}>
-            <button
-              onClick={() => router.push(`/${language}/${page.slug.current}`)}
-            >
+          <li key={page.slug} style={{ margin: "10px 0" }}>
+            <button onClick={() => router.push(`/${language}/${page.slug}`)}>
               {page.title[language]}
             </button>
           </li>

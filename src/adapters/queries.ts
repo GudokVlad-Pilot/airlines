@@ -1,6 +1,6 @@
 export const pagesQuery = `
   *[_type == "pages"]{
     title,
-    slug
+    "slug": slug.current
   }
 `

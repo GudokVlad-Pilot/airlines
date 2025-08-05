@@ -5,4 +5,10 @@ export interface Page {
     fi: string
   }
   slug: string
+  description: {
+    en: string
+    ru: string
+    fi: string
+  }
+  image: string
 }

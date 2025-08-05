@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import "./global.css";
 
 const supportedLocales = ["en", "fi", "ru"];
 

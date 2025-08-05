@@ -1,6 +1,8 @@
 export const pagesQuery = `
   *[_type == "pages"]{
     title,
-    "slug": slug.current
+    description,
+    "slug": slug.current,
+    "image": image.asset -> url
   }
 `

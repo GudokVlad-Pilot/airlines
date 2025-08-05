@@ -1,0 +1,7 @@
+.bigSearchBoxBox {
+  width: 900px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 220px; /* TODO: define the height */
+}

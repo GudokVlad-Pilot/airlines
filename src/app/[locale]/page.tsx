@@ -50,7 +50,6 @@ export default function Home() {
   if (error)
     return <div style={{ textAlign: "center", color: "red" }}>{error}</div>;
 
-  // Transform pages into NavCardProps[]
   const navCards = pages.map((page) => ({
     title: page.title?.[language] || "No Title",
     description: page.description?.[language] || "No Description",

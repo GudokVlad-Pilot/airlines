@@ -13,6 +13,7 @@ import { colors } from "@/components/styles/colors";
 import NavCardsRow from "@/components/molecules/navCardsRow";
 import { languages } from "./globalConsts";
 import { useStore } from "@/adapters/zustand/store";
+import LoaderWithText from "@/components/molecules/loaderWithText";
 
 const { getPages } = adapters.cms();
 
@@ -21,7 +22,14 @@ export default function Home() {
   const router = useRouter();
   const { pages, setPages } = useStore();
 
-  const [language, setLanguage] = useState<"en" | "ru" | "fi">("en");
+  // Do not delete! This is for strings before it fetched from Sanity
+  const loaderTextByLanguage: Record<"en" | "ru" | "fi", string> = {
+    en: "Loading...",
+    ru: "Загрузка...",
+    fi: "Ladataan...",
+  };
+
+  const [language, setLanguage] = useState<"en" | "ru" | "fi">("en"); //verify with params
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,6 +42,7 @@ export default function Home() {
   }, [params]);
 
   useEffect(() => {
+    console.log(loaderTextByLanguage[language]);
     if (pages.length > 0) {
       setLoading(false);
       return;
@@ -51,7 +60,7 @@ export default function Home() {
       });
   }, []);
 
-  if (loading) return <div style={{ textAlign: "center" }}>Loading...</div>;
+  if (loading) return <LoaderWithText text={loaderTextByLanguage[language]} />;
   if (error)
     return <div style={{ textAlign: "center", color: "red" }}>{error}</div>;
 

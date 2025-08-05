@@ -4,15 +4,32 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { adapters } from "@/adapters/adapter";
 import { Page } from "@/adapters/types";
+import NavBar from "@/components/molecules/navBar";
+import BottomBar from "@/components/molecules/bottomBar";
+import "./landingPage.css";
+import VideoBackground from "@/components/templates/video-background";
+import BigSearchBox from "@/components/atoms/bigSearchBox";
+import { colors } from "@/components/styles/colors";
+import NavCardsRow from "@/components/molecules/navCardsRow";
+import { languages } from "./globalConsts";
+import { useStore } from "@/adapters/zustand/store";
+import LoaderWithText from "@/components/molecules/loaderWithText";
 
 const { getPages } = adapters.cms();
 
 export default function Home() {
   const params = useParams();
   const router = useRouter();
+  const { pages, setPages } = useStore();
 
-  const [pages, setPages] = useState<Page[]>([]);
-  const [language, setLanguage] = useState<"en" | "ru" | "fi">("en");
+  // Do not delete! This is for strings before it fetched from Sanity
+  const loaderTextByLanguage: Record<"en" | "ru" | "fi", string> = {
+    en: "Loading...",
+    ru: "Загрузка...",
+    fi: "Ladataan...",
+  };
+
+  const [language, setLanguage] = useState<"en" | "ru" | "fi">("en"); //verify with params
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,9 +42,15 @@ export default function Home() {
   }, [params]);
 
   useEffect(() => {
+    console.log(loaderTextByLanguage[language]);
+    if (pages.length > 0) {
+      setLoading(false);
+      return;
+    }
+
     getPages()
       .then((pages) => {
-        setPages(pages);
+        setPages(pages); // Zustand
         setLoading(false);
       })
       .catch((err) => {
@@ -37,15 +60,72 @@ export default function Home() {
       });
   }, []);
 
-  if (loading) return <div style={{ textAlign: "center" }}>Loading...</div>;
+  if (loading) return <LoaderWithText text={loaderTextByLanguage[language]} />;
   if (error)
     return <div style={{ textAlign: "center", color: "red" }}>{error}</div>;
 
-  return (
-    <div style={{ textAlign: "center" }}>
-      <h1>Главная страница</h1>
+  const navCards = pages.map((page) => ({
+    title: page.title?.[language] || "No Title",
+    description: page.description?.[language] || "No Description",
+    image: page.image
+      ? `${page.image}?w=100`
+      : "/assets/images/placeholder-4-3.png",
+    onClick: () => router.push(`/${language}/${page.slug}`),
+  }));
 
-      {/* Language Selector */}
+  console.log(navCards);
+
+  return (
+    <div className="landingBox" style={{ backgroundColor: colors.background }}>
+      <div className="navBar">
+        <NavBar
+          placeholder={"NavBar"}
+          language={{
+            selectedLanguage: language,
+            onChange: (newLang: string) => {
+              if (newLang === "en" || newLang === "ru" || newLang === "fi") {
+                setLanguage(newLang);
+                router.push(`/${newLang}`);
+              }
+            },
+            languages: languages,
+          }}
+        />
+      </div>
+      <VideoBackground />
+      <div className="contentBox">
+        <BigSearchBox title={"Search Placeholder"} />
+        <NavCardsRow navCards={navCards} />
+      </div>
+      <div className="bottomPart">
+        <div
+          style={{
+            backgroundColor: "blue",
+            color: "white",
+            textAlign: "center",
+            justifyContent: "center",
+            height: "400px",
+          }}
+        >
+          Sponsors
+        </div>
+        <div
+          style={{
+            textAlign: "center",
+            height: "300px",
+          }}
+        >
+          Terms
+        </div>
+        <BottomBar placeholder="BottomBar" />
+      </div>
+    </div>
+  );
+}
+
+{
+  /* <h1>Главная страница</h1>
+
       <label htmlFor="language-select">Выберите язык: </label>
       <select
         id="language-select"
@@ -53,7 +133,7 @@ export default function Home() {
         onChange={(e) => {
           const newLang = e.target.value as "en" | "ru" | "fi";
           setLanguage(newLang);
-          router.push(`/${newLang}`); // Optionally update the route to match new language
+          router.push(`/${newLang}`);
         }}
         style={{ marginBottom: 20 }}
       >
@@ -62,28 +142,13 @@ export default function Home() {
         <option value="fi">Suomi</option>
       </select>
 
-      {/* Render pages in selected language */}
       <ul style={{ listStyle: "none", padding: 0 }}>
         {pages.map((page) => (
-          <li key={page.slug.current} style={{ margin: "10px 0" }}>
-            <button
-              onClick={() => router.push(`/${language}/${page.slug.current}`)}
-            >
+          <li key={page.slug} style={{ margin: "10px 0" }}>
+            <button onClick={() => router.push(`/${language}/${page.slug}`)}>
               {page.title[language]}
             </button>
           </li>
         ))}
-      </ul>
-
-      {/* Static navigation buttons */}
-      {/* <button onClick={() => router.push(`/${language}/flights`)}>
-        Перейти на страницу 1
-      </button>
-      <br />
-      <button onClick={() => router.push(`/${language}/news`)}>
-        Перейти на страницу 2
-      </button>
-      <TestComponent text={"Hello"} /> */}
-    </div>
-  );
+      </ul> */
 }

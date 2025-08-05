@@ -4,7 +4,11 @@ export interface Page {
     ru: string
     fi: string
   }
-  slug: {
-    current: string
+  slug: string
+  description: {
+    en: string
+    ru: string
+    fi: string
   }
+  image: string
 }

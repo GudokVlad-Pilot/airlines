@@ -9,6 +9,7 @@ export const adapters = {
         try {
           const result = await sanityClient.fetch(pagesQuery) as Page[]
           console.log(result)
+          console.log("I am getPages from Sanity")
           return result
         } catch (error) {
           console.error("Failed to fetch pages:", error)

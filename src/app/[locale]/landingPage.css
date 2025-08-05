@@ -1,0 +1,26 @@
+.landingBox {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bottomPart {
+  width: 100%;
+}
+
+.navBar {
+  width: 100%;
+  position: fixed;
+  z-index: 1;
+}
+
+.contentBox {
+  position: relative;
+  bottom: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}

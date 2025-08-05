@@ -1,0 +1,17 @@
+.cardBox {
+  width: 100px; /* TODO: Adjust the width */
+  border: 1px;
+  border-style: solid;
+}
+.cardImage {
+  width: 100px; /* TODO: Adjust the width */
+  height: auto; /* Height is adapted to the aspect ratio */
+  aspect-ratio: 4/3;
+}
+.cardDescription {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 5; /* TODO: change to the needed number of lines to show */
+  line-clamp: 5; /* TODO: change to the needed number of lines to show */
+  -webkit-box-orient: vertical;
+}

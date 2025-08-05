@@ -22,13 +22,13 @@ export default function SmallSearchBox({
   arrival,
   departureDate,
   arrivalDate,
-  onChangeClick
+  onChangeClick,
 }: Props) {
   return (
-    <div className="box">
+    <div className="smallSearchBoxBox">
       <div className="leftGroup">
         <div className="airportText">{departure}</div>
-        <ArrowForwardIcon className="arrowIcon"/>
+        <ArrowForwardIcon className="arrowIcon" />
         <div className="airportText">{arrival}</div>
       </div>
       <div className="rightGroup">
@@ -36,7 +36,7 @@ export default function SmallSearchBox({
         <div className="dash">-</div>
         <div className="arrivalDate">{formatDate(arrivalDate)}</div>
         <button className="changeButton" onClick={onChangeClick}>
-          <DriveFileRenameOutlineIcon className="changeIcon"/>
+          <DriveFileRenameOutlineIcon className="changeIcon" />
         </button>
       </div>
     </div>

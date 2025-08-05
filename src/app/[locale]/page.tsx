@@ -8,19 +8,19 @@ import NavBar from "@/components/molecules/navBar";
 import BottomBar from "@/components/molecules/bottomBar";
 import "./landingPage.css";
 import VideoBackground from "@/components/templates/video-background";
-import SmallSearchBox from "@/components/atoms/smallSearchBox";
 import BigSearchBox from "@/components/atoms/bigSearchBox";
 import { colors } from "@/components/styles/colors";
 import NavCardsRow from "@/components/molecules/navCardsRow";
 import { languages } from "./globalConsts";
+import { useStore } from "@/adapters/zustand/store";
 
 const { getPages } = adapters.cms();
 
 export default function Home() {
   const params = useParams();
   const router = useRouter();
+  const { pages, setPages } = useStore();
 
-  const [pages, setPages] = useState<Page[]>([]);
   const [language, setLanguage] = useState<"en" | "ru" | "fi">("en");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,9 +34,14 @@ export default function Home() {
   }, [params]);
 
   useEffect(() => {
+    if (pages.length > 0) {
+      setLoading(false);
+      return;
+    }
+
     getPages()
       .then((pages) => {
-        setPages(pages);
+        setPages(pages); // Zustand
         setLoading(false);
       })
       .catch((err) => {

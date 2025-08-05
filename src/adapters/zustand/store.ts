@@ -1,13 +1,15 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { Page } from "@/adapters/types"; // adjust path if needed
 
 const EXPIRATION_TIME = 1000 * 30; // 30 seconds
 
 type Store = {
   count: number;
+  pages: Page[];
   inc: () => void;
   reset: () => void;
-  lastUpdated: number;
+  setPages: (pages: Page[]) => void;
   checkExpiration: () => void;
 };
 
@@ -15,26 +17,43 @@ export const useStore = create<Store>()(
   persist(
     (set, get) => ({
       count: 1,
-      lastUpdated: Date.now(),
-      inc: () => set(() => ({ count: get().count + 1, lastUpdated: Date.now() })),
-      reset: () => set(() => ({ count: 1, lastUpdated: Date.now() })),
+      pages: [],
+      inc: () => set({ count: get().count + 1 }),
+      reset: () => set({ count: 1 }),
+      setPages: (pages) => {
+        console.log('I am fetched')
+        set({ pages })},
       checkExpiration: () => {
         const now = Date.now();
-        if (now - get().lastUpdated > EXPIRATION_TIME) {
-          set({ count: 1, lastUpdated: now });
+        const stored = localStorage.getItem("test-store");
+        if (!stored) return;
+
+        try {
+          const parsed = JSON.parse(stored);
+          const storedAt = parsed?.state?.__storedAt;
+          if (storedAt && now - storedAt > EXPIRATION_TIME) {
+            set({ count: 1 }); // only reset count
+            localStorage.setItem(
+              "test-store",
+              JSON.stringify({
+                state: { count: 1, pages: [] },
+                version: 0,
+              })
+            );
+          }
+        } catch (e) {
+          console.warn("Failed to parse store expiration");
         }
       },
     }),
     {
       name: "test-store",
-      onRehydrateStorage: () => (state) => {
-        if (!state) return;
-        const now = Date.now();
-        if (now - state.lastUpdated > EXPIRATION_TIME) {
-          state.count = 1;
-          state.lastUpdated = now;
-        }
-      },
+      version: 0,
+      // add __storedAt manually if needed
+      partialize: (state) => ({
+        count: state.count,
+        pages: state.pages,
+      }),
     }
   )
 );

@@ -23,10 +23,8 @@ export default function NavCard({
         image={image || "/assets/images/placeholder-4-3.png"}
         title="Card Image"
       />
-      <div className="cardTextBox">
-        <div className="cardTitle">{title}</div>
-        <div className="cardDescription">{description}</div>
-      </div>
+      <div className="cardTitle">{title}</div>
+      <div className="cardDescription">{description}</div>
     </div>
   );
 }

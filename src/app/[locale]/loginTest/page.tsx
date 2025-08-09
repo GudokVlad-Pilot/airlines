@@ -11,10 +11,15 @@ import {
   browserLocalPersistence,
   browserSessionPersistence,
   User,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import { auth } from "@/adapters/clients/firebase";
+import { useParams } from "next/navigation";
 
 export default function LoginTest() {
+  const params = useParams();
+
   const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +28,14 @@ export default function LoginTest() {
   const [user, setUser] = useState<User | null>(null);
   const [unverifiedUser, setUnverifiedUser] = useState<User | null>(null);
 
-  // Listen to auth state
+  useEffect(() => {
+    if (typeof params?.locale === "string") {
+      auth.languageCode = params.locale;
+    } else {
+      auth.useDeviceLanguage();
+    }
+  }, [params]);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser && firebaseUser.emailVerified ? firebaseUser : null);
@@ -37,7 +49,6 @@ export default function LoginTest() {
 
   const handleAuth = async () => {
     try {
-      // Set session persistence
       await setPersistence(
         auth,
         rememberMe ? browserLocalPersistence : browserSessionPersistence
@@ -80,6 +91,28 @@ export default function LoginTest() {
     if (unverifiedUser) {
       await sendEmailVerification(unverifiedUser);
       setMessage("Verification email resent.");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+
+      await setPersistence(
+        auth,
+        rememberMe ? browserLocalPersistence : browserSessionPersistence
+      );
+
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      if (!user.emailVerified) {
+        setMessage("Logged in with Google. (Email verification not required)");
+      } else {
+        setMessage("Login successful!");
+      }
+    } catch (error: any) {
+      setMessage(`Google login error: ${error.message}`);
     }
   };
 
@@ -148,6 +181,21 @@ export default function LoginTest() {
 
           <button onClick={handleAuth} style={{ width: "100%", padding: 10 }}>
             {isRegistering ? "Register" : "Login"}
+          </button>
+
+          <button
+            onClick={handleGoogleLogin}
+            style={{
+              width: "100%",
+              padding: 10,
+              marginTop: 10,
+              backgroundColor: "#4285F4",
+              color: "white",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            Continue with Google
           </button>
 
           <p style={{ marginTop: 10 }}>

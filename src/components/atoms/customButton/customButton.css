@@ -1,11 +1,20 @@
 .customButtonBox {
-  background-color: red;
+  background-color: var(--btn-bg, red);
+  color: var(--btn-color, white);
 }
 
-.customButtonBox:hover {
-  background-color: yellow;
+.customButtonBox:hover:not(:disabled) {
+  background-color: var(--btn-bg-hover, yellow);
+  color: var(--btn-color-hover, black);
 }
 
-.customButtonBox:active {
-  background-color: green;
+.customButtonBox:active:not(:disabled) {
+  background-color: var(--btn-bg-active, green);
+  color: var(--btn-color-active, white);
+}
+
+.customButtonBox:disabled {
+  background-color: var(--btn-bg-disabled, #cccccc);
+  color: var(--btn-color-disabled, #777777);
+  cursor: not-allowed;
 }

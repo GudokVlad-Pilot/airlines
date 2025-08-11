@@ -28,10 +28,7 @@ export default function NotFoundLayout({
           <div className="notFoundLayoutTitle">{title}</div>
           <div className="notFoundLayoutDescription">{description}</div>
         </div>
-        <CustomButton
-          title={customButton.title}
-          onClick={customButton.onClick}
-        />
+        <CustomButton {...customButton} />
       </div>
     </div>
   );

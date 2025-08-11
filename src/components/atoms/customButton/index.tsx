@@ -1,15 +1,19 @@
-// import "./customButton.css";
+import "./customButton.css";
 
 export type CustomButtonProps = {
   title: string;
-  icon?: string;
   onClick: () => void;
+  isDisabled?: boolean;
 };
 
-export default function CustomButton({ title, onClick }: CustomButtonProps) {
+export default function CustomButton({
+  title,
+  onClick,
+  isDisabled,
+}: CustomButtonProps) {
   return (
-    <button className="customButtonBox" onClick={onClick}>
-      <div>{title}</div>
+    <button className="customButtonBox" onClick={onClick} disabled={isDisabled}>
+      <div className="customButtonText">{title}</div>
     </button>
   );
 }

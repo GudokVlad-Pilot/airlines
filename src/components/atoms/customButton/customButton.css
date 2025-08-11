@@ -1,0 +1,11 @@
+.customButtonBox {
+  background-color: red;
+}
+
+.customButtonBox:hover {
+  background-color: yellow;
+}
+
+.customButtonBox:active {
+  background-color: green;
+}

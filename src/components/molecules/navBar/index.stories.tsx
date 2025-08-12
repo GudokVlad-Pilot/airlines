@@ -13,7 +13,6 @@ const languages = [
 
 export const Default = {
   args: {
-    placeholder: "NavBar",
     language: {
       selectedLanguage: "en",
       onChange: () => null,
@@ -24,7 +23,6 @@ export const Default = {
 
 export const Custom = {
   args: {
-    placeholder: "Custom",
     backgroundColor: "#FFF000",
     basicColor: "red",
     language: {

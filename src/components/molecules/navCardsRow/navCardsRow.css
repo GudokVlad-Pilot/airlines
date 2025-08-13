@@ -1,5 +1,5 @@
 .cardsRowBox {
   display: flex;
-  width: 1200px;
+  width: 900px;
   justify-content: space-between;
 }

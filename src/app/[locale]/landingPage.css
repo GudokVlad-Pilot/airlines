@@ -11,10 +11,53 @@
 }
 
 .navBar {
+  align-self: flex-start; /* not to center the navbar */
   width: 100%;
   position: fixed;
-  z-index: 1;
+  z-index: 10;
+  transition: width 0.3s ease;
 }
+
+.navBar.narrowed {
+  width: calc(100% - 300px); /* 300px = sidebar width */
+}
+
+.sideBarOverlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 9;
+}
+
+.sideBar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  /* background-color: white;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2); */
+
+  transform: translateX(100%);
+  transition: transform 0.4s ease;
+}
+
+.sideBar.visible {
+  transition: transform 0.3s ease;
+  transform: translateX(0);
+}
+
+/* .sideBar {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 1;
+} */
 
 .contentBox {
   position: relative;

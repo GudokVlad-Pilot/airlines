@@ -1,7 +1,25 @@
+.navBarImage {
+  height: 100%;
+  width: auto !important;
+  object-fit: contain !important;
+}
+
+.navBarImage:hover {
+  cursor: pointer;
+}
+
 .navBarBox {
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   height: 100px; /* TODO: define the height */
+}
+.navBarIcon {
+  height: 50px; /* size of the area */
+  width: 50px;
+}
+
+.navBarIcon svg {
+  font-size: 25px; /* size of the icon itself */
 }

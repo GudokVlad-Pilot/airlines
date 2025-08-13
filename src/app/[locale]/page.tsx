@@ -14,6 +14,7 @@ import NavCardsRow from "@/components/molecules/navCardsRow";
 import { languages } from "./globalConsts";
 import { useStore } from "@/adapters/zustand/store";
 import LoaderWithText from "@/components/molecules/loaderWithText";
+import SideBar from "@/components/molecules/sideBar";
 
 const { getPages } = adapters.cms();
 
@@ -32,6 +33,18 @@ export default function Home() {
   const [language, setLanguage] = useState<"en" | "ru" | "fi">("en"); //verify with params
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const [isSidebarMounted, setIsSidebarMounted] = useState(false);
+
+  const openSidebar = () => {
+    setIsSidebarMounted(true);
+    requestAnimationFrame(() => setIsSidebarVisible(true)); // trigger animation
+  };
+
+  const closeSidebar = () => {
+    setIsSidebarVisible(false);
+    setTimeout(() => setIsSidebarMounted(false), 300); // matches CSS duration
+  };
 
   useEffect(() => {
     // Update language state based on route param (if valid)
@@ -77,9 +90,8 @@ export default function Home() {
 
   return (
     <div className="landingBox" style={{ backgroundColor: colors.background }}>
-      <div className="navBar">
+      <div className={`navBar ${isSidebarVisible ? "narrowed" : ""}`}>
         <NavBar
-          placeholder={"NavBar"}
           language={{
             selectedLanguage: language,
             onChange: (newLang: string) => {
@@ -90,8 +102,33 @@ export default function Home() {
             },
             languages: languages,
           }}
+          onLogoClick={() => router.push(`/${language}`)}
+          onProfileClick={() => alert("Profile is not ready")}
+          onMenuClick={() => {
+            if (isSidebarMounted) {
+              closeSidebar();
+            } else {
+              openSidebar();
+            }
+          }}
         />
       </div>
+      {isSidebarMounted && (
+        <div className="sideBarOverlay" onClick={closeSidebar}>
+          <div
+            className={`sideBar ${isSidebarVisible ? "visible" : ""}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <SideBar
+              pages={pages.map((p) => ({
+                title: p.title?.[language] || "No Title",
+                onClick: () => router.push(`/${language}/${p.slug}`),
+              }))}
+            />
+          </div>
+        </div>
+      )}
+
       <VideoBackground />
       <div className="contentBox">
         <BigSearchBox title={"Search Placeholder"} />

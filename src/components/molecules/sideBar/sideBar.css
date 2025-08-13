@@ -1,0 +1,24 @@
+.sideBarBox {
+  width: 300px;
+  height: 100vh;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sideBarItem {
+  padding: 12px 10px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.sideBarItem:hover {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.3
+  ); /* the most neutral color that can be applied here */
+  cursor: pointer;
+}

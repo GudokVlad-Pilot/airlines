@@ -6,6 +6,11 @@
   background-color: #393e46;
   border-radius: 20px;
 }
+
+.cardBox:hover {
+  cursor: pointer;
+}
+
 .cardImage {
   width: 205px;
   height: auto; /* Height is adapted to the aspect ratio */

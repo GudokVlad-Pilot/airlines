@@ -21,7 +21,7 @@ export default function NavCard({
         className="cardImage"
         component="img"
         image={image || "/assets/images/placeholder-4-3.png"}
-        title="Card Image"
+        // title="Card Image"
       />
       <div className="cardTitle">{title}</div>
       <div className="cardDescription">{description}</div>

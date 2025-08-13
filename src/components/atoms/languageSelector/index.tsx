@@ -1,4 +1,4 @@
-// TODO: add style sheet
+import "./languageSelector.css";
 
 type LanguageOption = {
   code: string;

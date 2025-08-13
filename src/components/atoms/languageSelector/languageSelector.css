@@ -1,0 +1,12 @@
+.languageSelectorBox {
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.languageSelectorBox:hover {
+  cursor: pointer;
+}
+
+.languageSelectorBox option {
+  cursor: pointer;
+}

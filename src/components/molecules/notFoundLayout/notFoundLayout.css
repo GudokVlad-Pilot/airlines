@@ -1,0 +1,10 @@
+.notFoundLayoutBox {
+  background: linear-gradient(135deg, red 0%, green 100%);
+}
+
+.notFoundLayoutImage {
+  height: 300px !important; /* Use !important to override other conflicting styles (e.g., inline styles or styles from the component library) */
+  width: auto !important; /* keep original aspect ratio */
+  object-fit: contain; /* scale image without cropping */
+  max-width: 100%; /* prevent overflow */
+}

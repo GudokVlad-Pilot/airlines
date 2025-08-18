@@ -1,6 +1,7 @@
 import { colors } from "@/components/styles/colors";
 import { GoArrowRight } from "react-icons/go";
 import "./bigSearchBox.css";
+import TextField from "@mui/material/TextField";
 
 export type BigSearchBoxProps = {
   isReturn?: boolean;
@@ -43,19 +44,17 @@ export default function BigSearchBox({
       style={{ backgroundColor: backgroundColor || colors.secondary }}
     >
       <div className="bigSearchBoxInputs">
-        <input
-          type="text"
-          placeholder="Origin"
+        <TextField
+          className="searchInput"
+          label={originPlaceholder}
           value={origin}
           onChange={onOriginChange}
-          className="searchInput"
         />
-        <input
-          type="text"
-          placeholder="Destination"
+        <TextField
+          className="searchInput"
+          label={destinationPlaceholder}
           value={destination}
           onChange={onDestinationChange}
-          className="searchInput"
         />
         <input
           type="date"

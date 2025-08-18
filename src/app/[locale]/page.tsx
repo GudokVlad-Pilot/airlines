@@ -134,7 +134,6 @@ export default function Home() {
       <div className="contentBox">
         {/* <BigSearchBox title={"Search Placeholder"} /> */}
         <SearchBoxMain
-          title={""}
           bigSearchBox={{
             title: "",
             backgroundColor: undefined,

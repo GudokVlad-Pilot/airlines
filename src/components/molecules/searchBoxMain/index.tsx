@@ -5,12 +5,11 @@ import Tab, { TabProps } from "@/components/atoms/tab";
 import "./searchBoxMain.css";
 
 type Props = {
-  title: string;
   bigSearchBox: BigSearchBoxProps;
   tabs: TabProps[];
 };
 
-export default function SearchBoxMain({ title, bigSearchBox, tabs }: Props) {
+export default function SearchBoxMain({ bigSearchBox, tabs }: Props) {
   return (
     <div className="searchBoxMainBox">
       {/* Tabs Section */}

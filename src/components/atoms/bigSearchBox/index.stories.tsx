@@ -20,6 +20,7 @@ export const Default = {
     onStartDateChange: () => null,
     endDate: null,
     onEndDateChange: () => null,
+    locale: null,
   },
 };
 

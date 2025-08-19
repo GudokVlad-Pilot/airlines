@@ -65,9 +65,13 @@ export default function BigSearchBox({
             onChange={onOriginChange}
             sx={{
               width: 200,
+              mr: 2,
+              ml: 2,
+
               "& .MuiInputBase-root": {
                 height: 50,
                 color: basicColor || colors.basic,
+                borderRadius: 20,
               },
               "& .MuiOutlinedInput-notchedOutline": {
                 borderColor: accentColor || colors.primaryLight,
@@ -90,9 +94,11 @@ export default function BigSearchBox({
             onChange={onDestinationChange}
             sx={{
               width: 200,
+              mr: 2,
               "& .MuiInputBase-root": {
                 height: 50,
                 color: basicColor || colors.basic,
+                borderRadius: 20,
               },
               "& .MuiOutlinedInput-notchedOutline": {
                 borderColor: accentColor || colors.primaryLight,
@@ -115,10 +121,12 @@ export default function BigSearchBox({
             slotProps={{
               textField: {
                 sx: {
-                  width: 200,
+                  width: 135,
+                  mr: 2,
                   "& .MuiInputBase-root": {
                     height: 50,
                     color: basicColor || colors.basic,
+                    borderRadius: 20,
                   },
                   "& .MuiOutlinedInput-notchedOutline": {
                     borderColor: accentColor || colors.primaryLight, // border color
@@ -140,7 +148,7 @@ export default function BigSearchBox({
             <DatePicker
               label={endPlaceholder}
               value={endDate}
-              onChange={onEndDateChange}
+              onChange={onEndDateChange} //styling needed
             />
           )}
         </div>

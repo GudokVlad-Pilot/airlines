@@ -1,7 +1,17 @@
 .bigSearchBoxBox {
   width: 900px;
   display: flex;
-  justify-content: center;
   align-items: center;
   height: 175px;
+  border-radius: 0px 20px 20px 20px;
+  column-gap: 15px;
+}
+.searchButton {
+  height: 50px;
+  width: 85px;
+  border-radius: 20px;
+  border: none;
+  background-color: #215e9e;
+  margin-right: 20px;
+  margin-left: 181px;
 }

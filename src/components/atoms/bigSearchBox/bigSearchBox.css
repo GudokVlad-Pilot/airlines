@@ -13,5 +13,9 @@
   border: none;
   background-color: #215e9e;
   margin-right: 20px;
-  margin-left: 181px;
+  margin-left: 180px;
+}
+
+.bigSearchBoxInputs {
+  display: flex;
 }

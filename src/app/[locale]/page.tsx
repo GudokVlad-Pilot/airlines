@@ -31,11 +31,25 @@ export default function Home() {
     fi: "Ladataan...",
   };
 
+  const searchTabPlaceholder: Record<"en" | "ru" | "fi", string> = {
+    en: "Return flights unavailable at the moment.",
+    ru: "Обратные рейсы в данный момент недоступны.",
+    fi: "Paluulentoja ei ole saatavilla tällä hetkellä.",
+  };
+  const cityOptionsLocale: Record<"en" | "ru" | "fi", string[]> = {
+    en: ["Helsinki", "Fox-Land"],
+    ru: ["Хельсинки", "Лисичко-Лэнд"],
+    fi: ["Helsinki", "Ketunmaa"],
+  };
+
   const [language, setLanguage] = useState<"en" | "ru" | "fi">("en"); //verify with params
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isSidebarMounted, setIsSidebarMounted] = useState(false);
+
+  const [originValue, setOrigin] = useState<string | null>(null);
+  const [destinationValue, setDestination] = useState<string | null>(null);
 
   const openSidebar = () => {
     setIsSidebarMounted(true);
@@ -45,6 +59,10 @@ export default function Home() {
   const closeSidebar = () => {
     setIsSidebarVisible(false);
     setTimeout(() => setIsSidebarMounted(false), 300); // matches CSS duration
+  };
+
+  const onSearchClick = () => {
+    router.push(`/${language}/flights`);
   };
 
   useEffect(() => {
@@ -133,23 +151,41 @@ export default function Home() {
       <VideoBackground />
       <div className="contentBox">
         {/* <BigSearchBox title={"Search Placeholder"} /> */}
-        {/* <SearchBoxMain
+        <SearchBoxMain
           bigSearchBox={{
-            title: "",
-            backgroundColor: undefined,
+            isReturn: false, // hardcoded for now
+            // backgroundColor: undefined,
+            // basicColor: undefined,
+            // accentColor: undefined,
+            originPlaceholder: "",
+            destinationPlaceholder: "",
+            startPlaceholder: "",
+            endPlaceholder: "",
+            origin: originValue || "",
+            onOriginChange: setOrigin,
+            destination: destinationValue || "",
+            onDestinationChange: setDestination,
+            startDate: undefined,
+            onStartDateChange: undefined,
+            endDate: undefined,
+            onEndDateChange: undefined,
+            onClick: onSearchClick,
+            cityOptions: cityOptionsLocale[language],
+            // locale: undefined,
           }}
           tabs={[
             {
-              title: "Flights",
+              title: "One Way",
+              notSelected: false,
               onClick: () => console.log("Flights tab clicked"),
             },
             {
-              title: "Hotels",
+              title: "Return",
               notSelected: true,
-              onClick: () => console.log("Hotels tab clicked"),
+              onClick: () => alert(searchTabPlaceholder[language]),
             },
           ]}
-        /> */}
+        />
         <NavCardsRow navCards={navCards} />
       </div>
       <div className="bottomPart">

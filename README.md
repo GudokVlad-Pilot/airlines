@@ -26,13 +26,14 @@ This project was created as a birthday invitation for friends. Later the project
 
 3. If you do not have Node.js installed, you can download it from here: [Node.js website](https://nodejs.org/en).
 
-4. Add `.env` file to your repo.
+4. 1. Add `.env` file to your repo.
 
     ```
     NEXT_PUBLIC_SANITY_PROJECT_ID=projectID
     NEXT_PUBLIC_SANITY_DATASET=dataset
     NEXT_PUBLIC_SANITY_API_VERSION=2023-01-01
     ```
+4. 2. The rest of the `.env` should be asked from project leader.
 
 5. 1. (Optional) It is recommended to install `Prettier ESLint` extention for your VSCode.
 

@@ -1,9 +1,12 @@
+import CircularProgress from "@mui/material/CircularProgress";
 import "./customButton.css";
+import { colors } from "@/components/styles/colors";
 
 export type CustomButtonProps = {
   title: string;
   onClick: () => void;
   isDisabled?: boolean;
+  isLoading?: boolean;
 
   // Background colors
   backgroundColor?: string;
@@ -22,6 +25,7 @@ export default function CustomButton({
   title,
   onClick,
   isDisabled,
+  isLoading,
   backgroundColor,
   hoverBackgroundColor,
   activeBackgroundColor,
@@ -49,7 +53,14 @@ export default function CustomButton({
         } as React.CSSProperties
       }
     >
-      {title}
+      {isLoading ? (
+        <CircularProgress
+          className="customButtonLoader"
+          style={{ color: textColor || colors.basic }}
+        />
+      ) : (
+        title
+      )}
     </button>
   );
 }

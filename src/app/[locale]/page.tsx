@@ -15,6 +15,7 @@ import { languages } from "./globalConsts";
 import { useStore } from "@/adapters/zustand/store";
 import LoaderWithText from "@/components/molecules/loaderWithText";
 import SideBar from "@/components/molecules/sideBar";
+import SearchBoxMain from "@/components/molecules/searchBoxMain";
 
 const { getPages } = adapters.cms();
 
@@ -131,7 +132,24 @@ export default function Home() {
 
       <VideoBackground />
       <div className="contentBox">
-        <BigSearchBox title={"Search Placeholder"} />
+        {/* <BigSearchBox title={"Search Placeholder"} /> */}
+        {/* <SearchBoxMain
+          bigSearchBox={{
+            title: "",
+            backgroundColor: undefined,
+          }}
+          tabs={[
+            {
+              title: "Flights",
+              onClick: () => console.log("Flights tab clicked"),
+            },
+            {
+              title: "Hotels",
+              notSelected: true,
+              onClick: () => console.log("Hotels tab clicked"),
+            },
+          ]}
+        /> */}
         <NavCardsRow navCards={navCards} />
       </div>
       <div className="bottomPart">

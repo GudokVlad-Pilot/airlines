@@ -1,0 +1,13 @@
+.tabBox {
+  width: 175px;
+  height: 45px;
+  /* height: 115px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.tabBox.active {
+  background: linear-gradient(235deg);
+}

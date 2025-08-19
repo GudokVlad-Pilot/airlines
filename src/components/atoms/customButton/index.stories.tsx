@@ -34,3 +34,11 @@ export const CustomTheme = {
     disabledBackgroundColor: "#222222",
   },
 };
+
+export const Loading = {
+  args: {
+    title: "+ button",
+    onClick: () => null,
+    isLoading: true,
+  },
+};

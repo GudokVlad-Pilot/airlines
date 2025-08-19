@@ -7,6 +7,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
+import { Airport } from "@/adapters/types";
 
 export type BigSearchBoxProps = {
   isReturn?: boolean;
@@ -26,8 +27,8 @@ export type BigSearchBoxProps = {
   endDate?: Dayjs | null;
   onEndDateChange?: (date: Dayjs | null) => void;
   onClick?: () => void;
-  locale?: string;
-  cityOptions: string[];
+  locale?: "en" | "ru" | "fi";
+  airports: Airport[];
 };
 
 export default function BigSearchBox({
@@ -49,7 +50,7 @@ export default function BigSearchBox({
   onEndDateChange,
   onClick,
   locale,
-  cityOptions,
+  airports,
 }: BigSearchBoxProps) {
   return (
     <LocalizationProvider
@@ -63,10 +64,12 @@ export default function BigSearchBox({
         <div className="bigSearchBoxInputs">
           {/* ORIGIN AUTOCOMPLETE */}
           <Autocomplete
-            freeSolo
-            options={cityOptions}
-            value={origin || ""}
-            onInputChange={(event, newValue) => onOriginChange?.(newValue)}
+            options={airports}
+            getOptionLabel={(option) => option.city[locale || "en"]}
+            value={airports.find((a) => a.iata === origin) || null}
+            onChange={(e, newValue) =>
+              onOriginChange?.(newValue ? newValue.iata : "")
+            }
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -100,10 +103,12 @@ export default function BigSearchBox({
 
           {/* DESTINATION AUTOCOMPLETE */}
           <Autocomplete
-            freeSolo
-            options={cityOptions}
-            value={destination || ""}
-            onInputChange={(event, newValue) => onDestinationChange?.(newValue)}
+            options={airports}
+            getOptionLabel={(option) => option.city[locale || "en"]}
+            value={airports.find((a) => a.iata === destination) || null}
+            onChange={(e, newValue) =>
+              onDestinationChange?.(newValue ? newValue.iata : "")
+            }
             renderInput={(params) => (
               <TextField
                 {...params}

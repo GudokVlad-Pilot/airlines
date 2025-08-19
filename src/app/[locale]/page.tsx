@@ -36,11 +36,50 @@ export default function Home() {
     ru: "Обратные рейсы в данный момент недоступны.",
     fi: "Paluulentoja ei ole saatavilla tällä hetkellä.",
   };
-  const cityOptionsLocale: Record<"en" | "ru" | "fi", string[]> = {
-    en: ["Helsinki", "Fox-Land"],
-    ru: ["Хельсинки", "Лисичко-Лэнд"],
-    fi: ["Helsinki", "Ketunmaa"],
-  };
+
+  const mockAirports = [
+    {
+      iata: "HEL",
+      title: {
+        en: "Helsinki Airport",
+        ru: "Аэропорт Хельсинки",
+        fi: "Helsingin lentoasema",
+      },
+      city: { en: "Helsinki", ru: "Хельсинки", fi: "Helsinki" },
+      country: { en: "Finland", ru: "Финляндия", fi: "Suomi" },
+      image: null,
+    },
+    {
+      iata: "FOX",
+      title: {
+        en: "Fox Airport",
+        ru: "Лисичковый аэропорт",
+        fi: "Ketun lentoasema",
+      },
+      city: { en: "Fox City", ru: "Лисий город", fi: "Kettu City" },
+      country: { en: "Fox Land", ru: "Лисичколяндия", fi: "Ketunmaa" },
+      image: null,
+    },
+  ];
+
+  const mockDictionary = [
+    {
+      title: "searchBoxOriginPlaceholder",
+      phrase: {
+        en: "Origin",
+        ru: "Откуда",
+        fi: "Mistä",
+      },
+    },
+    {
+      title: "searchBoxDesstinationPlaceholder",
+      phrase: {
+        en: "Destination",
+        ru: "Куда",
+        fi: "Mihin",
+      },
+    },
+  ];
 
   const [language, setLanguage] = useState<"en" | "ru" | "fi">("en"); //verify with params
   const [loading, setLoading] = useState(true);
@@ -48,8 +87,8 @@ export default function Home() {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isSidebarMounted, setIsSidebarMounted] = useState(false);
 
-  const [originValue, setOrigin] = useState<string | null>(null);
-  const [destinationValue, setDestination] = useState<string | null>(null);
+  const [originValue, setOrigin] = useState<string>(""); // store IATA code
+  const [destinationValue, setDestination] = useState<string>(""); // store IATA code
 
   const openSidebar = () => {
     setIsSidebarMounted(true);
@@ -61,8 +100,16 @@ export default function Home() {
     setTimeout(() => setIsSidebarMounted(false), 300); // matches CSS duration
   };
 
+  const getPhrase = (title: string, lang: "en" | "ru" | "fi") => {
+    const item = mockDictionary.find((d) => d.title === title);
+    return item ? item.phrase[lang] : "";
+  };
+
   const onSearchClick = () => {
-    router.push(`/${language}/flights`);
+    console.log("Searching flights from", originValue, "to", destinationValue);
+    router.push(
+      `/${language}/flights?from=${originValue}&to=${destinationValue}`
+    );
   };
 
   useEffect(() => {
@@ -157,8 +204,14 @@ export default function Home() {
             // backgroundColor: undefined,
             // basicColor: undefined,
             // accentColor: undefined,
-            originPlaceholder: "",
-            destinationPlaceholder: "",
+            originPlaceholder: getPhrase(
+              "searchBoxOriginPlaceholder",
+              language
+            ),
+            destinationPlaceholder: getPhrase(
+              "searchBoxDesstinationPlaceholder",
+              language
+            ),
             startPlaceholder: "",
             endPlaceholder: "",
             origin: originValue || "",
@@ -170,8 +223,8 @@ export default function Home() {
             endDate: undefined,
             onEndDateChange: undefined,
             onClick: onSearchClick,
-            cityOptions: cityOptionsLocale[language],
-            // locale: undefined,
+            locale: language,
+            airports: mockAirports,
           }}
           tabs={[
             {

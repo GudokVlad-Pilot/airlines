@@ -133,7 +133,7 @@ export default function Home() {
       <VideoBackground />
       <div className="contentBox">
         {/* <BigSearchBox title={"Search Placeholder"} /> */}
-        <SearchBoxMain
+        {/* <SearchBoxMain
           bigSearchBox={{
             title: "",
             backgroundColor: undefined,
@@ -149,7 +149,7 @@ export default function Home() {
               onClick: () => console.log("Hotels tab clicked"),
             },
           ]}
-        />
+        /> */}
         <NavCardsRow navCards={navCards} />
       </div>
       <div className="bottomPart">

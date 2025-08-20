@@ -1,15 +1,19 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Page } from "@/adapters/types"; // adjust path if needed
+import { Airport, Dictionary, Page } from "@/adapters/types"; // adjust path if needed
 
 const EXPIRATION_TIME = 1000 * 30; // 30 seconds
 
 type Store = {
   count: number;
   pages: Page[];
+  dictionary: Dictionary[];
+  airports: Airport[];
   inc: () => void;
   reset: () => void;
   setPages: (pages: Page[]) => void;
+  setDictionary: (dictionary: Dictionary[]) => void;
+  setAirports: (airports: Airport[]) => void;
   checkExpiration: () => void;
 };
 
@@ -18,11 +22,22 @@ export const useStore = create<Store>()(
     (set, get) => ({
       count: 1,
       pages: [],
+      dictionary: [],
+      airports: [],
       inc: () => set({ count: get().count + 1 }),
       reset: () => set({ count: 1 }),
       setPages: (pages) => {
-        console.log('I am fetched')
-        set({ pages })},
+        console.log("I am fetched pages");
+        set({ pages });
+      },
+      setDictionary: (dictionary) => {
+        console.log("I am fetched dictionary");
+        set({ dictionary });
+      },
+      setAirports: (airports) => {
+        console.log("I am fetched airports");
+        set({ airports });
+      },
       checkExpiration: () => {
         const now = Date.now();
         const stored = localStorage.getItem("test-store");
@@ -38,7 +53,7 @@ export const useStore = create<Store>()(
               JSON.stringify({
                 state: { count: 1, pages: [] },
                 version: 0,
-              })
+              }),
             );
           }
         } catch (e) {
@@ -54,6 +69,6 @@ export const useStore = create<Store>()(
         count: state.count,
         pages: state.pages,
       }),
-    }
-  )
+    },
+  ),
 );

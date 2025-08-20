@@ -10,7 +10,7 @@ export interface Page {
     ru: string;
     fi: string;
   };
-  image: string;
+  image?: string | null;
 }
 export interface Airport {
   title: {
@@ -29,7 +29,12 @@ export interface Airport {
     ru: string;
     fi: string;
   };
-  image: string | null;
+  description?: {
+    en: string;
+    ru: string;
+    fi: string;
+  };
+  image?: string | null;
 }
 
 export interface Dictionary {

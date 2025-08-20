@@ -3,12 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { adapters } from "@/adapters/adapter";
-import { Page } from "@/adapters/types";
 import NavBar from "@/components/molecules/navBar";
 import BottomBar from "@/components/molecules/bottomBar";
 import "./landingPage.css";
 import VideoBackground from "@/components/templates/video-background";
-import BigSearchBox from "@/components/atoms/bigSearchBox";
 import { colors } from "@/components/styles/colors";
 import NavCardsRow from "@/components/molecules/navCardsRow";
 import { languages } from "./globalConsts";
@@ -17,17 +15,18 @@ import LoaderWithText from "@/components/molecules/loaderWithText";
 import SideBar from "@/components/molecules/sideBar";
 import SearchBoxMain from "@/components/molecules/searchBoxMain";
 
-const { getPages } = adapters.cms();
+const { getPages, getDictionary, getAirports } = adapters.cms();
 
 export default function Home() {
   const params = useParams();
   const router = useRouter();
-  const { pages, setPages } = useStore();
+  const { pages, dictionary, airports, setPages, setDictionary, setAirports } =
+    useStore();
 
   // Do not delete! This is for strings before it fetched from Sanity
   const loaderTextByLanguage: Record<"en" | "ru" | "fi", string> = {
-    en: "Loading...",
-    ru: "Загрузка...",
+    en: "Loading places foxes can take you to...",
+    ru: "Загрузка...", // TODO: define phrases
     fi: "Ladataan...",
   };
 
@@ -36,50 +35,6 @@ export default function Home() {
     ru: "Обратные рейсы в данный момент недоступны.",
     fi: "Paluulentoja ei ole saatavilla tällä hetkellä.",
   };
-
-  const mockAirports = [
-    {
-      iata: "HEL",
-      title: {
-        en: "Helsinki Airport",
-        ru: "Аэропорт Хельсинки",
-        fi: "Helsingin lentoasema",
-      },
-      city: { en: "Helsinki", ru: "Хельсинки", fi: "Helsinki" },
-      country: { en: "Finland", ru: "Финляндия", fi: "Suomi" },
-      image: null,
-    },
-    {
-      iata: "FOX",
-      title: {
-        en: "Fox Airport",
-        ru: "Лисичковый аэропорт",
-        fi: "Ketun lentoasema",
-      },
-      city: { en: "Fox City", ru: "Лисий город", fi: "Kettu City" },
-      country: { en: "Fox Land", ru: "Лисичколяндия", fi: "Ketunmaa" },
-      image: null,
-    },
-  ];
-
-  const mockDictionary = [
-    {
-      title: "searchBoxOriginPlaceholder",
-      phrase: {
-        en: "Origin",
-        ru: "Откуда",
-        fi: "Mistä",
-      },
-    },
-    {
-      title: "searchBoxDesstinationPlaceholder",
-      phrase: {
-        en: "Destination",
-        ru: "Куда",
-        fi: "Mihin",
-      },
-    },
-  ];
 
   const [language, setLanguage] = useState<"en" | "ru" | "fi">("en"); //verify with params
   const [loading, setLoading] = useState(true);
@@ -101,7 +56,7 @@ export default function Home() {
   };
 
   const getPhrase = (title: string, lang: "en" | "ru" | "fi") => {
-    const item = mockDictionary.find((d) => d.title === title);
+    const item = dictionary.find((d) => d.title === title);
     return item ? item.phrase[lang] : "";
   };
 
@@ -122,14 +77,25 @@ export default function Home() {
 
   useEffect(() => {
     console.log(loaderTextByLanguage[language]);
-    if (pages.length > 0) {
+    if (pages.length > 0 && dictionary.length > 0) {
       setLoading(false);
       return;
     }
 
-    getPages()
-      .then((pages) => {
-        setPages(pages); // Zustand
+    Promise.all([getPages(), getDictionary()])
+      .then(([pages, dictionary]) => {
+        setPages(pages);
+        setDictionary(dictionary);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError("Failed to load content");
+        setLoading(false);
+        console.error(err);
+      });
+    getAirports()
+      .then((airports) => {
+        setAirports(airports); // Zustand
         setLoading(false);
       })
       .catch((err) => {
@@ -137,6 +103,26 @@ export default function Home() {
         setLoading(false);
         console.error(err);
       });
+    // getPages()
+    //   .then((pages) => {
+    //     setPages(pages); // Zustand
+    //     setLoading(false);
+    //   })
+    //   .catch((err) => {
+    //     setError("Failed to load pages");
+    //     setLoading(false);
+    //     console.error(err);
+    //   });
+    // getDictionary()
+    //   .then((dictionary) => {
+    //     setDictionary(dictionary); // Zustand
+    //     setLoading(false);
+    //   })
+    //   .catch((err) => {
+    //     setError("Failed to load dictionary");
+    //     setLoading(false);
+    //     console.error(err);
+    //   });
   }, []);
 
   if (loading) return <LoaderWithText text={loaderTextByLanguage[language]} />;
@@ -205,11 +191,11 @@ export default function Home() {
             // basicColor: undefined,
             // accentColor: undefined,
             originPlaceholder: getPhrase(
-              "searchBoxOriginPlaceholder",
+              "SearchBoxOriginPlaceholder",
               language
             ),
             destinationPlaceholder: getPhrase(
-              "searchBoxDesstinationPlaceholder",
+              "SearchBoxDestinationPlaceholder",
               language
             ),
             startPlaceholder: "",
@@ -224,16 +210,16 @@ export default function Home() {
             onEndDateChange: undefined,
             onClick: onSearchClick,
             locale: language,
-            airports: mockAirports,
+            airports: airports,
           }}
           tabs={[
             {
-              title: "One Way",
+              title: getPhrase("OneWayTab", language),
               notSelected: false,
               onClick: () => console.log("Flights tab clicked"),
             },
             {
-              title: "Return",
+              title: getPhrase("ReturnTripTab", language),
               notSelected: true,
               onClick: () => alert(searchTabPlaceholder[language]),
             },

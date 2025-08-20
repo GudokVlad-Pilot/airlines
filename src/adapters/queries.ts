@@ -5,4 +5,11 @@ export const pagesQuery = `
     "slug": slug.current,
     "image": image.asset -> url
   }
-`
+`;
+
+export const dictionaryQuery = `
+  *[_type == "dictionary"]{
+      title,
+      phrase,
+  }
+`;

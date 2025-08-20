@@ -3,12 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { adapters } from "@/adapters/adapter";
-import { Page } from "@/adapters/types";
 import NavBar from "@/components/molecules/navBar";
 import BottomBar from "@/components/molecules/bottomBar";
 import "./landingPage.css";
 import VideoBackground from "@/components/templates/video-background";
-import BigSearchBox from "@/components/atoms/bigSearchBox";
 import { colors } from "@/components/styles/colors";
 import NavCardsRow from "@/components/molecules/navCardsRow";
 import { languages } from "./globalConsts";
@@ -17,16 +15,16 @@ import LoaderWithText from "@/components/molecules/loaderWithText";
 import SideBar from "@/components/molecules/sideBar";
 import SearchBoxMain from "@/components/molecules/searchBoxMain";
 
-const { getPages } = adapters.cms();
+const { getPages, getDictionary } = adapters.cms();
 
 export default function Home() {
   const params = useParams();
   const router = useRouter();
-  const { pages, setPages } = useStore();
+  const { pages, dictionary, setPages, setDictionary } = useStore();
 
   // Do not delete! This is for strings before it fetched from Sanity
   const loaderTextByLanguage: Record<"en" | "ru" | "fi", string> = {
-    en: "Loading...",
+    en: "Loading places foxes can take you to...",
     ru: "Загрузка...",
     fi: "Ladataan...",
   };
@@ -62,25 +60,6 @@ export default function Home() {
     },
   ];
 
-  const mockDictionary = [
-    {
-      title: "searchBoxOriginPlaceholder",
-      phrase: {
-        en: "Origin",
-        ru: "Откуда",
-        fi: "Mistä",
-      },
-    },
-    {
-      title: "searchBoxDesstinationPlaceholder",
-      phrase: {
-        en: "Destination",
-        ru: "Куда",
-        fi: "Mihin",
-      },
-    },
-  ];
-
   const [language, setLanguage] = useState<"en" | "ru" | "fi">("en"); //verify with params
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -101,7 +80,7 @@ export default function Home() {
   };
 
   const getPhrase = (title: string, lang: "en" | "ru" | "fi") => {
-    const item = mockDictionary.find((d) => d.title === title);
+    const item = dictionary.find((d) => d.title === title);
     return item ? item.phrase[lang] : "";
   };
 
@@ -122,7 +101,7 @@ export default function Home() {
 
   useEffect(() => {
     console.log(loaderTextByLanguage[language]);
-    if (pages.length > 0) {
+    if (pages.length > 0 && dictionary.length > 0) {
       setLoading(false);
       return;
     }
@@ -134,6 +113,16 @@ export default function Home() {
       })
       .catch((err) => {
         setError("Failed to load pages");
+        setLoading(false);
+        console.error(err);
+      });
+    getDictionary()
+      .then((dictionary) => {
+        setDictionary(dictionary); // Zustand
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError("Failed to load dictionary");
         setLoading(false);
         console.error(err);
       });
@@ -205,11 +194,11 @@ export default function Home() {
             // basicColor: undefined,
             // accentColor: undefined,
             originPlaceholder: getPhrase(
-              "searchBoxOriginPlaceholder",
+              "SearchBoxOriginPlaceholder",
               language
             ),
             destinationPlaceholder: getPhrase(
-              "searchBoxDesstinationPlaceholder",
+              "SearchBoxDestinationPlaceholder",
               language
             ),
             startPlaceholder: "",
@@ -228,12 +217,12 @@ export default function Home() {
           }}
           tabs={[
             {
-              title: "One Way",
+              title: getPhrase("OneWayTab", language),
               notSelected: false,
               onClick: () => console.log("Flights tab clicked"),
             },
             {
-              title: "Return",
+              title: getPhrase("ReturnTripTab", language),
               notSelected: true,
               onClick: () => alert(searchTabPlaceholder[language]),
             },

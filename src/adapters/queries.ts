@@ -13,3 +13,14 @@ export const dictionaryQuery = `
       phrase,
   }
 `;
+
+export const airportsQuery = `
+  *[_type == "airports"]{
+      title,
+      iata,
+      city,
+      country,
+      description,
+      "image": image.asset -> url
+  }
+`;

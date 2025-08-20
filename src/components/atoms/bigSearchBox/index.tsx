@@ -65,11 +65,22 @@ export default function BigSearchBox({
           {/* ORIGIN AUTOCOMPLETE */}
           <Autocomplete
             options={airports}
-            getOptionLabel={(option) => option.city[locale || "en"]}
+            getOptionLabel={(option) =>
+              `${option.city[locale || "en"]} (${option.iata})`
+            }
             value={airports.find((a) => a.iata === origin) || null}
             onChange={(e, newValue) =>
               onOriginChange?.(newValue ? newValue.iata : "")
             }
+            renderOption={(props, option) => {
+              const { key, ...rest } = props; // remove key from spread
+              return (
+                <li key={key} {...rest}>
+                  {option.city[locale || "en"]},{" "}
+                  {option.country[locale || "en"]} ({option.iata})
+                </li>
+              );
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -104,11 +115,22 @@ export default function BigSearchBox({
           {/* DESTINATION AUTOCOMPLETE */}
           <Autocomplete
             options={airports}
-            getOptionLabel={(option) => option.city[locale || "en"]}
+            getOptionLabel={(option) =>
+              `${option.city[locale || "en"]} (${option.iata})`
+            }
             value={airports.find((a) => a.iata === destination) || null}
             onChange={(e, newValue) =>
               onDestinationChange?.(newValue ? newValue.iata : "")
             }
+            renderOption={(props, option) => {
+              const { key, ...rest } = props; // remove key from spread
+              return (
+                <li key={key} {...rest}>
+                  {option.city[locale || "en"]},{" "}
+                  {option.country[locale || "en"]} ({option.iata})
+                </li>
+              );
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}

@@ -15,12 +15,13 @@ import LoaderWithText from "@/components/molecules/loaderWithText";
 import SideBar from "@/components/molecules/sideBar";
 import SearchBoxMain from "@/components/molecules/searchBoxMain";
 
-const { getPages, getDictionary } = adapters.cms();
+const { getPages, getDictionary, getAirports } = adapters.cms();
 
 export default function Home() {
   const params = useParams();
   const router = useRouter();
-  const { pages, dictionary, setPages, setDictionary } = useStore();
+  const { pages, dictionary, airports, setPages, setDictionary, setAirports } =
+    useStore();
 
   // Do not delete! This is for strings before it fetched from Sanity
   const loaderTextByLanguage: Record<"en" | "ru" | "fi", string> = {
@@ -34,31 +35,6 @@ export default function Home() {
     ru: "Обратные рейсы в данный момент недоступны.",
     fi: "Paluulentoja ei ole saatavilla tällä hetkellä.",
   };
-
-  const mockAirports = [
-    {
-      iata: "HEL",
-      title: {
-        en: "Helsinki Airport",
-        ru: "Аэропорт Хельсинки",
-        fi: "Helsingin lentoasema",
-      },
-      city: { en: "Helsinki", ru: "Хельсинки", fi: "Helsinki" },
-      country: { en: "Finland", ru: "Финляндия", fi: "Suomi" },
-      image: null,
-    },
-    {
-      iata: "FOX",
-      title: {
-        en: "Fox Airport",
-        ru: "Лисичковый аэропорт",
-        fi: "Ketun lentoasema",
-      },
-      city: { en: "Fox City", ru: "Лисий город", fi: "Kettu City" },
-      country: { en: "Fox Land", ru: "Лисичколяндия", fi: "Ketunmaa" },
-      image: null,
-    },
-  ];
 
   const [language, setLanguage] = useState<"en" | "ru" | "fi">("en"); //verify with params
   const [loading, setLoading] = useState(true);
@@ -106,9 +82,20 @@ export default function Home() {
       return;
     }
 
-    getPages()
-      .then((pages) => {
-        setPages(pages); // Zustand
+    Promise.all([getPages(), getDictionary()])
+      .then(([pages, dictionary]) => {
+        setPages(pages);
+        setDictionary(dictionary);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError("Failed to load content");
+        setLoading(false);
+        console.error(err);
+      });
+    getAirports()
+      .then((airports) => {
+        setAirports(airports); // Zustand
         setLoading(false);
       })
       .catch((err) => {
@@ -116,16 +103,26 @@ export default function Home() {
         setLoading(false);
         console.error(err);
       });
-    getDictionary()
-      .then((dictionary) => {
-        setDictionary(dictionary); // Zustand
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError("Failed to load dictionary");
-        setLoading(false);
-        console.error(err);
-      });
+    // getPages()
+    //   .then((pages) => {
+    //     setPages(pages); // Zustand
+    //     setLoading(false);
+    //   })
+    //   .catch((err) => {
+    //     setError("Failed to load pages");
+    //     setLoading(false);
+    //     console.error(err);
+    //   });
+    // getDictionary()
+    //   .then((dictionary) => {
+    //     setDictionary(dictionary); // Zustand
+    //     setLoading(false);
+    //   })
+    //   .catch((err) => {
+    //     setError("Failed to load dictionary");
+    //     setLoading(false);
+    //     console.error(err);
+    //   });
   }, []);
 
   if (loading) return <LoaderWithText text={loaderTextByLanguage[language]} />;
@@ -213,7 +210,7 @@ export default function Home() {
             onEndDateChange: undefined,
             onClick: onSearchClick,
             locale: language,
-            airports: mockAirports,
+            airports: airports,
           }}
           tabs={[
             {

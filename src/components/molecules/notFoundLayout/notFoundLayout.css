@@ -1,10 +1,37 @@
 .notFoundLayoutBox {
-  background: linear-gradient(135deg, red 0%, green 100%);
+  background: linear-gradient(135deg, #f1efec 0%, #dfd0b8 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  /* TODO: adjust size when footer and header are added*/
 }
 
 .notFoundLayoutImage {
-  height: 300px !important; /* Use !important to override other conflicting styles (e.g., inline styles or styles from the component library) */
+  height: 380px !important; /* Use !important to override other conflicting styles (e.g., inline styles or styles from the component library) */
   width: auto !important; /* keep original aspect ratio */
   object-fit: contain; /* scale image without cropping */
   max-width: 100%; /* prevent overflow */
+}
+
+.notFoundLayoutRightPart {
+  margin-left: 40px;
+  margin-bottom: 75px;
+  color: #393e46;
+}
+
+.notFoundLayoutTextBox {
+  font-family: "Manrope";
+  padding-bottom: 100px;
+  font-weight: 600;
+}
+
+.notFoundLayoutTitle {
+  font-size: 50px;
+}
+
+.notFoundLayoutDescription {
+  font-size: 16px;
+  width: 245px;
 }

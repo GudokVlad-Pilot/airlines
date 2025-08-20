@@ -7,6 +7,6 @@ export default {
 
 export const Default = {
   args: {
-    text: "LoaderWithText",
+    text: "Loading places foxes can take you to...",
   },
 };

@@ -3,10 +3,10 @@
   position: relative;
   width: 150px;
   height: 150px;
-  background: #212121;
+  background: #89b8e9;
   border-radius: 50%;
-  box-shadow: inset 0px 0px 7px seagreen;
-  border: 1px solid seagreen;
+  box-shadow: inset 0px 0px 7px white;
+  border: 1px solid white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,9 +18,9 @@
   position: absolute;
   inset: 20px;
   background: transparent;
-  border: 1px solid seagreen;
+  border: 1px solid white;
   border-radius: 50%;
-  box-shadow: inset 0px 0px 5px seagreen;
+  box-shadow: inset 0px 0px 5px white;
 }
 
 .loader::after {
@@ -29,8 +29,8 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  border: 1px solid seagreen;
-  box-shadow: inset 0px 0px 3px seagreen;
+  border: 1px solid white;
+  box-shadow: inset 0px 0px 3px white;
 }
 
 .loader span {
@@ -42,8 +42,8 @@
   background: transparent;
   transform-origin: top left;
   animation: radar81 2s linear infinite;
-  box-shadow: -25px -75px 30px -50px seagreen;
-  border-top: 2px solid #2e8b57;
+  box-shadow: -25px -75px 30px -50px white;
+  border-top: 2px solid white;
 }
 
 .loader span::before {
@@ -54,10 +54,10 @@
   left: 0;
   width: 15%;
   height: 100%;
-  background: seagreen;
+  background: white;
   transform-origin: top left;
   transform: rotate(-90deg);
-  filter: blur(15px) drop-shadow(10px 0px 10px seagreen);
+  filter: blur(15px) drop-shadow(10px 0px 10px white);
 }
 
 @keyframes radar81 {
@@ -118,8 +118,9 @@
   left: var(--dot-start-left);
   border-radius: 9999px;
   background: rgba(255, 255, 255);
-  box-shadow: inset 0px 0px 10px 2px rgba(0, 255, 182, 0.5),
-    0px 0px 10px 2px rgba(0, 255, 135, 0.3);
+  box-shadow:
+    inset 0px 0px 10px 2px white,
+    0px 0px 10px 2px white;
   -webkit-animation: fly 32s linear infinite;
   animation-delay: var(--delay);
   -moz-animation: fly 32s linear infinite;
@@ -147,8 +148,9 @@
   85%,
   95% {
     background: rgba(255, 255, 255, 1);
-    box-shadow: inset 0 0 10px 2px rgba(0, 255, 182, 0.5),
-      0 0 15px 2px rgba(0, 255, 135, 1);
+    box-shadow:
+      inset 0 0 10px 2px white,
+      0 0 15px 2px white;
   }
 
   0%,
@@ -162,7 +164,8 @@
   80%,
   90% {
     background: rgba(255, 255, 255, 0.3);
-    box-shadow: inset 0 0 10px 2px rgba(0, 255, 182, 0.5),
-      0 0 5px 2px rgba(0, 255, 135, 0.3);
+    box-shadow:
+      inset 0 0 10px 2px #d2dfec,
+      0 0 5px 2px #d2dfec;
   }
 }

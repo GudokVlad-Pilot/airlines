@@ -1,15 +1,24 @@
 .customButtonBox {
-  background-color: var(--btn-bg, red);
+  background-color: var(--btn-bg, #89b8e9);
   color: var(--btn-color, white);
+  border: none;
+  border-radius: 20px;
+  height: 50px;
+  width: 120px;
+  font-family: "Manrope";
+  font-size: 14px;
+  font-weight: 600;
+  padding-bottom: 5px;
 }
 
 .customButtonBox:hover:not(:disabled) {
-  background-color: var(--btn-bg-hover, yellow);
-  color: var(--btn-color-hover, black);
+  background-color: var(--btn-bg-hover, #215e9e);
+  color: var(--btn-color-hover, white);
+  cursor: pointer;
 }
 
 .customButtonBox:active:not(:disabled) {
-  background-color: var(--btn-bg-active, green);
+  background-color: var(--btn-bg-active, #89b8e9);
   color: var(--btn-color-active, white);
 }
 

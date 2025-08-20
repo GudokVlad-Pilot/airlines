@@ -6,8 +6,13 @@
   height: 100vh; /* Full height of the viewport */
   width: 100vw; /* Full width of the viewport */
   text-align: center;
+  background-color: #89b8e9;
 }
 
 .textOfTheRadar {
-  margin-bottom: 16px;
+  margin-bottom: 70px;
+  font-family: "Manrope";
+  font-weight: 600;
+  font-size: 30px;
+  color: white;
 }

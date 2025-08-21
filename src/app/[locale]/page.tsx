@@ -77,7 +77,7 @@ export default function Home() {
 
   useEffect(() => {
     console.log(loaderTextByLanguage[language]);
-    if (pages.length > 0 && dictionary.length > 0) {
+    if (pages.length > 0 && dictionary.length > 0 && airports.length) {
       setLoading(false);
       return;
     }

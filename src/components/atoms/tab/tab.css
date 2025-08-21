@@ -6,6 +6,9 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  font-family: "Manrope";
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .tabBox.active {

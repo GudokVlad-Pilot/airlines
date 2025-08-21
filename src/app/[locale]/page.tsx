@@ -9,7 +9,7 @@ import "./landingPage.css";
 import VideoBackground from "@/components/templates/video-background";
 import { colors } from "@/components/styles/colors";
 import NavCardsRow from "@/components/molecules/navCardsRow";
-import { languages } from "./globalConsts";
+import { languages, loaderTextByLanguage } from "./globalConsts";
 import { useStore } from "@/adapters/zustand/store";
 import LoaderWithText from "@/components/molecules/loaderWithText";
 import SideBar from "@/components/molecules/sideBar";
@@ -22,13 +22,6 @@ export default function Home() {
   const router = useRouter();
   const { pages, dictionary, airports, setPages, setDictionary, setAirports } =
     useStore();
-
-  // Do not delete! This is for strings before it fetched from Sanity
-  const loaderTextByLanguage: Record<"en" | "ru" | "fi", string> = {
-    en: "Loading places foxes can take you to...",
-    ru: "Загрузка...", // TODO: define phrases
-    fi: "Ladataan...",
-  };
 
   const searchTabPlaceholder: Record<"en" | "ru" | "fi", string> = {
     en: "Return flights unavailable at the moment.",
@@ -77,7 +70,7 @@ export default function Home() {
 
   useEffect(() => {
     console.log(loaderTextByLanguage[language]);
-    if (pages.length > 0 && dictionary.length > 0) {
+    if (pages.length > 0 && dictionary.length > 0 && airports.length) {
       setLoading(false);
       return;
     }

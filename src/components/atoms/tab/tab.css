@@ -1,11 +1,14 @@
 .tabBox {
   width: 175px;
   height: 45px;
-  /* height: 115px; */
+  border-radius: 20px 20px 0 0;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  font-family: "Manrope";
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .tabBox.active {

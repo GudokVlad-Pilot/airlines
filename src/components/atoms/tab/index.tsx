@@ -21,8 +21,9 @@ export default function Tab({
       className={`tabBox ${notSelected ? "active" : ""}`}
       style={{
         background: notSelected
-          ? `linear-gradient(45deg, black 30%, ${colors.secondary} 70%)`
+          ? `linear-gradient(45deg, black 10%, ${colors.secondary} 90%)`
           : backgroundColor || colors.secondary,
+        cursor: notSelected ? "not-allowed" : "pointer", // TODO: remove for 2nd phase
       }}
       onClick={onClick}
     >

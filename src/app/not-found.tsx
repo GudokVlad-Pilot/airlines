@@ -2,14 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-
 import NotFoundLayout from "@/components/molecules/notFoundLayout";
 import NavBar from "@/components/molecules/navBar";
 import BottomBar from "@/components/molecules/bottomBar";
 import SideBar from "@/components/molecules/sideBar";
-
-import { colors } from "@/components/styles/colors";
-import { languages } from "./[locale]/globalConsts";
+import { languages, loaderTextByLanguage } from "./[locale]/globalConsts";
 import { useStore } from "@/adapters/zustand/store";
 import { adapters } from "@/adapters/adapter";
 import LoaderWithText from "@/components/molecules/loaderWithText";
@@ -37,12 +34,6 @@ const mokeDictionary = {
 };
 
 export default function GlobalNotFound() {
-  // Do not delete! This is for strings before it fetched from Sanity
-  const loaderTextByLanguage: Record<"en" | "ru" | "fi", string> = {
-    en: "Loading places foxes can take you to...",
-    ru: "Загрузка...", // TODO: define phrases
-    fi: "Ladataan...",
-  };
   const { pages, dictionary, setPages, setDictionary } = useStore();
   const pathname = usePathname();
   const router = useRouter();

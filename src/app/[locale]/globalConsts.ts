@@ -6,6 +6,6 @@ export const languages = [
 
 export const loaderTextByLanguage: Record<"en" | "ru" | "fi", string> = {
   en: "Loading places foxes can take you to...",
-  ru: "Загрузка...", // TODO: define phrases
-  fi: "Ladataan...",
+  ru: "Подгружаем список мест, куда вас могут доставить лисички...",
+  fi: "Ladataan paikkoja, joihin ketut voivat viedä sinut...",
 };

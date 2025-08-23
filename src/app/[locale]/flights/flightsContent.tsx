@@ -4,12 +4,17 @@ import LoaderWithText from "@/components/molecules/loaderWithText";
 import NavBar from "@/components/molecules/navBar";
 import SideBar from "@/components/molecules/sideBar";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { languages, loaderTextByLanguage } from "../globalConsts";
+import {
+  languages,
+  loaderTextByLanguage,
+  mockBottomBar,
+} from "../globalConsts";
 import { useEffect, useState } from "react";
 import { useStore } from "@/adapters/zustand/store";
 import { adapters } from "@/adapters/adapter";
 import { Route } from "@/adapters/types"; // 👈 the type we created earlier
 import "./flights.css";
+import BottomBar from "@/components/molecules/bottomBar";
 
 const { getPages, getDictionary, getRoutes } = adapters.cms();
 
@@ -172,6 +177,10 @@ export default function FlightsContent() {
           </div>
         ))}
       </div>
+      <BottomBar
+        copyright={mockBottomBar.Copyright[language]}
+        createdby={mockBottomBar.CreatedBy[language]}
+      />
     </div>
   );
 }

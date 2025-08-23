@@ -9,7 +9,7 @@ import "./landingPage.css";
 import VideoBackground from "@/components/templates/video-background";
 import { colors } from "@/components/styles/colors";
 import NavCardsRow from "@/components/molecules/navCardsRow";
-import { languages, loaderTextByLanguage } from "./globalConsts";
+import { languages, loaderTextByLanguage, mockBottomBar } from "./globalConsts";
 import { useStore } from "@/adapters/zustand/store";
 import LoaderWithText from "@/components/molecules/loaderWithText";
 import SideBar from "@/components/molecules/sideBar";
@@ -79,7 +79,7 @@ export default function Home() {
       destinationValue,
       "start",
       startDateStr,
-      endDateStr ? "end " + endDateStr : "",
+      endDateStr ? "end " + endDateStr : ""
     );
 
     router.push(url);
@@ -210,11 +210,11 @@ export default function Home() {
             // accentColor: undefined,
             originPlaceholder: getPhrase(
               "SearchBoxOriginPlaceholder",
-              language,
+              language
             ),
             destinationPlaceholder: getPhrase(
               "SearchBoxDestinationPlaceholder",
-              language,
+              language
             ),
             startPlaceholder: getPhrase("SearchBoxStartPlaceholder", language),
             endPlaceholder: getPhrase("SearchBoxEndPlaceholder", language),
@@ -265,7 +265,10 @@ export default function Home() {
         >
           Terms
         </div>
-        <BottomBar copyright={""} createdby={""} />
+        <BottomBar
+          copyright={mockBottomBar.Copyright[language]}
+          createdby={mockBottomBar.CreatedBy[language]}
+        />
       </div>
     </div>
   );

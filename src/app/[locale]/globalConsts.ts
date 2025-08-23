@@ -9,3 +9,16 @@ export const loaderTextByLanguage: Record<"en" | "ru" | "fi", string> = {
   ru: "Подгружаем список мест, куда вас могут доставить лисички...",
   fi: "Ladataan paikkoja, joihin ketut voivat viedä sinut...",
 };
+
+export const mockBottomBar = {
+  Copyright: {
+    en: "© Copyright 2025 Fox Airlines. All rights reserved.",
+    ru: "© Авторское право 2025 Fox Airlines. Все права защищены.",
+    fi: "© Copyright 2025 Fox Airlines. Kaikki oikeudet pidätetään.",
+  },
+  CreatedBy: {
+    en: "Created by",
+    ru: "Создано",
+    fi: "Luonut",
+  },
+};

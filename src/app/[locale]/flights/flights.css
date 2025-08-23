@@ -41,5 +41,8 @@
 }
 
 .flightsContent {
-  padding-top: 100px; /* adjust according to navbar height */
+  padding-top: 100px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }

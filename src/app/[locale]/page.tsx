@@ -14,6 +14,7 @@ import { useStore } from "@/adapters/zustand/store";
 import LoaderWithText from "@/components/molecules/loaderWithText";
 import SideBar from "@/components/molecules/sideBar";
 import SearchBoxMain from "@/components/molecules/searchBoxMain";
+import { Dayjs } from "dayjs";
 
 const { getPages, getDictionary, getAirports } = adapters.cms();
 
@@ -37,6 +38,8 @@ export default function Home() {
 
   const [originValue, setOrigin] = useState<string>(""); // store IATA code
   const [destinationValue, setDestination] = useState<string>(""); // store IATA code
+  const [startDateValue, setStartDateValue] = useState<Dayjs | null>(null);
+  const [endDateValue, setEndDateValue] = useState<Dayjs | null>(null);
 
   const openSidebar = () => {
     setIsSidebarMounted(true);
@@ -54,10 +57,32 @@ export default function Home() {
   };
 
   const onSearchClick = () => {
-    console.log("Searching flights from", originValue, "to", destinationValue);
-    router.push(
-      `/${language}/flights?from=${originValue}&to=${destinationValue}`
+    // Check required fields
+    if (!originValue || !destinationValue || !startDateValue) {
+      alert(getPhrase("SearchBoxAlert", language));
+      return; // stop execution if fields are missing
+    }
+
+    const startDateStr = startDateValue.format("YYYY-MM-DD");
+    const endDateStr = endDateValue ? endDateValue.format("YYYY-MM-DD") : null;
+
+    let url = `/${language}/flights?from=${originValue}&to=${destinationValue}&start=${startDateStr}`;
+
+    if (endDateStr) {
+      url += `&end=${endDateStr}`;
+    }
+
+    console.log(
+      "Searching flights from",
+      originValue,
+      "to",
+      destinationValue,
+      "start",
+      startDateStr,
+      endDateStr ? "end " + endDateStr : ""
     );
+
+    router.push(url);
   };
 
   useEffect(() => {
@@ -191,16 +216,16 @@ export default function Home() {
               "SearchBoxDestinationPlaceholder",
               language
             ),
-            startPlaceholder: "",
-            endPlaceholder: "",
+            startPlaceholder: getPhrase("SearchBoxStartPlaceholder", language),
+            endPlaceholder: getPhrase("SearchBoxEndPlaceholder", language),
             origin: originValue || "",
             onOriginChange: setOrigin,
             destination: destinationValue || "",
             onDestinationChange: setDestination,
-            startDate: undefined,
-            onStartDateChange: undefined,
-            endDate: undefined,
-            onEndDateChange: undefined,
+            startDate: startDateValue,
+            onStartDateChange: (date) => setStartDateValue(date),
+            endDate: endDateValue,
+            onEndDateChange: (date) => setEndDateValue(date),
             onClick: onSearchClick,
             locale: language,
             airports: airports,

@@ -163,11 +163,15 @@ export default function BigSearchBox({
 
           {/* START DATE PICKER */}
           <DatePicker
+            disablePast
             label={startPlaceholder}
             value={startDate}
             onChange={onStartDateChange}
             slotProps={{
               textField: {
+                InputProps: {
+                  endAdornment: null, // 🚀 removes the calendar icon
+                },
                 sx: {
                   width: 135,
                   mr: 2,
@@ -196,6 +200,7 @@ export default function BigSearchBox({
           {/* RETURN DATE PICKER */}
           {isReturn && (
             <DatePicker
+              disablePast
               label={endPlaceholder}
               value={endDate}
               onChange={onEndDateChange}

@@ -15,17 +15,19 @@ type Store = {
   setDictionary: (dictionary: Dictionary[]) => void;
   setAirports: (airports: Airport[]) => void;
   checkExpiration: () => void;
+  lastUpdated: number;
 };
 
 export const useStore = create<Store>()(
   persist(
     (set, get) => ({
       count: 1,
+      lastUpdated: Date.now(),
       pages: [],
       dictionary: [],
       airports: [],
-      inc: () => set({ count: get().count + 1 }),
-      reset: () => set({ count: 1 }),
+      inc: () => set({ count: get().count + 1, lastUpdated: Date.now() }),
+      reset: () => set({ count: 1, lastUpdated: Date.now() }),
       setPages: (pages) => {
         console.log("I am fetched pages");
         set({ pages });
@@ -40,35 +42,22 @@ export const useStore = create<Store>()(
       },
       checkExpiration: () => {
         const now = Date.now();
-        const stored = localStorage.getItem("test-store");
-        if (!stored) return;
-
-        try {
-          const parsed = JSON.parse(stored);
-          const storedAt = parsed?.state?.__storedAt;
-          if (storedAt && now - storedAt > EXPIRATION_TIME) {
-            set({ count: 1 }); // only reset count
-            localStorage.setItem(
-              "test-store",
-              JSON.stringify({
-                state: { count: 1, pages: [] },
-                version: 0,
-              }),
-            );
-          }
-        } catch (e) {
-          console.warn("Failed to parse store expiration");
+        if (now - get().lastUpdated > EXPIRATION_TIME) {
+          set({ count: 1, lastUpdated: now });
         }
       },
     }),
     {
       name: "test-store",
       version: 0,
-      // add __storedAt manually if needed
-      partialize: (state) => ({
-        count: state.count,
-        pages: state.pages,
-      }),
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+        const now = Date.now();
+        if (now - state.lastUpdated > EXPIRATION_TIME) {
+          state.count = 1;
+          state.lastUpdated = now;
+        }
+      },
     },
   ),
 );

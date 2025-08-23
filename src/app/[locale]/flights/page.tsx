@@ -1,8 +1,12 @@
+"use client";
+
+import { Suspense } from "react";
+import FlightsContent from "./flightsContent";
+
 export default function FlightsPage() {
   return (
-    <div>
-      <h1>Flights</h1>
-      <p>Welcome to the flights page!</p>
-    </div>
+    <Suspense fallback={<div>Loading flights...</div>}>
+      <FlightsContent />
+    </Suspense>
   );
 }

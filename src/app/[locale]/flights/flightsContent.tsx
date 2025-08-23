@@ -8,9 +8,10 @@ import { languages, loaderTextByLanguage } from "../globalConsts";
 import { useEffect, useState } from "react";
 import { useStore } from "@/adapters/zustand/store";
 import { adapters } from "@/adapters/adapter";
+import { Route } from "@/adapters/types"; // 👈 the type we created earlier
 import "./flights.css";
 
-const { getPages, getDictionary } = adapters.cms();
+const { getPages, getDictionary, getRoutes } = adapters.cms();
 
 export default function FlightsContent() {
   const searchParams = useSearchParams();
@@ -21,22 +22,24 @@ export default function FlightsContent() {
 
   const params = useParams();
   const router = useRouter();
-  const { pages, dictionary, setPages, setDictionary } = useStore();
+  const { pages, dictionary, routes, setPages, setDictionary, setRoutes } =
+    useStore();
 
-  const [language, setLanguage] = useState<"en" | "ru" | "fi">("en"); //verify with params
+  const [language, setLanguage] = useState<"en" | "ru" | "fi">("en");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isSidebarMounted, setIsSidebarMounted] = useState(false);
+  const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
 
   const openSidebar = () => {
     setIsSidebarMounted(true);
-    requestAnimationFrame(() => setIsSidebarVisible(true)); // trigger animation
+    requestAnimationFrame(() => setIsSidebarVisible(true));
   };
 
   const closeSidebar = () => {
     setIsSidebarVisible(false);
-    setTimeout(() => setIsSidebarMounted(false), 300); // matches CSS duration
+    setTimeout(() => setIsSidebarMounted(false), 300);
   };
 
   const getPhrase = (title: string, lang: "en" | "ru" | "fi") => {
@@ -45,7 +48,6 @@ export default function FlightsContent() {
   };
 
   useEffect(() => {
-    // Update language state based on route param (if valid)
     const locale = params?.locale;
     if (locale === "en" || locale === "ru" || locale === "fi") {
       setLanguage(locale);
@@ -53,16 +55,42 @@ export default function FlightsContent() {
   }, [params]);
 
   useEffect(() => {
-    console.log(loaderTextByLanguage[language]);
-    if (pages.length > 0 && dictionary.length > 0) {
-      setLoading(false);
-      return;
-    }
-
-    Promise.all([getPages(), getDictionary()])
-      .then(([pages, dictionary]) => {
+    Promise.all([getPages(), getDictionary(), getRoutes()])
+      .then(([pages, dictionary, routes]) => {
         setPages(pages);
         setDictionary(dictionary);
+        setRoutes(routes);
+
+        // ✅ filter routes by params
+        let results = routes as Route[];
+
+        if (from) {
+          results = results.filter(
+            (r) => r.origin.iata.toLowerCase() === from.toLowerCase()
+          );
+        }
+        if (to) {
+          results = results.filter(
+            (r) => r.destination.iata.toLowerCase() === to.toLowerCase()
+          );
+        }
+        if (start) {
+          const startDate = new Date(start);
+          results = results.filter(
+            (r) =>
+              new Date(r.departureTime).toDateString() ===
+              startDate.toDateString()
+          );
+        }
+        if (end) {
+          const endDate = new Date(end);
+          results = results.filter(
+            (r) =>
+              new Date(r.arrivalTime).toDateString() === endDate.toDateString()
+          );
+        }
+
+        setFilteredRoutes(results);
         setLoading(false);
       })
       .catch((err) => {
@@ -70,7 +98,7 @@ export default function FlightsContent() {
         setLoading(false);
         console.error(err);
       });
-  }, []);
+  }, [from, to, start, end]);
 
   if (loading) return <LoaderWithText text={loaderTextByLanguage[language]} />;
   if (error)
@@ -124,6 +152,25 @@ export default function FlightsContent() {
         <p>To: {to}</p>
         <p>Start date: {start}</p>
         {end && <p>End date: {end}</p>}
+
+        <h2>Available routes:</h2>
+        {filteredRoutes.length === 0 && <p>No flights found</p>}
+        {filteredRoutes.map((r) => (
+          <div
+            key={`${r.origin.iata}-${r.destination.iata}-${r.departureTime}-${r.arrivalTime}`}
+            className="flightCard"
+          >
+            <p>
+              {r.origin.city[language]} ({r.origin.iata}) →{" "}
+              {r.destination.city[language]} ({r.destination.iata})
+            </p>
+            <p>
+              Departure: {new Date(r.departureTime).toLocaleString(language)}
+            </p>
+            <p>Arrival: {new Date(r.arrivalTime).toLocaleString(language)}</p>
+            <p>Price: {r.price} €</p>
+          </div>
+        ))}
       </div>
     </div>
   );

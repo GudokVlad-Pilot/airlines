@@ -13,6 +13,7 @@ export interface Page {
   image?: string | null;
 }
 export interface Airport {
+  _id?: string;
   title: {
     en: string;
     ru: string;
@@ -44,4 +45,12 @@ export interface Dictionary {
     ru: string;
     fi: string;
   };
+}
+
+export interface Route {
+  origin: Airport;
+  destination: Airport;
+  departureTime: string; // ISO date string from Sanity (e.g. "2025-08-23T09:00:00Z")
+  arrivalTime: string; // ISO date string
+  price: number;
 }

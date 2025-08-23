@@ -1,6 +1,11 @@
 import { sanityClient } from "./clients/sanity";
-import { airportsQuery, dictionaryQuery, pagesQuery } from "./queries";
-import { Airport, Dictionary, Page } from "./types";
+import {
+  airportsQuery,
+  dictionaryQuery,
+  pagesQuery,
+  routesQuery,
+} from "./queries";
+import { Airport, Dictionary, Page, Route } from "./types";
 
 export const adapters = {
   cms: () => {
@@ -37,6 +42,17 @@ export const adapters = {
           return result;
         } catch (error) {
           console.error("Failed to fetch airports:", error);
+          return [];
+        }
+      },
+      getRoutes: async (): Promise<Route[]> => {
+        try {
+          const result = (await sanityClient.fetch(routesQuery)) as Route[];
+          console.log(result);
+          console.log("I am getRoutes from Sanity");
+          return result;
+        } catch (error) {
+          console.error("Failed to fetch routes:", error);
           return [];
         }
       },

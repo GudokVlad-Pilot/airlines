@@ -6,7 +6,11 @@ import NotFoundLayout from "@/components/molecules/notFoundLayout";
 import NavBar from "@/components/molecules/navBar";
 import BottomBar from "@/components/molecules/bottomBar";
 import SideBar from "@/components/molecules/sideBar";
-import { languages, loaderTextByLanguage } from "./[locale]/globalConsts";
+import {
+  languages,
+  loaderTextByLanguage,
+  mockBottomBar,
+} from "./[locale]/globalConsts";
 import { useStore } from "@/adapters/zustand/store";
 import { adapters } from "@/adapters/adapter";
 import LoaderWithText from "@/components/molecules/loaderWithText";
@@ -19,7 +23,7 @@ const { getPages, getDictionary } = adapters.cms();
 const supportedLocales = ["en", "fi", "ru"] as const;
 
 // Mock dictionary
-const mokeDictionary = {
+const mockDictionary = {
   NotFoundTitle: { en: "404", ru: "404", fi: "404" },
   NotFoundDescription: {
     en: "Sorry, we couldn’t find the page you were looking for.",
@@ -141,17 +145,20 @@ export default function GlobalNotFound() {
       {/* NotFoundLayout fills remaining space */}
       <div style={{ flex: 1, display: "flex" }}>
         <NotFoundLayout
-          title={mokeDictionary.NotFoundTitle[locale]}
-          description={mokeDictionary.NotFoundDescription[locale]}
+          title={mockDictionary.NotFoundTitle[locale]}
+          description={mockDictionary.NotFoundDescription[locale]}
           customButton={{
-            title: mokeDictionary.NotFoundButtonTitle[locale],
+            title: mockDictionary.NotFoundButtonTitle[locale],
             onClick: () => router.push(`/${locale}`),
           }}
         />
       </div>
 
       {/* BottomBar fixed height */}
-      <BottomBar copyright={""} createdby={""} />
+      <BottomBar
+        copyright={mockBottomBar.Copyright[locale]}
+        createdby={mockBottomBar.CreatedBy[locale]}
+      />
     </div>
   );
 }

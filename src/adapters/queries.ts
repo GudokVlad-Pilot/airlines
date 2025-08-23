@@ -24,3 +24,25 @@ export const airportsQuery = `
       "image": image.asset -> url
   }
 `;
+
+export const routesQuery = `
+  *[_type == "routes"]{
+    origin->{
+    _id,
+    iata,
+    title,
+    city,
+    country
+  },
+  destination->{
+    _id,
+    iata,
+    title,
+    city,
+    country
+  },
+    departureTime,
+    arrivalTime,
+    price
+  }
+`;

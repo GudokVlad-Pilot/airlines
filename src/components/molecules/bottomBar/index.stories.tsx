@@ -7,7 +7,8 @@ export default {
 
 export const Default = {
   args: {
-    placeholder: "bottomBar",
+    copyright: "© Copyright 2025 Fox Airlines. All rights reserved.",
+    createdby: "Created by",
   },
 };
 

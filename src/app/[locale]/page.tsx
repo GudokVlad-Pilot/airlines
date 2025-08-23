@@ -79,7 +79,7 @@ export default function Home() {
       destinationValue,
       "start",
       startDateStr,
-      endDateStr ? "end " + endDateStr : ""
+      endDateStr ? "end " + endDateStr : "",
     );
 
     router.push(url);
@@ -210,11 +210,11 @@ export default function Home() {
             // accentColor: undefined,
             originPlaceholder: getPhrase(
               "SearchBoxOriginPlaceholder",
-              language
+              language,
             ),
             destinationPlaceholder: getPhrase(
               "SearchBoxDestinationPlaceholder",
-              language
+              language,
             ),
             startPlaceholder: getPhrase("SearchBoxStartPlaceholder", language),
             endPlaceholder: getPhrase("SearchBoxEndPlaceholder", language),
@@ -265,7 +265,7 @@ export default function Home() {
         >
           Terms
         </div>
-        <BottomBar placeholder="BottomBar" />
+        <BottomBar copyright={""} createdby={""} />
       </div>
     </div>
   );

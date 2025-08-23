@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import LoaderWithText from "@/components/molecules/loaderWithText";
 import NavBar from "@/components/molecules/navBar";
 import SideBar from "@/components/molecules/sideBar";
@@ -67,26 +69,6 @@ export default function FlightsPage() {
       })
       .catch((err) => {
         setError("Failed to load content");
-        setLoading(false);
-        console.error(err);
-      });
-    getPages()
-      .then((pages) => {
-        setPages(pages); // Zustand
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError("Failed to load pages");
-        setLoading(false);
-        console.error(err);
-      });
-    getDictionary()
-      .then((dictionary) => {
-        setDictionary(dictionary); // Zustand
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError("Failed to load dictionary");
         setLoading(false);
         console.error(err);
       });

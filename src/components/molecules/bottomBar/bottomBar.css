@@ -1,7 +1,34 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+
 .bottomBarBox {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 50px;
+  font-size: 12px;
+  font-family: "Manrope";
+}
+
+.copyrightText {
+  margin-right: 430px;
+}
+
+.createdByBox {
+  display: flex;
+  align-items: center;
+}
+
+a:link {
+  text-decoration: none;
+  color: white;
+}
+
+a:hover {
+  color: #89b8e9;
+}
+
+a:visited {
+  text-decoration: none;
+  color: white;
 }

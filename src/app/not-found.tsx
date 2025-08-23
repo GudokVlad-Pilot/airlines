@@ -151,7 +151,7 @@ export default function GlobalNotFound() {
       </div>
 
       {/* BottomBar fixed height */}
-      <BottomBar placeholder="BottomBar" />
+      <BottomBar copyright={""} createdby={""} />
     </div>
   );
 }

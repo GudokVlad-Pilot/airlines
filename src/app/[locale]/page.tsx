@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { adapters } from "@/adapters/adapter";
 import NavBar from "@/components/molecules/navBar";
@@ -16,13 +16,14 @@ import SideBar from "@/components/molecules/sideBar";
 import SearchBoxMain from "@/components/molecules/searchBoxMain";
 import { Dayjs } from "dayjs";
 import PoweredBar from "@/components/molecules/poweredBar";
+import { Airport } from "@/adapters/types";
 
-const { getPages, getDictionary, getAirports } = adapters.cms();
+const { getPages, getDictionary, getRoutes } = adapters.cms();
 
 export default function Home() {
   const params = useParams();
   const router = useRouter();
-  const { pages, dictionary, airports, setPages, setDictionary, setAirports } =
+  const { pages, dictionary, routes, setPages, setDictionary, setRoutes } =
     useStore();
 
   const searchTabPlaceholder: Record<"en" | "ru" | "fi", string> = {
@@ -31,25 +32,25 @@ export default function Home() {
     fi: "Paluulentoja ei ole saatavilla tällä hetkellä.",
   };
 
-  const [language, setLanguage] = useState<"en" | "ru" | "fi">("en"); //verify with params
+  const [language, setLanguage] = useState<"en" | "ru" | "fi">("en");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isSidebarMounted, setIsSidebarMounted] = useState(false);
 
-  const [originValue, setOrigin] = useState<string>(""); // store IATA code
-  const [destinationValue, setDestination] = useState<string>(""); // store IATA code
+  const [originValue, setOrigin] = useState<string>(""); // IATA
+  const [destinationValue, setDestination] = useState<string>(""); // IATA
   const [startDateValue, setStartDateValue] = useState<Dayjs | null>(null);
   const [endDateValue, setEndDateValue] = useState<Dayjs | null>(null);
 
   const openSidebar = () => {
     setIsSidebarMounted(true);
-    requestAnimationFrame(() => setIsSidebarVisible(true)); // trigger animation
+    requestAnimationFrame(() => setIsSidebarVisible(true));
   };
 
   const closeSidebar = () => {
     setIsSidebarVisible(false);
-    setTimeout(() => setIsSidebarMounted(false), 300); // matches CSS duration
+    setTimeout(() => setIsSidebarMounted(false), 300);
   };
 
   const getPhrase = (title: string, lang: "en" | "ru" | "fi") => {
@@ -58,36 +59,56 @@ export default function Home() {
   };
 
   const onSearchClick = () => {
-    // Check required fields
     if (!originValue || !destinationValue || !startDateValue) {
       alert(getPhrase("SearchBoxAlert", language));
-      return; // stop execution if fields are missing
+      return;
     }
 
     const startDateStr = startDateValue.format("YYYY-MM-DD");
     const endDateStr = endDateValue ? endDateValue.format("YYYY-MM-DD") : null;
 
     let url = `/${language}/flights?from=${originValue}&to=${destinationValue}&start=${startDateStr}`;
-
-    if (endDateStr) {
-      url += `&end=${endDateStr}`;
-    }
-
-    console.log(
-      "Searching flights from",
-      originValue,
-      "to",
-      destinationValue,
-      "start",
-      startDateStr,
-      endDateStr ? "end " + endDateStr : ""
-    );
-
+    if (endDateStr) url += `&end=${endDateStr}`;
     router.push(url);
   };
 
+  // ✅ Origins filtered by selected destination
+  const availableOrigins: Airport[] = useMemo(() => {
+    const seen = new Set<string>();
+    let origins = routes.map((r) => r.origin);
+
+    if (destinationValue) {
+      origins = routes
+        .filter((r) => r.destination.iata === destinationValue)
+        .map((r) => r.origin);
+    }
+
+    return origins.filter((origin) => {
+      if (seen.has(origin.iata)) return false;
+      seen.add(origin.iata);
+      return true;
+    });
+  }, [routes, destinationValue]);
+
+  // ✅ Destinations filtered by selected origin
+  const filteredDestinations: Airport[] = useMemo(() => {
+    const seen = new Set<string>();
+    let destinations = routes.map((r) => r.destination);
+
+    if (originValue) {
+      destinations = routes
+        .filter((r) => r.origin.iata === originValue)
+        .map((r) => r.destination);
+    }
+
+    return destinations.filter((dest) => {
+      if (seen.has(dest.iata)) return false;
+      seen.add(dest.iata);
+      return true;
+    });
+  }, [originValue, routes]);
+
   useEffect(() => {
-    // Update language state based on route param (if valid)
     const locale = params?.locale;
     if (locale === "en" || locale === "ru" || locale === "fi") {
       setLanguage(locale);
@@ -95,16 +116,16 @@ export default function Home() {
   }, [params]);
 
   useEffect(() => {
-    console.log(loaderTextByLanguage[language]);
-    if (pages.length > 0 && dictionary.length > 0 && airports.length) {
+    if (pages.length && dictionary.length && routes.length) {
       setLoading(false);
       return;
     }
 
-    Promise.all([getPages(), getDictionary()])
-      .then(([pages, dictionary]) => {
+    Promise.all([getPages(), getDictionary(), getRoutes()])
+      .then(([pages, dictionary, routes]) => {
         setPages(pages);
         setDictionary(dictionary);
+        setRoutes(routes);
         setLoading(false);
       })
       .catch((err) => {
@@ -112,36 +133,6 @@ export default function Home() {
         setLoading(false);
         console.error(err);
       });
-    getAirports()
-      .then((airports) => {
-        setAirports(airports); // Zustand
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError("Failed to load pages");
-        setLoading(false);
-        console.error(err);
-      });
-    // getPages()
-    //   .then((pages) => {
-    //     setPages(pages); // Zustand
-    //     setLoading(false);
-    //   })
-    //   .catch((err) => {
-    //     setError("Failed to load pages");
-    //     setLoading(false);
-    //     console.error(err);
-    //   });
-    // getDictionary()
-    //   .then((dictionary) => {
-    //     setDictionary(dictionary); // Zustand
-    //     setLoading(false);
-    //   })
-    //   .catch((err) => {
-    //     setError("Failed to load dictionary");
-    //     setLoading(false);
-    //     console.error(err);
-    //   });
   }, []);
 
   if (loading) return <LoaderWithText text={loaderTextByLanguage[language]} />;
@@ -156,8 +147,6 @@ export default function Home() {
       : "/assets/images/placeholder-4-3.png",
     onClick: () => router.push(`/${language}/${page.slug}`),
   }));
-
-  console.log(navCards);
 
   return (
     <div className="landingBox" style={{ backgroundColor: colors.background }}>
@@ -176,11 +165,7 @@ export default function Home() {
           onLogoClick={() => router.push(`/${language}`)}
           onProfileClick={() => alert("Profile is not ready")}
           onMenuClick={() => {
-            if (isSidebarMounted) {
-              closeSidebar();
-            } else {
-              openSidebar();
-            }
+            isSidebarMounted ? closeSidebar() : openSidebar();
           }}
         />
       </div>
@@ -202,13 +187,9 @@ export default function Home() {
 
       <VideoBackground />
       <div className="contentBox">
-        {/* <BigSearchBox title={"Search Placeholder"} /> */}
         <SearchBoxMain
           bigSearchBox={{
-            isReturn: false, // hardcoded for now
-            // backgroundColor: undefined,
-            // basicColor: undefined,
-            // accentColor: undefined,
+            isReturn: false,
             originPlaceholder: getPhrase(
               "SearchBoxOriginPlaceholder",
               language
@@ -220,16 +201,41 @@ export default function Home() {
             startPlaceholder: getPhrase("SearchBoxStartPlaceholder", language),
             endPlaceholder: getPhrase("SearchBoxEndPlaceholder", language),
             origin: originValue || "",
-            onOriginChange: setOrigin,
+            onOriginChange: (val) => {
+              setOrigin(val);
+
+              // Only validate/reset destination if a real origin is selected
+              if (val) {
+                const availableDestinations = routes
+                  .filter((r) => r.origin.iata === val)
+                  .map((r) => r.destination.iata);
+
+                if (!availableDestinations.includes(destinationValue)) {
+                  setDestination(""); // reset only if invalid
+                }
+              }
+            },
             destination: destinationValue || "",
-            onDestinationChange: setDestination,
+            onDestinationChange: (val) => {
+              setDestination(val);
+
+              // ✅ check if current origin is still valid under the new destination
+              const availableOrigins = routes
+                .filter((r) => r.destination.iata === val)
+                .map((r) => r.origin.iata);
+
+              if (!availableOrigins.includes(originValue)) {
+                setOrigin(""); // reset only if invalid
+              }
+            },
             startDate: startDateValue,
             onStartDateChange: (date) => setStartDateValue(date),
             endDate: endDateValue,
             onEndDateChange: (date) => setEndDateValue(date),
             onClick: onSearchClick,
             locale: language,
-            airports: airports,
+            airports: availableOrigins, // ✅ origins filtered by destination
+            destinations: filteredDestinations, // ✅ destinations filtered by origin
           }}
           tabs={[
             {
@@ -248,14 +254,6 @@ export default function Home() {
       </div>
       <div className="bottomPart">
         <PoweredBar title={getPhrase("PoweredBarPoweredBy", language)} />
-        <div
-          style={{
-            textAlign: "center",
-            height: "300px",
-          }}
-        >
-          Terms
-        </div>
         <BottomBar
           copyright={mockBottomBar.Copyright[language]}
           createdby={mockBottomBar.CreatedBy[language]}
@@ -263,34 +261,4 @@ export default function Home() {
       </div>
     </div>
   );
-}
-
-{
-  /* <h1>Главная страница</h1>
-
-      <label htmlFor="language-select">Выберите язык: </label>
-      <select
-        id="language-select"
-        value={language}
-        onChange={(e) => {
-          const newLang = e.target.value as "en" | "ru" | "fi";
-          setLanguage(newLang);
-          router.push(`/${newLang}`);
-        }}
-        style={{ marginBottom: 20 }}
-      >
-        <option value="en">English</option>
-        <option value="ru">Русский</option>
-        <option value="fi">Suomi</option>
-      </select>
-
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {pages.map((page) => (
-          <li key={page.slug} style={{ margin: "10px 0" }}>
-            <button onClick={() => router.push(`/${language}/${page.slug}`)}>
-              {page.title[language]}
-            </button>
-          </li>
-        ))}
-      </ul> */
 }

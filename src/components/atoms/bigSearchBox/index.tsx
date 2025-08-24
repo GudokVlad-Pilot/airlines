@@ -29,6 +29,7 @@ export type BigSearchBoxProps = {
   onClick?: () => void;
   locale?: "en" | "ru" | "fi";
   airports: Airport[];
+  destinations?: Airport[];
 };
 
 export default function BigSearchBox({
@@ -51,6 +52,7 @@ export default function BigSearchBox({
   onClick,
   locale,
   airports,
+  destinations,
 }: BigSearchBoxProps) {
   return (
     <LocalizationProvider
@@ -114,16 +116,23 @@ export default function BigSearchBox({
 
           {/* DESTINATION AUTOCOMPLETE */}
           <Autocomplete
-            options={airports}
+            options={
+              destinations && destinations.length > 0 ? destinations : airports
+            } // ✅ use filtered list
             getOptionLabel={(option) =>
               `${option.city[locale || "en"]} (${option.iata})`
             }
-            value={airports.find((a) => a.iata === destination) || null}
+            value={
+              (destinations &&
+                destinations.find((a) => a.iata === destination)) ||
+              airports.find((a) => a.iata === destination) ||
+              null
+            }
             onChange={(e, newValue) =>
               onDestinationChange?.(newValue ? newValue.iata : "")
             }
             renderOption={(props, option) => {
-              const { key, ...rest } = props; // remove key from spread
+              const { key, ...rest } = props;
               return (
                 <li key={key} {...rest}>
                   {option.city[locale || "en"]},{" "}

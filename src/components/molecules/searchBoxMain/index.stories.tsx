@@ -10,6 +10,7 @@ export const Default = {
     title: "Search",
     bigSearchBox: {
       title: "Where do you want to fly?",
+      airports: [],
     },
     tabs: [
       {

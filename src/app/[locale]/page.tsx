@@ -15,6 +15,7 @@ import LoaderWithText from "@/components/molecules/loaderWithText";
 import SideBar from "@/components/molecules/sideBar";
 import SearchBoxMain from "@/components/molecules/searchBoxMain";
 import { Dayjs } from "dayjs";
+import PoweredBar from "@/components/molecules/poweredBar";
 
 const { getPages, getDictionary, getAirports } = adapters.cms();
 
@@ -246,17 +247,7 @@ export default function Home() {
         <NavCardsRow navCards={navCards} />
       </div>
       <div className="bottomPart">
-        <div
-          style={{
-            backgroundColor: "blue",
-            color: "white",
-            textAlign: "center",
-            justifyContent: "center",
-            height: "400px",
-          }}
-        >
-          Sponsors
-        </div>
+        <PoweredBar title={getPhrase("PoweredBarPoweredBy", language)} />
         <div
           style={{
             textAlign: "center",

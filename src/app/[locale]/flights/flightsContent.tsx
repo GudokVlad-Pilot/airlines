@@ -184,9 +184,9 @@ export default function FlightsContent() {
                     departureDate={new Date(r.departureTime).toLocaleDateString(
                       language
                     )}
-                    arrivalDate={new Date(r.arrivalTime).toLocaleDateString(
-                      language
-                    )}
+                    arrivalDate={new Date(
+                      end ? r.arrivalTime : r.departureTime
+                    ).toLocaleDateString(language)} // TODO: review the logic
                     onChangeClick={() => alert("Change is progress")}
                   />
                   <FlightCardColumn

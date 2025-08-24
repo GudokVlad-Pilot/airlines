@@ -21,6 +21,7 @@ export const Default = {
     endDate: null,
     onEndDateChange: () => null,
     locale: null,
+    airports: [],
   },
 };
 
@@ -39,6 +40,7 @@ export const OneWay = {
     onStartDateChange: () => null,
     endDate: null,
     onEndDateChange: () => null,
+    airports: [],
   },
 };
 
@@ -60,5 +62,6 @@ export const Custom = {
     backgroundColor: "#FF00FF",
     accentColor: "#00FF00",
     basicColor: "#000FFF",
+    airports: [],
   },
 };

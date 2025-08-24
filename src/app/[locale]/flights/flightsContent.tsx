@@ -8,6 +8,7 @@ import {
   languages,
   loaderTextByLanguage,
   mockBottomBar,
+  mockDays,
 } from "../globalConsts";
 import { useEffect, useState } from "react";
 import { useStore } from "@/adapters/zustand/store";
@@ -69,7 +70,6 @@ export default function FlightsContent() {
         setDictionary(dictionary);
         setRoutes(routes);
 
-        // ✅ filter routes by params
         let results = routes as Route[];
 
         if (from) {
@@ -119,7 +119,7 @@ export default function FlightsContent() {
         flexDirection: "column",
         minHeight: "100vh",
         alignItems: "center",
-        backgroundColor: colors.background, // TODO: set customisation for 2nd phase
+        backgroundColor: colors.background,
       }}
     >
       <div className={`navBar ${isSidebarVisible ? "narrowed" : ""}`}>
@@ -145,6 +145,7 @@ export default function FlightsContent() {
           }}
         />
       </div>
+
       {isSidebarMounted && (
         <div className="sideBarOverlay" onClick={closeSidebar}>
           <div
@@ -160,10 +161,10 @@ export default function FlightsContent() {
           </div>
         </div>
       )}
+
       <div className="flightsContent">
         {filteredRoutes.length > 0 &&
           filteredRoutes.map((r, idx, arr) => {
-            // Only show one column per unique origin-destination pair
             if (
               idx === 0 ||
               r.origin.iata !== arr[idx - 1].origin.iata ||
@@ -191,35 +192,62 @@ export default function FlightsContent() {
                   <FlightCardColumn
                     origin={`${r.origin.city[language]} (${r.origin.iata})`}
                     destination={`${r.destination.city[language]} (${r.destination.iata})`}
-                    flightCards={routesForPair.map((route) => ({
-                      time: `${new Date(route.departureTime).toLocaleTimeString(
-                        language,
-                        {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      )} - ${new Date(route.arrivalTime).toLocaleTimeString(
-                        language,
-                        {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      )}`,
-                      flightTime: (() => {
-                        const diffMs =
-                          new Date(route.arrivalTime).getTime() -
-                          new Date(route.departureTime).getTime();
-                        const hours = Math.floor(diffMs / 1000 / 60 / 60);
-                        const minutes = Math.floor((diffMs / 1000 / 60) % 60);
-                        return minutes > 0
-                          ? `${hours}h ${minutes}m`
-                          : `${hours}h`;
-                      })(),
-                      connections: "Direct",
-                      price: `${route.price} €`,
-                      onClick: () =>
-                        router.push(`/${language}/flights/${route._id}`),
-                    }))}
+                    flightCards={routesForPair
+                      .slice()
+                      .sort(
+                        (a, b) =>
+                          new Date(a.departureTime).getTime() -
+                          new Date(b.departureTime).getTime()
+                      )
+                      .map((route) => {
+                        const dep = new Date(route.departureTime);
+                        const arr = new Date(route.arrivalTime);
+
+                        // ✅ Fixed day difference calculation
+                        const depDay = new Date(
+                          dep.getFullYear(),
+                          dep.getMonth(),
+                          dep.getDate()
+                        );
+                        const arrDay = new Date(
+                          arr.getFullYear(),
+                          arr.getMonth(),
+                          arr.getDate()
+                        );
+                        const dayDiff = Math.round(
+                          (arrDay.getTime() - depDay.getTime()) /
+                            (1000 * 60 * 60 * 24)
+                        );
+
+                        const arrivalTimeStr = `${arr.toLocaleTimeString(
+                          language,
+                          {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}${dayDiff > 0 ? ` (+${dayDiff} ${mockDays.days[language]})` : ""}`;
+
+                        return {
+                          time: `${dep.toLocaleTimeString(language, {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })} - ${arrivalTimeStr}`,
+                          flightTime: (() => {
+                            const diffMs = arr.getTime() - dep.getTime();
+                            const hours = Math.floor(diffMs / 1000 / 60 / 60);
+                            const minutes = Math.floor(
+                              (diffMs / 1000 / 60) % 60
+                            );
+                            return minutes > 0
+                              ? `${hours}${mockDays.hours[language]} ${minutes}${mockDays.minutes[language]}`
+                              : `${hours}${mockDays.hours[language]}`;
+                          })(),
+                          connections: getPhrase("DirectFlights", language),
+                          price: `${route.price} €`,
+                          onClick: () =>
+                            router.push(`/${language}/flights/${route._id}`),
+                        };
+                      })}
                   />
                 </div>
               );
@@ -227,9 +255,10 @@ export default function FlightsContent() {
             return null;
           })}
       </div>
+
       <BottomBar
-        copyright={mockBottomBar.Copyright[language]}
-        createdby={mockBottomBar.CreatedBy[language]}
+        copyright={mockBottomBar.copyright[language]}
+        createdby={mockBottomBar.createdBy[language]}
       />
     </div>
   );

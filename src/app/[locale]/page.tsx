@@ -255,8 +255,8 @@ export default function Home() {
       <div className="bottomPart">
         <PoweredBar title={getPhrase("PoweredBarPoweredBy", language)} />
         <BottomBar
-          copyright={mockBottomBar.Copyright[language]}
-          createdby={mockBottomBar.CreatedBy[language]}
+          copyright={mockBottomBar.copyright[language]}
+          createdby={mockBottomBar.createdBy[language]}
         />
       </div>
     </div>

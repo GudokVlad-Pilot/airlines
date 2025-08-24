@@ -156,8 +156,8 @@ export default function GlobalNotFound() {
 
       {/* BottomBar fixed height */}
       <BottomBar
-        copyright={mockBottomBar.Copyright[locale]}
-        createdby={mockBottomBar.CreatedBy[locale]}
+        copyright={mockBottomBar.copyright[locale]}
+        createdby={mockBottomBar.createdBy[locale]}
       />
     </div>
   );

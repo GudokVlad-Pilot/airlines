@@ -8,13 +8,17 @@ import {
   languages,
   loaderTextByLanguage,
   mockBottomBar,
+  mockDays,
 } from "../globalConsts";
 import { useEffect, useState } from "react";
 import { useStore } from "@/adapters/zustand/store";
 import { adapters } from "@/adapters/adapter";
-import { Route } from "@/adapters/types"; // 👈 the type we created earlier
+import { Route } from "@/adapters/types";
 import "./flights.css";
 import BottomBar from "@/components/molecules/bottomBar";
+import FlightCardColumn from "@/components/molecules/flightCardsColumn";
+import { colors } from "@/components/styles/colors";
+import SmallSearchBox from "@/components/atoms/smallSearchBox";
 
 const { getPages, getDictionary, getRoutes } = adapters.cms();
 
@@ -66,7 +70,6 @@ export default function FlightsContent() {
         setDictionary(dictionary);
         setRoutes(routes);
 
-        // ✅ filter routes by params
         let results = routes as Route[];
 
         if (from) {
@@ -111,7 +114,13 @@ export default function FlightsContent() {
 
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        alignItems: "center",
+        backgroundColor: colors.background,
+      }}
     >
       <div className={`navBar ${isSidebarVisible ? "narrowed" : ""}`}>
         <NavBar
@@ -136,6 +145,7 @@ export default function FlightsContent() {
           }}
         />
       </div>
+
       {isSidebarMounted && (
         <div className="sideBarOverlay" onClick={closeSidebar}>
           <div
@@ -151,35 +161,104 @@ export default function FlightsContent() {
           </div>
         </div>
       )}
-      <div className="flightsContent">
-        <h1>Flights</h1>
-        <p>From: {from}</p>
-        <p>To: {to}</p>
-        <p>Start date: {start}</p>
-        {end && <p>End date: {end}</p>}
 
-        <h2>Available routes:</h2>
-        {filteredRoutes.length === 0 && <p>No flights found</p>}
-        {filteredRoutes.map((r) => (
-          <div
-            key={`${r.origin.iata}-${r.destination.iata}-${r.departureTime}-${r.arrivalTime}`}
-            className="flightCard"
-          >
-            <p>
-              {r.origin.city[language]} ({r.origin.iata}) →{" "}
-              {r.destination.city[language]} ({r.destination.iata})
-            </p>
-            <p>
-              Departure: {new Date(r.departureTime).toLocaleString(language)}
-            </p>
-            <p>Arrival: {new Date(r.arrivalTime).toLocaleString(language)}</p>
-            <p>Price: {r.price} €</p>
-          </div>
-        ))}
+      <div className="flightsContent">
+        {filteredRoutes.length > 0 &&
+          filteredRoutes.map((r, idx, arr) => {
+            if (
+              idx === 0 ||
+              r.origin.iata !== arr[idx - 1].origin.iata ||
+              r.destination.iata !== arr[idx - 1].destination.iata
+            ) {
+              const routesForPair = arr.filter(
+                (route) =>
+                  route.origin.iata === r.origin.iata &&
+                  route.destination.iata === r.destination.iata
+              );
+
+              return (
+                <div key={`${r.origin.iata}-${r.destination.iata}`}>
+                  <SmallSearchBox
+                    departure={`${r.origin.city[language]} (${r.origin.iata})`}
+                    arrival={`${r.destination.city[language]} (${r.destination.iata})`}
+                    departureDate={new Date(r.departureTime).toLocaleDateString(
+                      language
+                    )}
+                    arrivalDate={new Date(
+                      end ? r.arrivalTime : r.departureTime
+                    ).toLocaleDateString(language)} // TODO: review the logic
+                    onChangeClick={() => alert("Change is progress")}
+                  />
+                  <FlightCardColumn
+                    origin={`${r.origin.city[language]} (${r.origin.iata})`}
+                    destination={`${r.destination.city[language]} (${r.destination.iata})`}
+                    flightCards={routesForPair
+                      .slice()
+                      .sort(
+                        (a, b) =>
+                          new Date(a.departureTime).getTime() -
+                          new Date(b.departureTime).getTime()
+                      )
+                      .map((route) => {
+                        const dep = new Date(route.departureTime);
+                        const arr = new Date(route.arrivalTime);
+
+                        // ✅ Fixed day difference calculation
+                        const depDay = new Date(
+                          dep.getFullYear(),
+                          dep.getMonth(),
+                          dep.getDate()
+                        );
+                        const arrDay = new Date(
+                          arr.getFullYear(),
+                          arr.getMonth(),
+                          arr.getDate()
+                        );
+                        const dayDiff = Math.round(
+                          (arrDay.getTime() - depDay.getTime()) /
+                            (1000 * 60 * 60 * 24)
+                        );
+
+                        const arrivalTimeStr = `${arr.toLocaleTimeString(
+                          language,
+                          {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}${dayDiff > 0 ? ` (+${dayDiff} ${mockDays.days[language]})` : ""}`;
+
+                        return {
+                          time: `${dep.toLocaleTimeString(language, {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })} - ${arrivalTimeStr}`,
+                          flightTime: (() => {
+                            const diffMs = arr.getTime() - dep.getTime();
+                            const hours = Math.floor(diffMs / 1000 / 60 / 60);
+                            const minutes = Math.floor(
+                              (diffMs / 1000 / 60) % 60
+                            );
+                            return minutes > 0
+                              ? `${hours}${mockDays.hours[language]} ${minutes}${mockDays.minutes[language]}`
+                              : `${hours}${mockDays.hours[language]}`;
+                          })(),
+                          connections: getPhrase("DirectFlights", language),
+                          price: `${route.price} €`,
+                          onClick: () =>
+                            router.push(`/${language}/flights/${route._id}`),
+                        };
+                      })}
+                  />
+                </div>
+              );
+            }
+            return null;
+          })}
       </div>
+
       <BottomBar
-        copyright={mockBottomBar.Copyright[language]}
-        createdby={mockBottomBar.CreatedBy[language]}
+        copyright={mockBottomBar.copyright[language]}
+        createdby={mockBottomBar.createdBy[language]}
       />
     </div>
   );

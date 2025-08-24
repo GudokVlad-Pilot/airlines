@@ -1,0 +1,20 @@
+.flightCardBox {
+  height: 100px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flightCardBox:hover {
+  cursor: pointer;
+}
+
+.flightCardInfo {
+  display: flex;
+}
+
+.flightCardLabel {
+  display: flex;
+  align-items: center;
+}

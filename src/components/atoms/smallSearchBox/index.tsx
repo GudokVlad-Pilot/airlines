@@ -1,23 +1,23 @@
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import "./smallSearchBox.css";
+import { colors } from "@/components/styles/colors";
 
 type Props = {
+  backgroundColor?: string;
+  basicColor?: string;
+  accentColor?: string;
   departure: string;
   arrival: string;
-  departureDate: Date;
-  arrivalDate: Date;
+  departureDate: string;
+  arrivalDate: string;
   onChangeClick: () => void;
 };
 
-function formatDate(date: Date): string {
-  const day = date.getDate();
-  const month = date.getMonth() + 1; // Months are 0-based
-  const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
-}
-
 export default function SmallSearchBox({
+  accentColor,
+  basicColor,
+  backgroundColor,
   departure,
   arrival,
   departureDate,
@@ -25,16 +25,19 @@ export default function SmallSearchBox({
   onChangeClick,
 }: Props) {
   return (
-    <div className="smallSearchBoxBox">
-      <div className="leftGroup">
+    <div
+      className="smallSearchBoxBox"
+      style={{ backgroundColor: backgroundColor || colors.secondary }}
+    >
+      <div className="leftGroup" style={{ color: basicColor || colors.basic }}>
         <div className="airportText">{departure}</div>
         <ArrowForwardIcon className="arrowIcon" />
         <div className="airportText">{arrival}</div>
       </div>
       <div className="rightGroup">
-        <div className="departureDate">{formatDate(departureDate)}</div>
+        <div className="departureDate">{departureDate}</div>
         <div className="dash">-</div>
-        <div className="arrivalDate">{formatDate(arrivalDate)}</div>
+        <div className="arrivalDate">{arrivalDate}</div>
         <button className="changeButton" onClick={onChangeClick}>
           <DriveFileRenameOutlineIcon className="changeIcon" />
         </button>

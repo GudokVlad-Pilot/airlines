@@ -41,7 +41,7 @@
 }
 
 .flightsContent {
-  padding-top: 100px;
+  padding: 60px 0;
   display: flex;
   flex: 1;
   flex-direction: column;

@@ -19,7 +19,7 @@
   margin-right: 20px;
 }
 .changeIcon {
-  color: brown;
+  color: #215e9e;
 }
 .airportText {
   width: 150px;
@@ -34,8 +34,8 @@
   cursor: pointer;
 }
 .changeButton:hover .changeIcon {
-  color: white;
+  color: #89b8e9;
 }
-.changeButton:active .changeIcon {
+/* .changeButton:active .changeIcon {
   color: black;
-}
+} */

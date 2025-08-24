@@ -13,7 +13,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100px; /* TODO: define the height */
+  height: 50px; /* TODO: define the height */
 }
 .navBarIcon {
   height: 50px; /* size of the area */

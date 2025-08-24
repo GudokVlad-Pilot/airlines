@@ -1,0 +1,17 @@
+.flightCardsColumnBox {
+  display: flex;
+  width: 900px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.flightCardsColumnRoute {
+  padding: 20px 0;
+}
+
+.flightCardsColumnCards {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+}

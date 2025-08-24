@@ -12,9 +12,12 @@ import {
 import { useEffect, useState } from "react";
 import { useStore } from "@/adapters/zustand/store";
 import { adapters } from "@/adapters/adapter";
-import { Route } from "@/adapters/types"; // 👈 the type we created earlier
+import { Route } from "@/adapters/types";
 import "./flights.css";
 import BottomBar from "@/components/molecules/bottomBar";
+import FlightCardColumn from "@/components/molecules/flightCardsColumn";
+import { colors } from "@/components/styles/colors";
+import SmallSearchBox from "@/components/atoms/smallSearchBox";
 
 const { getPages, getDictionary, getRoutes } = adapters.cms();
 
@@ -111,7 +114,13 @@ export default function FlightsContent() {
 
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        alignItems: "center",
+        backgroundColor: colors.background, // TODO: set customisation for 2nd phase
+      }}
     >
       <div className={`navBar ${isSidebarVisible ? "narrowed" : ""}`}>
         <NavBar
@@ -152,30 +161,71 @@ export default function FlightsContent() {
         </div>
       )}
       <div className="flightsContent">
-        <h1>Flights</h1>
-        <p>From: {from}</p>
-        <p>To: {to}</p>
-        <p>Start date: {start}</p>
-        {end && <p>End date: {end}</p>}
+        {filteredRoutes.length > 0 &&
+          filteredRoutes.map((r, idx, arr) => {
+            // Only show one column per unique origin-destination pair
+            if (
+              idx === 0 ||
+              r.origin.iata !== arr[idx - 1].origin.iata ||
+              r.destination.iata !== arr[idx - 1].destination.iata
+            ) {
+              const routesForPair = arr.filter(
+                (route) =>
+                  route.origin.iata === r.origin.iata &&
+                  route.destination.iata === r.destination.iata
+              );
 
-        <h2>Available routes:</h2>
-        {filteredRoutes.length === 0 && <p>No flights found</p>}
-        {filteredRoutes.map((r) => (
-          <div
-            key={`${r.origin.iata}-${r.destination.iata}-${r.departureTime}-${r.arrivalTime}`}
-            className="flightCard"
-          >
-            <p>
-              {r.origin.city[language]} ({r.origin.iata}) →{" "}
-              {r.destination.city[language]} ({r.destination.iata})
-            </p>
-            <p>
-              Departure: {new Date(r.departureTime).toLocaleString(language)}
-            </p>
-            <p>Arrival: {new Date(r.arrivalTime).toLocaleString(language)}</p>
-            <p>Price: {r.price} €</p>
-          </div>
-        ))}
+              return (
+                <div key={`${r.origin.iata}-${r.destination.iata}`}>
+                  <SmallSearchBox
+                    departure={`${r.origin.city[language]} (${r.origin.iata})`}
+                    arrival={`${r.destination.city[language]} (${r.destination.iata})`}
+                    departureDate={new Date(r.departureTime).toLocaleDateString(
+                      language
+                    )}
+                    arrivalDate={new Date(r.arrivalTime).toLocaleDateString(
+                      language
+                    )}
+                    onChangeClick={() => alert("Change is progress")}
+                  />
+                  <FlightCardColumn
+                    origin={`${r.origin.city[language]} (${r.origin.iata})`}
+                    destination={`${r.destination.city[language]} (${r.destination.iata})`}
+                    flightCards={routesForPair.map((route) => ({
+                      time: `${new Date(route.departureTime).toLocaleTimeString(
+                        language,
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      )} - ${new Date(route.arrivalTime).toLocaleTimeString(
+                        language,
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      )}`,
+                      flightTime: (() => {
+                        const diffMs =
+                          new Date(route.arrivalTime).getTime() -
+                          new Date(route.departureTime).getTime();
+                        const hours = Math.floor(diffMs / 1000 / 60 / 60);
+                        const minutes = Math.floor((diffMs / 1000 / 60) % 60);
+                        return minutes > 0
+                          ? `${hours}h ${minutes}m`
+                          : `${hours}h`;
+                      })(),
+                      connections: "Direct",
+                      price: `${route.price} €`,
+                      onClick: () =>
+                        router.push(`/${language}/flights/${route._id}`),
+                    }))}
+                  />
+                </div>
+              );
+            }
+            return null;
+          })}
       </div>
       <BottomBar
         copyright={mockBottomBar.Copyright[language]}

@@ -27,6 +27,7 @@ export const airportsQuery = `
 
 export const routesQuery = `
   *[_type == "routes"]{
+  _id,
     origin->{
     _id,
     iata,

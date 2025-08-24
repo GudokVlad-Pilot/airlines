@@ -48,6 +48,7 @@ export interface Dictionary {
 }
 
 export interface Route {
+  _id: string;
   origin: Airport;
   destination: Airport;
   departureTime: string; // ISO date string from Sanity (e.g. "2025-08-23T09:00:00Z")

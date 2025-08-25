@@ -56,7 +56,7 @@ export default function FlightCard({
       </div>
       <div
         className="flightCardPrice"
-        style={{ color: accentColor || colors.primaryLight }}
+        style={{ color: accentColor || colors.primaryLight }} // TODO: check it later
       >
         {price}
       </div>

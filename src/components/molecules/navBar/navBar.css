@@ -26,9 +26,12 @@
   width: 45px;
 }
 
+.navBarIconProfile {
+  padding-left: 10px;
+}
+
 .navBarIconProfile svg {
   font-size: 20px; /* size of the icon itself */
-  padding-left: 10px;
 }
 
 .navBarIconMenu svg {

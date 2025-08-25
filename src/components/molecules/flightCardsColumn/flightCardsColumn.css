@@ -8,11 +8,12 @@
 .flightCardsColumnRoute {
   padding: 10px 0;
   font-family: "Manrope";
+  font-weight: 600;
   font-size: 14px;
 }
 
 .flightCardsColumnCards {
-  width: 900;
+  width: 100%;
   display: flex;
   gap: 15px;
   flex-direction: column;

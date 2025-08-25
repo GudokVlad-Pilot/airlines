@@ -11,16 +11,14 @@
 
 .flightCardBox:hover {
   cursor: pointer;
-  background-color: #89b8e9 !important;
+  background-color: #215e9e !important;
   color: white !important;
-  /*does not change color on hover*/
 }
 
 .flightCardBox:active {
   cursor: pointer;
-  background-color: #215e9e !important;
+  background-color: #89b8e9 !important;
   color: white !important;
-  /*does not change color on click*/
 }
 
 .flightCardInfo {
@@ -56,8 +54,6 @@
   color: white !important;
 }
 
-.flightCardBox:active .flightCardLabelIcon {
+.flightCardBox:hover .flightCardLabelIcon {
   color: white !important;
 }
-
-/* Switch hover and active */

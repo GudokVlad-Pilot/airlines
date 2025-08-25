@@ -24,7 +24,7 @@ export default function LanguageSelector({
       onChange={(e) => onChange(e.target.value)}
     >
       {languages.map(({ code, label }) => (
-        <option key={code} value={code}>
+        <option key={code} value={code} className="languageSelectorOption">
           {label.toLocaleUpperCase()}
         </option>
       ))}

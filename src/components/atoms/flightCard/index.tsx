@@ -33,7 +33,7 @@ export default function FlightCard({
       style={{ backgroundColor: backgroundColor || colors.secondary }}
     >
       <div
-        className="flightPartInfo"
+        className="flightCardInfo"
         style={{ color: basicColor || colors.basic }}
       >
         <div className="flightCardTime">{time}</div>
@@ -56,7 +56,7 @@ export default function FlightCard({
       </div>
       <div
         className="flightCardPrice"
-        style={{ color: accentColor || colors.primaryLight }}
+        style={{ color: accentColor || colors.primaryLight }} // TODO: check it later
       >
         {price}
       </div>

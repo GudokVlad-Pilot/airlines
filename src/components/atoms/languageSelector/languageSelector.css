@@ -1,6 +1,11 @@
 .languageSelectorBox {
   border-radius: 8px;
   padding: 10px;
+  border: none;
+  color: white;
+  font-weight: 500;
+  font: "Manrope";
+  background-color: #215e9e;
 }
 
 .languageSelectorBox:hover {
@@ -10,3 +15,6 @@
 .languageSelectorBox option {
   cursor: pointer;
 }
+
+/* Now it has option className */
+/* Google how to get rid of "select frame on double click" */

@@ -9,11 +9,11 @@
 .poweredByBlock {
   width: 900px;
   padding: 20px 0;
-  padding-bottom: 30px;
+  padding-bottom: 40px;
 }
 .poweredByText {
   align-self: flex-start;
-  font-weight: 600;
+  font-weight: 500;
   font-family: "Manrope";
 }
 .techStackImage {

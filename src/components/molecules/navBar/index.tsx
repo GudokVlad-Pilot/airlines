@@ -45,7 +45,7 @@ export default function NavBar({
         />
 
         <IconButton
-          className="navBarIcon"
+          className="navBarIconProfile"
           aria-label="profile"
           onClick={onProfileClick}
         >
@@ -53,7 +53,7 @@ export default function NavBar({
         </IconButton>
 
         <IconButton
-          className="navBarIcon"
+          className="navBarIconMenu"
           aria-label="menu"
           onClick={onMenuClick}
         >

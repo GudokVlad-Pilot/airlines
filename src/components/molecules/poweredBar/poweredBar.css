@@ -9,12 +9,15 @@
 .poweredByBlock {
   width: 900px;
   padding: 20px 0;
-  padding-bottom: 30px;
+  padding-bottom: 40px;
 }
 .poweredByText {
   align-self: flex-start;
-  font-weight: 600;
+  justify-self: left;
+  margin-left: 60px;
+  font-weight: 500;
   font-family: "Manrope";
+  /*need to make the text stay on screen tab/screen size changes*/
 }
 .techStackImage {
   height: auto !important; /* Use !important to override other conflicting styles (e.g., inline styles or styles from the component library) */

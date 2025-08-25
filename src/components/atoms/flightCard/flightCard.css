@@ -1,20 +1,47 @@
 .flightCardBox {
   height: 100px;
-  width: 100%;
+  width: 900px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-radius: 20px;
+  font-family: "Manrope";
 }
 
 .flightCardBox:hover {
   cursor: pointer;
+  background-color: #89b8e9;
+  color: white;
+  /*does not change color on hover*/
+}
+
+.flightCardBox:active {
+  cursor: pointer;
+  background-color: #215e9e;
+  color: white;
+  /*does not change color on click*/
 }
 
 .flightCardInfo {
   display: flex;
+  align-content: center;
+  margin-left: 25px;
+  font-size: 24px;
 }
 
 .flightCardLabel {
   display: flex;
   align-items: center;
+  margin-left: 70px;
+  font-size: 14px;
+}
+
+.flightCardLabelIcon {
+  margin-right: 5px;
+}
+
+.flightCardPrice {
+  margin-right: 25px;
+  font-weight: 600;
+  font-size: 24px;
 }

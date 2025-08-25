@@ -16,4 +16,5 @@
   cursor: pointer;
 }
 
-/*how to style the dropdown part? (index does not have a place for classname, if I understand correctly)*/
+/* Now it has option className */
+/* Google how to get rid of "select frame on double click" */

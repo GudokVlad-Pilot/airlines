@@ -7,6 +7,7 @@
   border-radius: 20px;
   font-size: 14px;
   color: white;
+  font-family: "Manrope";
 }
 .leftGroup {
   display: flex;
@@ -19,23 +20,39 @@
   margin-right: 20px;
 }
 .changeIcon {
-  color: #215e9e;
+  color: white;
 }
 .airportText {
   width: 150px;
+  margin-bottom: 2px;
 }
 .arrowIcon {
   margin: 0 20px;
 }
+
+.departureDate {
+  margin-right: 40px;
+  margin-bottom: 2px;
+}
+
+.dash {
+  margin-bottom: 2px;
+}
+
+.arrivalDate {
+  margin-left: 40px;
+  margin-bottom: 2px;
+}
+
 .changeButton {
   background-color: transparent;
   border: 0;
-  margin-left: 20px;
+  margin-left: 55px;
   cursor: pointer;
 }
 .changeButton:hover .changeIcon {
   color: #89b8e9;
 }
-/* .changeButton:active .changeIcon {
-  color: black;
-} */
+.changeButton:active .changeIcon {
+  color: #215e9e;
+}

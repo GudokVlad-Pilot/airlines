@@ -57,3 +57,16 @@
 .flightCardBox:hover .flightCardLabelIcon {
   color: white !important;
 }
+
+.flightCardBox.selected {
+  background-color: #89b8e9 !important;
+  color: white !important;
+}
+
+.flightCardBox.selected .flightCardPrice {
+  color: white !important;
+}
+
+.flightCardBox.selected .flightCardLabelIcon {
+  color: white !important;
+}

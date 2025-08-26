@@ -42,6 +42,10 @@ export default function FlightsContent() {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isSidebarMounted, setIsSidebarMounted] = useState(false);
   const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
+  const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
+    null
+  );
+  const [selectedRoute, setSelectedRoute] = useState<string>("");
 
   const openSidebar = () => {
     setIsSidebarMounted(true);
@@ -53,12 +57,13 @@ export default function FlightsContent() {
     setTimeout(() => setIsSidebarMounted(false), 300);
   };
 
-  // ✅ Extracted flight card builder
   const buildFlightCards = (
     routesForPair: Route[],
     language: "en" | "ru" | "fi",
     getPhrase: (title: string, lang: "en" | "ru" | "fi") => string,
-    router: any
+    selectedCardIndex: number | null,
+    setSelectedCardIndex: (idx: number) => void,
+    setSelectedRoute: (id: string) => void
   ): FlightCardProps[] => {
     return routesForPair
       .slice()
@@ -67,11 +72,10 @@ export default function FlightsContent() {
           new Date(a.departureTime).getTime() -
           new Date(b.departureTime).getTime()
       )
-      .map((route) => {
+      .map((route, idx) => {
         const dep = new Date(route.departureTime);
         const arr = new Date(route.arrivalTime);
 
-        // ✅ Day difference calculation
         const depDay = new Date(
           dep.getFullYear(),
           dep.getMonth(),
@@ -106,10 +110,16 @@ export default function FlightsContent() {
           })(),
           connections: getPhrase("DirectFlights", language),
           price: `${route.price} €`,
-          onClick: () => router.push(`/${language}/flights/${route._id}`),
+          isSelected: selectedCardIndex === idx,
+          onClick: () => {
+            setSelectedCardIndex(idx);
+            setSelectedRoute(route._id);
+          },
         };
       });
   };
+
+  console.log(selectedRoute);
 
   const getPhrase = (title: string, lang: "en" | "ru" | "fi") => {
     const item = dictionary.find((d) => d.title === title);
@@ -256,7 +266,9 @@ export default function FlightsContent() {
                       routesForPair,
                       language,
                       getPhrase,
-                      router
+                      selectedCardIndex,
+                      setSelectedCardIndex,
+                      setSelectedRoute
                     )}
                   />
                 </div>

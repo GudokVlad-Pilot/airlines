@@ -20,6 +20,7 @@ import FlightCardColumn from "@/components/molecules/flightCardsColumn";
 import { colors } from "@/components/styles/colors";
 import SmallSearchBox from "@/components/atoms/smallSearchBox";
 import FlightControlPanel from "@/components/molecules/flightControlPanel";
+import { FlightCardProps } from "@/components/atoms/flightCard";
 
 const { getPages, getDictionary, getRoutes } = adapters.cms();
 
@@ -50,6 +51,64 @@ export default function FlightsContent() {
   const closeSidebar = () => {
     setIsSidebarVisible(false);
     setTimeout(() => setIsSidebarMounted(false), 300);
+  };
+
+  // ✅ Extracted flight card builder
+  const buildFlightCards = (
+    routesForPair: Route[],
+    language: "en" | "ru" | "fi",
+    getPhrase: (title: string, lang: "en" | "ru" | "fi") => string,
+    router: any
+  ): FlightCardProps[] => {
+    return routesForPair
+      .slice()
+      .sort(
+        (a, b) =>
+          new Date(a.departureTime).getTime() -
+          new Date(b.departureTime).getTime()
+      )
+      .map((route) => {
+        const dep = new Date(route.departureTime);
+        const arr = new Date(route.arrivalTime);
+
+        // ✅ Day difference calculation
+        const depDay = new Date(
+          dep.getFullYear(),
+          dep.getMonth(),
+          dep.getDate()
+        );
+        const arrDay = new Date(
+          arr.getFullYear(),
+          arr.getMonth(),
+          arr.getDate()
+        );
+        const dayDiff = Math.round(
+          (arrDay.getTime() - depDay.getTime()) / (1000 * 60 * 60 * 24)
+        );
+
+        const arrivalTimeStr = `${arr.toLocaleTimeString(language, {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}${dayDiff > 0 ? ` (+${dayDiff} ${mockDays.days[language]})` : ""}`;
+
+        return {
+          time: `${dep.toLocaleTimeString(language, {
+            hour: "2-digit",
+            minute: "2-digit",
+          })} - ${arrivalTimeStr}`,
+          flightTime: (() => {
+            const diffMs = arr.getTime() - dep.getTime();
+            const hours = Math.floor(diffMs / 1000 / 60 / 60);
+            const minutes = Math.floor((diffMs / 1000 / 60) % 60);
+            return minutes > 0
+              ? `${hours}${mockDays.hours[language]} ${minutes}${mockDays.minutes[language]}`
+              : `${hours}${mockDays.hours[language]}`;
+          })(),
+          connections: getPhrase("DirectFlights", language),
+          price: `${route.price} €`,
+          onClick: () => router.push(`/${language}/flights/${route._id}`),
+        };
+      });
   };
 
   const getPhrase = (title: string, lang: "en" | "ru" | "fi") => {
@@ -188,67 +247,17 @@ export default function FlightsContent() {
                     arrivalDate={new Date(
                       end ? r.arrivalTime : r.departureTime
                     ).toLocaleDateString(language)} // TODO: review the logic
-                    onChangeClick={() => alert("Change is progress")}
+                    onChangeClick={() => alert("Change in progress")}
                   />
                   <FlightCardColumn
                     origin={`${r.origin.city[language]} (${r.origin.iata})`}
                     destination={`${r.destination.city[language]} (${r.destination.iata})`}
-                    flightCards={routesForPair
-                      .slice()
-                      .sort(
-                        (a, b) =>
-                          new Date(a.departureTime).getTime() -
-                          new Date(b.departureTime).getTime()
-                      )
-                      .map((route) => {
-                        const dep = new Date(route.departureTime);
-                        const arr = new Date(route.arrivalTime);
-
-                        // ✅ Fixed day difference calculation
-                        const depDay = new Date(
-                          dep.getFullYear(),
-                          dep.getMonth(),
-                          dep.getDate()
-                        );
-                        const arrDay = new Date(
-                          arr.getFullYear(),
-                          arr.getMonth(),
-                          arr.getDate()
-                        );
-                        const dayDiff = Math.round(
-                          (arrDay.getTime() - depDay.getTime()) /
-                            (1000 * 60 * 60 * 24)
-                        );
-
-                        const arrivalTimeStr = `${arr.toLocaleTimeString(
-                          language,
-                          {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}${dayDiff > 0 ? ` (+${dayDiff} ${mockDays.days[language]})` : ""}`;
-
-                        return {
-                          time: `${dep.toLocaleTimeString(language, {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })} - ${arrivalTimeStr}`,
-                          flightTime: (() => {
-                            const diffMs = arr.getTime() - dep.getTime();
-                            const hours = Math.floor(diffMs / 1000 / 60 / 60);
-                            const minutes = Math.floor(
-                              (diffMs / 1000 / 60) % 60
-                            );
-                            return minutes > 0
-                              ? `${hours}${mockDays.hours[language]} ${minutes}${mockDays.minutes[language]}`
-                              : `${hours}${mockDays.hours[language]}`;
-                          })(),
-                          connections: getPhrase("DirectFlights", language),
-                          price: `${route.price} €`,
-                          onClick: () =>
-                            router.push(`/${language}/flights/${route._id}`),
-                        };
-                      })}
+                    flightCards={buildFlightCards(
+                      routesForPair,
+                      language,
+                      getPhrase,
+                      router
+                    )}
                   />
                 </div>
               );
@@ -256,28 +265,6 @@ export default function FlightsContent() {
             return null;
           })}
       </div>
-      {/* <FlightControlPanel
-        state={"select"}
-        flightControlSelectFlight={{
-          title: "",
-        }}
-        flightControlEditFlight={{
-          title: "",
-          onClick: function (): void {
-            throw new Error("Function not implemented.");
-          },
-        }}
-        flightControlConfirmFlight={{
-          title: "",
-          time: "",
-          flightTime: "",
-          connections: "",
-          buttonTitle: "",
-          onClick: function (): void {
-            throw new Error("Function not implemented.");
-          },
-        }}
-      /> */}
       <BottomBar
         copyright={mockBottomBar.copyright[language]}
         createdby={mockBottomBar.createdBy[language]}

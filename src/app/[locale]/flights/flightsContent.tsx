@@ -19,6 +19,7 @@ import BottomBar from "@/components/molecules/bottomBar";
 import FlightCardColumn from "@/components/molecules/flightCardsColumn";
 import { colors } from "@/components/styles/colors";
 import SmallSearchBox from "@/components/atoms/smallSearchBox";
+import FlightControlPanel from "@/components/molecules/flightControlPanel";
 
 const { getPages, getDictionary, getRoutes } = adapters.cms();
 
@@ -255,7 +256,28 @@ export default function FlightsContent() {
             return null;
           })}
       </div>
-
+      {/* <FlightControlPanel
+        state={"select"}
+        flightControlSelectFlight={{
+          title: "",
+        }}
+        flightControlEditFlight={{
+          title: "",
+          onClick: function (): void {
+            throw new Error("Function not implemented.");
+          },
+        }}
+        flightControlConfirmFlight={{
+          title: "",
+          time: "",
+          flightTime: "",
+          connections: "",
+          buttonTitle: "",
+          onClick: function (): void {
+            throw new Error("Function not implemented.");
+          },
+        }}
+      /> */}
       <BottomBar
         copyright={mockBottomBar.copyright[language]}
         createdby={mockBottomBar.createdBy[language]}

@@ -8,10 +8,18 @@ export default {
 export const Default = {
   args: {
     state: "select",
-    flightControlSelectFlight: { title: "title" },
+    flightControlSelectFlight: { title: "Choose you flight" },
     flightControlEditFlight: {
-      title: "title",
+      title: "Changing the search",
       onClick: () => alert("Flight canceled!"),
+    },
+    flightControlConfirmFlight: {
+      title: "Flight Information",
+      time: "16:00 - 17:30",
+      flightTime: "1h 30m",
+      connections: "Direct",
+      buttonTitle: "Confirm",
+      onClick: () => alert("Flight confirmed!"),
     },
   },
 };

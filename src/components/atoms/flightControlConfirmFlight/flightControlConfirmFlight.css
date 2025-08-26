@@ -1,0 +1,40 @@
+.flightControlConfirmFlightBox {
+  height: 100%; /* should accept parent's params */
+  width: 100%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  font-family: "Manrope";
+}
+
+.flightControlConfirmFlightInfo {
+  display: flex;
+  align-content: center;
+  /* Should it be here? */
+  /* margin-left: 25px; */
+  font-size: 24px;
+}
+
+.flightControlConfirmFlightTime {
+  width: 300px;
+}
+
+.flightControlConfirmFlightLabel {
+  display: flex;
+  align-items: center;
+  margin-left: 70px;
+  font-size: 14px;
+}
+
+.flightControlConfirmFlightLabelIcon {
+  margin-right: 5px;
+}
+
+.flightControlConfirmFlightButton {
+  align-self: flex-end;
+}

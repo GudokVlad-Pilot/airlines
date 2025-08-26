@@ -5,6 +5,9 @@ import "./flightControlPanel.css";
 import FlightControlEditFlight, {
   FlightControlEditFlightProps,
 } from "@/components/atoms/flightControlEditFlight";
+import FlightControlConfirmFlight, {
+  FlightControlConfirmFlightProps,
+} from "@/components/atoms/flightControlConfirmFlight";
 
 type FlightControlState = "select" | "change" | "confirm";
 
@@ -12,12 +15,14 @@ type Props = {
   state: FlightControlState;
   flightControlSelectFlight: FlightControlSelectFlightProps;
   flightControlEditFlight: FlightControlEditFlightProps;
+  flightControlConfirmFlight: FlightControlConfirmFlightProps;
 };
 
 export default function FlightControlPanel({
   state,
   flightControlSelectFlight,
   flightControlEditFlight,
+  flightControlConfirmFlight,
 }: Props) {
   const renderContent = () => {
     switch (state) {
@@ -33,7 +38,16 @@ export default function FlightControlPanel({
           />
         );
       case "confirm":
-        return <div>confirm</div>;
+        return (
+          <FlightControlConfirmFlight
+            title={flightControlConfirmFlight.title}
+            onClick={flightControlConfirmFlight.onClick}
+            time={flightControlConfirmFlight.time}
+            flightTime={flightControlConfirmFlight.flightTime}
+            connections={flightControlConfirmFlight.connections}
+            buttonTitle={flightControlConfirmFlight.buttonTitle}
+          />
+        );
       default:
         return null;
     }

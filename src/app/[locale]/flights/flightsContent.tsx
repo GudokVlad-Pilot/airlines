@@ -19,8 +19,11 @@ import BottomBar from "@/components/molecules/bottomBar";
 import FlightCardColumn from "@/components/molecules/flightCardsColumn";
 import { colors } from "@/components/styles/colors";
 import SmallSearchBox from "@/components/atoms/smallSearchBox";
-import FlightControlPanel from "@/components/molecules/flightControlPanel";
+import FlightControlPanel, {
+  FlightControlState,
+} from "@/components/molecules/flightControlPanel";
 import { FlightCardProps } from "@/components/atoms/flightCard";
+import { FlightControlConfirmFlightProps } from "@/components/atoms/flightControlConfirmFlight";
 
 const { getPages, getDictionary, getRoutes } = adapters.cms();
 
@@ -46,6 +49,10 @@ export default function FlightsContent() {
     null
   );
   const [selectedRoute, setSelectedRoute] = useState<string>("");
+  const [flightInfo, setFlightInfo] =
+    useState<FlightControlConfirmFlightProps>();
+  const [flightControlPanelState, setflightControlPanelState] =
+    useState<FlightControlState>("select");
 
   const openSidebar = () => {
     setIsSidebarMounted(true);
@@ -112,6 +119,7 @@ export default function FlightsContent() {
           price: `${route.price} €`,
           isSelected: selectedCardIndex === idx,
           onClick: () => {
+            setflightControlPanelState("confirm");
             setSelectedCardIndex(idx);
             setSelectedRoute(route._id);
           },
@@ -257,7 +265,10 @@ export default function FlightsContent() {
                     arrivalDate={new Date(
                       end ? r.arrivalTime : r.departureTime
                     ).toLocaleDateString(language)} // TODO: review the logic
-                    onChangeClick={() => alert("Change in progress")}
+                    onChangeClick={() => {
+                      setflightControlPanelState("change");
+                      alert("Change in progress");
+                    }}
                   />
                   <FlightCardColumn
                     origin={`${r.origin.city[language]} (${r.origin.iata})`}
@@ -276,6 +287,30 @@ export default function FlightsContent() {
             }
             return null;
           })}
+      </div>
+      <div className="flightControlPanel">
+        <FlightControlPanel
+          state={flightControlPanelState}
+          flightControlSelectFlight={{
+            title: getPhrase("FlightControlSelect", language),
+          }}
+          flightControlEditFlight={{
+            title: getPhrase("FlightControlEdit", language),
+            onClick: () => {
+              setflightControlPanelState("select");
+            },
+          }}
+          flightControlConfirmFlight={{
+            title: getPhrase("FlightControlConfirm", language),
+            time: "",
+            flightTime: "",
+            connections: "",
+            buttonTitle: "",
+            onClick: function (): void {
+              throw new Error("Function not implemented.");
+            },
+          }}
+        />
       </div>
       <BottomBar
         copyright={mockBottomBar.copyright[language]}

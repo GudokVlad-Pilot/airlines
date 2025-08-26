@@ -9,7 +9,7 @@ import FlightControlConfirmFlight, {
   FlightControlConfirmFlightProps,
 } from "@/components/atoms/flightControlConfirmFlight";
 
-type FlightControlState = "select" | "change" | "confirm";
+export type FlightControlState = "select" | "change" | "confirm";
 
 type Props = {
   state: FlightControlState;

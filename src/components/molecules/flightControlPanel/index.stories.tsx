@@ -7,6 +7,11 @@ export default {
 
 export const Default = {
   args: {
-    title: "title",
+    state: "select",
+    flightControlSelectFlight: { title: "title" },
+    flightControlEditFlight: {
+      title: "title",
+      onClick: () => alert("Flight canceled!"),
+    },
   },
 };

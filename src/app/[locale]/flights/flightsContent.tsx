@@ -24,6 +24,7 @@ import FlightControlPanel, {
 } from "@/components/molecules/flightControlPanel";
 import { FlightCardProps } from "@/components/atoms/flightCard";
 import { FlightControlConfirmFlightProps } from "@/components/atoms/flightControlConfirmFlight";
+import { title } from "process";
 
 const { getPages, getDictionary, getRoutes } = adapters.cms();
 
@@ -49,8 +50,9 @@ export default function FlightsContent() {
     null
   );
   const [selectedRoute, setSelectedRoute] = useState<string>("");
-  const [flightInfo, setFlightInfo] =
-    useState<FlightControlConfirmFlightProps>();
+  const [selectedFlight, setSelectedFlight] = useState<FlightCardProps | null>(
+    null
+  );
   const [flightControlPanelState, setflightControlPanelState] =
     useState<FlightControlState>("select");
 
@@ -122,12 +124,28 @@ export default function FlightsContent() {
             setflightControlPanelState("confirm");
             setSelectedCardIndex(idx);
             setSelectedRoute(route._id);
+            setSelectedFlight({
+              time: `${dep.toLocaleTimeString(language, {
+                hour: "2-digit",
+                minute: "2-digit",
+              })} - ${arrivalTimeStr}`,
+              flightTime: (() => {
+                const diffMs = arr.getTime() - dep.getTime();
+                const hours = Math.floor(diffMs / 1000 / 60 / 60);
+                const minutes = Math.floor((diffMs / 1000 / 60) % 60);
+                return minutes > 0
+                  ? `${hours}${mockDays.hours[language]} ${minutes}${mockDays.minutes[language]}`
+                  : `${hours}${mockDays.hours[language]}`;
+              })(),
+              connections: getPhrase("DirectFlights", language),
+              price: `${route.price} €`,
+              isSelected: true,
+              onClick: () => {},
+            });
           },
         };
       });
   };
-
-  console.log(selectedRoute);
 
   const getPhrase = (title: string, lang: "en" | "ru" | "fi") => {
     const item = dictionary.find((d) => d.title === title);
@@ -297,18 +315,16 @@ export default function FlightsContent() {
           flightControlEditFlight={{
             title: getPhrase("FlightControlEdit", language),
             onClick: () => {
-              setflightControlPanelState("select");
+              setflightControlPanelState(selectedFlight ? "confirm" : "select");
             },
           }}
           flightControlConfirmFlight={{
             title: getPhrase("FlightControlConfirm", language),
-            time: "",
-            flightTime: "",
-            connections: "",
-            buttonTitle: "",
-            onClick: function (): void {
-              throw new Error("Function not implemented.");
-            },
+            time: selectedFlight?.time || "",
+            flightTime: selectedFlight?.flightTime || "",
+            connections: selectedFlight?.connections || "",
+            buttonTitle: getPhrase("FlightControlConfirmButton", language),
+            onClick: () => router.push(`/${language}/flights/${selectedRoute}`),
           }}
         />
       </div>

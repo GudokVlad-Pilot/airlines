@@ -23,8 +23,6 @@ import FlightControlPanel, {
   FlightControlState,
 } from "@/components/molecules/flightControlPanel";
 import { FlightCardProps } from "@/components/atoms/flightCard";
-import { FlightControlConfirmFlightProps } from "@/components/atoms/flightControlConfirmFlight";
-import { title } from "process";
 
 const { getPages, getDictionary, getRoutes } = adapters.cms();
 
@@ -277,12 +275,13 @@ export default function FlightsContent() {
                   <SmallSearchBox
                     departure={`${r.origin.city[language]} (${r.origin.iata})`}
                     arrival={`${r.destination.city[language]} (${r.destination.iata})`}
-                    departureDate={new Date(r.departureTime).toLocaleDateString(
-                      language
-                    )}
-                    arrivalDate={new Date(
-                      end ? r.arrivalTime : r.departureTime
-                    ).toLocaleDateString(language)} // TODO: review the logic
+                    dates={
+                      start && end
+                        ? `${new Date(start).toLocaleDateString(language)} - ${new Date(end).toLocaleDateString(language)}`
+                        : start
+                          ? new Date(start).toLocaleDateString(language)
+                          : ""
+                    }
                     onChangeClick={() => {
                       setflightControlPanelState("change");
                       alert("Change in progress");

@@ -9,8 +9,7 @@ type Props = {
   accentColor?: string;
   departure: string;
   arrival: string;
-  departureDate: string;
-  arrivalDate: string;
+  dates: string;
   onChangeClick: () => void;
 };
 
@@ -20,8 +19,7 @@ export default function SmallSearchBox({
   backgroundColor,
   departure,
   arrival,
-  departureDate,
-  arrivalDate,
+  dates,
   onChangeClick,
 }: Props) {
   return (
@@ -35,9 +33,9 @@ export default function SmallSearchBox({
         <div className="airportText">{arrival}</div>
       </div>
       <div className="rightGroup">
-        <div className="departureDate">{departureDate}</div>
-        <div className="dash">-</div>
-        <div className="arrivalDate">{arrivalDate}</div>
+        <div className="departureDate">{dates}</div>
+        {/* <div className="dash">-</div>
+        <div className="arrivalDate">{arrivalDate}</div> */}
         <button className="changeButton" onClick={onChangeClick}>
           <DriveFileRenameOutlineIcon className="changeIcon" />
         </button>

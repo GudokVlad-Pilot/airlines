@@ -10,10 +10,10 @@ import {
   mockBottomBar,
   mockDays,
 } from "../globalConsts";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useStore } from "@/adapters/zustand/store";
 import { adapters } from "@/adapters/adapter";
-import { Route } from "@/adapters/types";
+import { Airport, Route } from "@/adapters/types";
 import "./flights.css";
 import BottomBar from "@/components/molecules/bottomBar";
 import FlightCardColumn from "@/components/molecules/flightCardsColumn";
@@ -23,6 +23,8 @@ import FlightControlPanel, {
   FlightControlState,
 } from "@/components/molecules/flightControlPanel";
 import { FlightCardProps } from "@/components/atoms/flightCard";
+import SearchBoxMain from "@/components/molecules/searchBoxMain";
+import { Dayjs } from "dayjs";
 
 const { getPages, getDictionary, getRoutes } = adapters.cms();
 
@@ -37,6 +39,18 @@ export default function FlightsContent() {
   const router = useRouter();
   const { pages, dictionary, routes, setPages, setDictionary, setRoutes } =
     useStore();
+
+  /* Change flight consts*/
+  const [isChanging, setIsChanging] = useState<boolean>(false);
+  const [originValue, setOrigin] = useState<string>(""); // IATA
+  const [destinationValue, setDestination] = useState<string>(""); // IATA
+  const [startDateValue, setStartDateValue] = useState<Dayjs | null>(null);
+  const [endDateValue, setEndDateValue] = useState<Dayjs | null>(null);
+  const searchTabPlaceholder: Record<"en" | "ru" | "fi", string> = {
+    en: "Return flights unavailable at the moment.",
+    ru: "Обратные рейсы в данный момент недоступны.",
+    fi: "Paluulentoja ei ole saatavilla tällä hetkellä.",
+  };
 
   const [language, setLanguage] = useState<"en" | "ru" | "fi">("en");
   const [loading, setLoading] = useState(true);
@@ -150,6 +164,60 @@ export default function FlightsContent() {
     return item ? item.phrase[lang] : "";
   };
 
+  /* Change flight functions */
+
+  const onSearchClick = () => {
+    if (!originValue || !destinationValue || !startDateValue) {
+      alert(getPhrase("SearchBoxAlert", language));
+      return;
+    }
+
+    const startDateStr = startDateValue.format("YYYY-MM-DD");
+    const endDateStr = endDateValue ? endDateValue.format("YYYY-MM-DD") : null;
+
+    let url = `/${language}/flights?from=${originValue}&to=${destinationValue}&start=${startDateStr}`;
+    if (endDateStr) url += `&end=${endDateStr}`;
+    setflightControlPanelState("select");
+    setIsChanging(false);
+    router.push(url);
+  };
+
+  // ✅ Origins filtered by selected destination
+  const availableOrigins: Airport[] = useMemo(() => {
+    const seen = new Set<string>();
+    let origins = routes.map((r) => r.origin);
+
+    if (destinationValue) {
+      origins = routes
+        .filter((r) => r.destination.iata === destinationValue)
+        .map((r) => r.origin);
+    }
+
+    return origins.filter((origin) => {
+      if (seen.has(origin.iata)) return false;
+      seen.add(origin.iata);
+      return true;
+    });
+  }, [routes, destinationValue]);
+
+  // ✅ Destinations filtered by selected origin
+  const filteredDestinations: Airport[] = useMemo(() => {
+    const seen = new Set<string>();
+    let destinations = routes.map((r) => r.destination);
+
+    if (originValue) {
+      destinations = routes
+        .filter((r) => r.origin.iata === originValue)
+        .map((r) => r.destination);
+    }
+
+    return destinations.filter((dest) => {
+      if (seen.has(dest.iata)) return false;
+      seen.add(dest.iata);
+      return true;
+    });
+  }, [originValue, routes]);
+
   useEffect(() => {
     const locale = params?.locale;
     if (locale === "en" || locale === "ru" || locale === "fi") {
@@ -256,6 +324,77 @@ export default function FlightsContent() {
         </div>
       )}
 
+      <div className={`changeLayout ${isChanging ? "changing" : ""}`}>
+        <div className="searchBoxWithBackground">
+          <SearchBoxMain
+            bigSearchBox={{
+              isReturn: false,
+              originPlaceholder: getPhrase(
+                "SearchBoxOriginPlaceholder",
+                language
+              ),
+              destinationPlaceholder: getPhrase(
+                "SearchBoxDestinationPlaceholder",
+                language
+              ),
+              startPlaceholder: getPhrase(
+                "SearchBoxStartPlaceholder",
+                language
+              ),
+              endPlaceholder: getPhrase("SearchBoxEndPlaceholder", language),
+              origin: originValue || "",
+              onOriginChange: (val) => {
+                setOrigin(val);
+
+                // Only validate/reset destination if a real origin is selected
+                if (val) {
+                  const availableDestinations = routes
+                    .filter((r) => r.origin.iata === val)
+                    .map((r) => r.destination.iata);
+
+                  if (!availableDestinations.includes(destinationValue)) {
+                    setDestination(""); // reset only if invalid
+                  }
+                }
+              },
+              destination: destinationValue || "",
+              onDestinationChange: (val) => {
+                setDestination(val);
+
+                // ✅ check if current origin is still valid under the new destination
+                const availableOrigins = routes
+                  .filter((r) => r.destination.iata === val)
+                  .map((r) => r.origin.iata);
+
+                if (!availableOrigins.includes(originValue)) {
+                  setOrigin(""); // reset only if invalid
+                }
+              },
+              startDate: startDateValue,
+              onStartDateChange: (date) => setStartDateValue(date),
+              endDate: endDateValue,
+              onEndDateChange: (date) => setEndDateValue(date),
+              onClick: onSearchClick,
+              locale: language,
+              airports: availableOrigins, // ✅ origins filtered by destination
+              destinations: filteredDestinations, // ✅ destinations filtered by origin
+            }}
+            tabs={[
+              {
+                title: getPhrase("OneWayTab", language),
+                notSelected: false,
+                onClick: () => console.log("Flights tab clicked"),
+              },
+              {
+                title: getPhrase("ReturnTripTab", language),
+                notSelected: true,
+                onClick: () => alert(searchTabPlaceholder[language]),
+              },
+            ]}
+          />
+        </div>
+      </div>
+
       <div className="flightsContent">
         {filteredRoutes.length > 0 &&
           filteredRoutes.map((r, idx, arr) => {
@@ -272,21 +411,23 @@ export default function FlightsContent() {
 
               return (
                 <div key={`${r.origin.iata}-${r.destination.iata}`}>
-                  <SmallSearchBox
-                    departure={`${r.origin.city[language]} (${r.origin.iata})`}
-                    arrival={`${r.destination.city[language]} (${r.destination.iata})`}
-                    dates={
-                      start && end
-                        ? `${new Date(start).toLocaleDateString(language)} - ${new Date(end).toLocaleDateString(language)}`
-                        : start
-                          ? new Date(start).toLocaleDateString(language)
-                          : ""
-                    }
-                    onChangeClick={() => {
-                      setflightControlPanelState("change");
-                      alert("Change in progress");
-                    }}
-                  />
+                  <div className="smallSearchBoxWithoutBackground">
+                    <SmallSearchBox
+                      departure={`${r.origin.city[language]} (${r.origin.iata})`}
+                      arrival={`${r.destination.city[language]} (${r.destination.iata})`}
+                      dates={
+                        start && end
+                          ? `${new Date(start).toLocaleDateString(language)} - ${new Date(end).toLocaleDateString(language)}`
+                          : start
+                            ? new Date(start).toLocaleDateString(language)
+                            : ""
+                      }
+                      onChangeClick={() => {
+                        setflightControlPanelState("change");
+                        setIsChanging(true);
+                      }}
+                    />
+                  </div>
                   <FlightCardColumn
                     origin={`${r.origin.city[language]} (${r.origin.iata})`}
                     destination={`${r.destination.city[language]} (${r.destination.iata})`}
@@ -314,6 +455,7 @@ export default function FlightsContent() {
           flightControlEditFlight={{
             title: getPhrase("FlightControlEdit", language),
             onClick: () => {
+              setIsChanging(false);
               setflightControlPanelState(selectedFlight ? "confirm" : "select");
             },
           }}

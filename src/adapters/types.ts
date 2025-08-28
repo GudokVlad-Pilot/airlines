@@ -55,3 +55,7 @@ export interface Route {
   arrivalTime: string; // ISO date string
   price: number;
 }
+
+export interface StaticRoute {
+  _id: string;
+}

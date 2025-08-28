@@ -398,56 +398,81 @@ export default function FlightsContent() {
       </div>
 
       <div className="flightsContent">
-        {filteredRoutes.length > 0 &&
-          filteredRoutes.map((r, idx, arr) => {
-            if (
-              idx === 0 ||
-              r.origin.iata !== arr[idx - 1].origin.iata ||
-              r.destination.iata !== arr[idx - 1].destination.iata
-            ) {
-              const routesForPair = arr.filter(
+        {from && to && (
+          <div className="smallSearchBoxWithoutBackground">
+            <SmallSearchBox
+              departure={`${
+                routes.find((r) => r.origin.iata === from)?.origin.city[
+                  language
+                ] || ""
+              } (${from.toUpperCase()})`}
+              arrival={`${
+                routes.find((r) => r.destination.iata === to)?.destination.city[
+                  language
+                ] || ""
+              } (${to.toUpperCase()})`}
+              dates={
+                start && end
+                  ? `${new Date(start).toLocaleDateString(language)} - ${new Date(end).toLocaleDateString(language)}`
+                  : start
+                    ? new Date(start).toLocaleDateString(language)
+                    : ""
+              }
+              onChangeClick={() => {
+                setflightControlPanelState("change");
+                setIsChanging(true);
+              }}
+            />
+          </div>
+        )}
+
+        {filteredRoutes.length > 0 ? (
+          filteredRoutes
+            .filter(
+              (r, idx, arr) =>
+                idx === 0 ||
+                r.origin.iata !== arr[idx - 1].origin.iata ||
+                r.destination.iata !== arr[idx - 1].destination.iata
+            )
+            .map((r) => {
+              const routesForPair = filteredRoutes.filter(
                 (route) =>
                   route.origin.iata === r.origin.iata &&
                   route.destination.iata === r.destination.iata
               );
 
               return (
-                <div key={`${r.origin.iata}-${r.destination.iata}`}>
-                  <div className="smallSearchBoxWithoutBackground">
-                    <SmallSearchBox
-                      departure={`${r.origin.city[language]} (${r.origin.iata})`}
-                      arrival={`${r.destination.city[language]} (${r.destination.iata})`}
-                      dates={
-                        start && end
-                          ? `${new Date(start).toLocaleDateString(language)} - ${new Date(end).toLocaleDateString(language)}`
-                          : start
-                            ? new Date(start).toLocaleDateString(language)
-                            : ""
-                      }
-                      onChangeClick={() => {
-                        setflightControlPanelState("change");
-                        setIsChanging(true);
-                      }}
-                    />
-                  </div>
-                  <FlightCardColumn
-                    origin={`${r.origin.city[language]} (${r.origin.iata})`}
-                    destination={`${r.destination.city[language]} (${r.destination.iata})`}
-                    flightCards={buildFlightCards(
-                      routesForPair,
-                      language,
-                      getPhrase,
-                      selectedCardIndex,
-                      setSelectedCardIndex,
-                      setSelectedRoute
-                    )}
-                  />
-                </div>
+                <FlightCardColumn
+                  key={`${r.origin.iata}-${r.destination.iata}`}
+                  origin={`${r.origin.city[language]} (${r.origin.iata})`}
+                  destination={`${r.destination.city[language]} (${r.destination.iata})`}
+                  flightCards={buildFlightCards(
+                    routesForPair,
+                    language,
+                    getPhrase,
+                    selectedCardIndex,
+                    setSelectedCardIndex,
+                    setSelectedRoute
+                  )}
+                />
               );
-            }
-            return null;
-          })}
+            })
+        ) : (
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: "1rem",
+              fontFamily: "Manrope",
+              fontSize: "24px",
+              fontWeight: "600",
+              color: colors.primary,
+            }} // TODO: move to css file
+          >
+            {getPhrase("NoFlightsFound", language)}
+          </div>
+        )}
       </div>
+
       <div className="flightControlPanel">
         <FlightControlPanel
           state={flightControlPanelState}

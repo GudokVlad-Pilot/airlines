@@ -1,0 +1,5 @@
+.flightControlSelectFlightBox {
+  height: 100%; /* should accept parent's params */
+  width: 100%;
+  color: white;
+}

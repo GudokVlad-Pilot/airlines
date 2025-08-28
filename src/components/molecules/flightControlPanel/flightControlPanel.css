@@ -1,0 +1,12 @@
+.flightControlPanelBox {
+  background-color: blue;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 175px;
+  width: 100%;
+}
+
+.flightControlPanelContent {
+  width: 900px;
+}

@@ -10,15 +10,21 @@ import {
   mockBottomBar,
   mockDays,
 } from "../globalConsts";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useStore } from "@/adapters/zustand/store";
 import { adapters } from "@/adapters/adapter";
-import { Route } from "@/adapters/types";
+import { Airport, Route } from "@/adapters/types";
 import "./flights.css";
 import BottomBar from "@/components/molecules/bottomBar";
 import FlightCardColumn from "@/components/molecules/flightCardsColumn";
 import { colors } from "@/components/styles/colors";
 import SmallSearchBox from "@/components/atoms/smallSearchBox";
+import FlightControlPanel, {
+  FlightControlState,
+} from "@/components/molecules/flightControlPanel";
+import { FlightCardProps } from "@/components/atoms/flightCard";
+import SearchBoxMain from "@/components/molecules/searchBoxMain";
+import { Dayjs } from "dayjs";
 
 const { getPages, getDictionary, getRoutes } = adapters.cms();
 
@@ -34,12 +40,33 @@ export default function FlightsContent() {
   const { pages, dictionary, routes, setPages, setDictionary, setRoutes } =
     useStore();
 
+  /* Change flight consts*/
+  const [isChanging, setIsChanging] = useState<boolean>(false);
+  const [originValue, setOrigin] = useState<string>(""); // IATA
+  const [destinationValue, setDestination] = useState<string>(""); // IATA
+  const [startDateValue, setStartDateValue] = useState<Dayjs | null>(null);
+  const [endDateValue, setEndDateValue] = useState<Dayjs | null>(null);
+  const searchTabPlaceholder: Record<"en" | "ru" | "fi", string> = {
+    en: "Return flights unavailable at the moment.",
+    ru: "Обратные рейсы в данный момент недоступны.",
+    fi: "Paluulentoja ei ole saatavilla tällä hetkellä.",
+  };
+
   const [language, setLanguage] = useState<"en" | "ru" | "fi">("en");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isSidebarMounted, setIsSidebarMounted] = useState(false);
   const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
+  const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
+    null
+  );
+  const [selectedRoute, setSelectedRoute] = useState<string>("");
+  const [selectedFlight, setSelectedFlight] = useState<FlightCardProps | null>(
+    null
+  );
+  const [flightControlPanelState, setflightControlPanelState] =
+    useState<FlightControlState>("select");
 
   const openSidebar = () => {
     setIsSidebarMounted(true);
@@ -51,10 +78,147 @@ export default function FlightsContent() {
     setTimeout(() => setIsSidebarMounted(false), 300);
   };
 
+  const buildFlightCards = (
+    routesForPair: Route[],
+    language: "en" | "ru" | "fi",
+    getPhrase: (title: string, lang: "en" | "ru" | "fi") => string,
+    selectedCardIndex: number | null,
+    setSelectedCardIndex: (idx: number) => void,
+    setSelectedRoute: (id: string) => void
+  ): FlightCardProps[] => {
+    return routesForPair
+      .slice()
+      .sort(
+        (a, b) =>
+          new Date(a.departureTime).getTime() -
+          new Date(b.departureTime).getTime()
+      )
+      .map((route, idx) => {
+        const dep = new Date(route.departureTime);
+        const arr = new Date(route.arrivalTime);
+
+        const depDay = new Date(
+          dep.getFullYear(),
+          dep.getMonth(),
+          dep.getDate()
+        );
+        const arrDay = new Date(
+          arr.getFullYear(),
+          arr.getMonth(),
+          arr.getDate()
+        );
+        const dayDiff = Math.round(
+          (arrDay.getTime() - depDay.getTime()) / (1000 * 60 * 60 * 24)
+        );
+
+        const arrivalTimeStr = `${arr.toLocaleTimeString(language, {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}${dayDiff > 0 ? ` (+${dayDiff} ${mockDays.days[language]})` : ""}`;
+
+        return {
+          time: `${dep.toLocaleTimeString(language, {
+            hour: "2-digit",
+            minute: "2-digit",
+          })} - ${arrivalTimeStr}`,
+          flightTime: (() => {
+            const diffMs = arr.getTime() - dep.getTime();
+            const hours = Math.floor(diffMs / 1000 / 60 / 60);
+            const minutes = Math.floor((diffMs / 1000 / 60) % 60);
+            return minutes > 0
+              ? `${hours}${mockDays.hours[language]} ${minutes}${mockDays.minutes[language]}`
+              : `${hours}${mockDays.hours[language]}`;
+          })(),
+          connections: getPhrase("DirectFlights", language),
+          price: `${route.price} €`,
+          isSelected: selectedCardIndex === idx,
+          onClick: () => {
+            setflightControlPanelState("confirm");
+            setSelectedCardIndex(idx);
+            setSelectedRoute(route._id);
+            setSelectedFlight({
+              time: `${dep.toLocaleTimeString(language, {
+                hour: "2-digit",
+                minute: "2-digit",
+              })} - ${arrivalTimeStr}`,
+              flightTime: (() => {
+                const diffMs = arr.getTime() - dep.getTime();
+                const hours = Math.floor(diffMs / 1000 / 60 / 60);
+                const minutes = Math.floor((diffMs / 1000 / 60) % 60);
+                return minutes > 0
+                  ? `${hours}${mockDays.hours[language]} ${minutes}${mockDays.minutes[language]}`
+                  : `${hours}${mockDays.hours[language]}`;
+              })(),
+              connections: getPhrase("DirectFlights", language),
+              price: `${route.price} €`,
+              isSelected: true,
+              onClick: () => {},
+            });
+          },
+        };
+      });
+  };
+
   const getPhrase = (title: string, lang: "en" | "ru" | "fi") => {
     const item = dictionary.find((d) => d.title === title);
     return item ? item.phrase[lang] : "";
   };
+
+  /* Change flight functions */
+
+  const onSearchClick = () => {
+    if (!originValue || !destinationValue || !startDateValue) {
+      alert(getPhrase("SearchBoxAlert", language));
+      return;
+    }
+
+    const startDateStr = startDateValue.format("YYYY-MM-DD");
+    const endDateStr = endDateValue ? endDateValue.format("YYYY-MM-DD") : null;
+
+    let url = `/${language}/flights?from=${originValue}&to=${destinationValue}&start=${startDateStr}`;
+    if (endDateStr) url += `&end=${endDateStr}`;
+    setSelectedFlight(null);
+    setSelectedCardIndex(null);
+    setflightControlPanelState("select");
+    setIsChanging(false);
+    router.push(url);
+  };
+
+  // ✅ Origins filtered by selected destination
+  const availableOrigins: Airport[] = useMemo(() => {
+    const seen = new Set<string>();
+    let origins = routes.map((r) => r.origin);
+
+    if (destinationValue) {
+      origins = routes
+        .filter((r) => r.destination.iata === destinationValue)
+        .map((r) => r.origin);
+    }
+
+    return origins.filter((origin) => {
+      if (seen.has(origin.iata)) return false;
+      seen.add(origin.iata);
+      return true;
+    });
+  }, [routes, destinationValue]);
+
+  // ✅ Destinations filtered by selected origin
+  const filteredDestinations: Airport[] = useMemo(() => {
+    const seen = new Set<string>();
+    let destinations = routes.map((r) => r.destination);
+
+    if (originValue) {
+      destinations = routes
+        .filter((r) => r.origin.iata === originValue)
+        .map((r) => r.destination);
+    }
+
+    return destinations.filter((dest) => {
+      if (seen.has(dest.iata)) return false;
+      seen.add(dest.iata);
+      return true;
+    });
+  }, [originValue, routes]);
 
   useEffect(() => {
     const locale = params?.locale;
@@ -162,6 +326,77 @@ export default function FlightsContent() {
         </div>
       )}
 
+      <div className={`changeLayout ${isChanging ? "changing" : ""}`}>
+        <div className="searchBoxWithBackground">
+          <SearchBoxMain
+            bigSearchBox={{
+              isReturn: false,
+              originPlaceholder: getPhrase(
+                "SearchBoxOriginPlaceholder",
+                language
+              ),
+              destinationPlaceholder: getPhrase(
+                "SearchBoxDestinationPlaceholder",
+                language
+              ),
+              startPlaceholder: getPhrase(
+                "SearchBoxStartPlaceholder",
+                language
+              ),
+              endPlaceholder: getPhrase("SearchBoxEndPlaceholder", language),
+              origin: originValue || "",
+              onOriginChange: (val) => {
+                setOrigin(val);
+
+                // Only validate/reset destination if a real origin is selected
+                if (val) {
+                  const availableDestinations = routes
+                    .filter((r) => r.origin.iata === val)
+                    .map((r) => r.destination.iata);
+
+                  if (!availableDestinations.includes(destinationValue)) {
+                    setDestination(""); // reset only if invalid
+                  }
+                }
+              },
+              destination: destinationValue || "",
+              onDestinationChange: (val) => {
+                setDestination(val);
+
+                // ✅ check if current origin is still valid under the new destination
+                const availableOrigins = routes
+                  .filter((r) => r.destination.iata === val)
+                  .map((r) => r.origin.iata);
+
+                if (!availableOrigins.includes(originValue)) {
+                  setOrigin(""); // reset only if invalid
+                }
+              },
+              startDate: startDateValue,
+              onStartDateChange: (date) => setStartDateValue(date),
+              endDate: endDateValue,
+              onEndDateChange: (date) => setEndDateValue(date),
+              onClick: onSearchClick,
+              locale: language,
+              airports: availableOrigins, // ✅ origins filtered by destination
+              destinations: filteredDestinations, // ✅ destinations filtered by origin
+            }}
+            tabs={[
+              {
+                title: getPhrase("OneWayTab", language),
+                notSelected: false,
+                onClick: () => console.log("Flights tab clicked"),
+              },
+              {
+                title: getPhrase("ReturnTripTab", language),
+                notSelected: true,
+                onClick: () => alert(searchTabPlaceholder[language]),
+              },
+            ]}
+          />
+        </div>
+      </div>
+
       <div className="flightsContent">
         {filteredRoutes.length > 0 &&
           filteredRoutes.map((r, idx, arr) => {
@@ -178,76 +413,34 @@ export default function FlightsContent() {
 
               return (
                 <div key={`${r.origin.iata}-${r.destination.iata}`}>
-                  <SmallSearchBox
-                    departure={`${r.origin.city[language]} (${r.origin.iata})`}
-                    arrival={`${r.destination.city[language]} (${r.destination.iata})`}
-                    departureDate={new Date(r.departureTime).toLocaleDateString(
-                      language
-                    )}
-                    arrivalDate={new Date(
-                      end ? r.arrivalTime : r.departureTime
-                    ).toLocaleDateString(language)} // TODO: review the logic
-                    onChangeClick={() => alert("Change is progress")}
-                  />
+                  <div className="smallSearchBoxWithoutBackground">
+                    <SmallSearchBox
+                      departure={`${r.origin.city[language]} (${r.origin.iata})`}
+                      arrival={`${r.destination.city[language]} (${r.destination.iata})`}
+                      dates={
+                        start && end
+                          ? `${new Date(start).toLocaleDateString(language)} - ${new Date(end).toLocaleDateString(language)}`
+                          : start
+                            ? new Date(start).toLocaleDateString(language)
+                            : ""
+                      }
+                      onChangeClick={() => {
+                        setflightControlPanelState("change");
+                        setIsChanging(true);
+                      }}
+                    />
+                  </div>
                   <FlightCardColumn
                     origin={`${r.origin.city[language]} (${r.origin.iata})`}
                     destination={`${r.destination.city[language]} (${r.destination.iata})`}
-                    flightCards={routesForPair
-                      .slice()
-                      .sort(
-                        (a, b) =>
-                          new Date(a.departureTime).getTime() -
-                          new Date(b.departureTime).getTime()
-                      )
-                      .map((route) => {
-                        const dep = new Date(route.departureTime);
-                        const arr = new Date(route.arrivalTime);
-
-                        // ✅ Fixed day difference calculation
-                        const depDay = new Date(
-                          dep.getFullYear(),
-                          dep.getMonth(),
-                          dep.getDate()
-                        );
-                        const arrDay = new Date(
-                          arr.getFullYear(),
-                          arr.getMonth(),
-                          arr.getDate()
-                        );
-                        const dayDiff = Math.round(
-                          (arrDay.getTime() - depDay.getTime()) /
-                            (1000 * 60 * 60 * 24)
-                        );
-
-                        const arrivalTimeStr = `${arr.toLocaleTimeString(
-                          language,
-                          {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}${dayDiff > 0 ? ` (+${dayDiff} ${mockDays.days[language]})` : ""}`;
-
-                        return {
-                          time: `${dep.toLocaleTimeString(language, {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })} - ${arrivalTimeStr}`,
-                          flightTime: (() => {
-                            const diffMs = arr.getTime() - dep.getTime();
-                            const hours = Math.floor(diffMs / 1000 / 60 / 60);
-                            const minutes = Math.floor(
-                              (diffMs / 1000 / 60) % 60
-                            );
-                            return minutes > 0
-                              ? `${hours}${mockDays.hours[language]} ${minutes}${mockDays.minutes[language]}`
-                              : `${hours}${mockDays.hours[language]}`;
-                          })(),
-                          connections: getPhrase("DirectFlights", language),
-                          price: `${route.price} €`,
-                          onClick: () =>
-                            router.push(`/${language}/flights/${route._id}`),
-                        };
-                      })}
+                    flightCards={buildFlightCards(
+                      routesForPair,
+                      language,
+                      getPhrase,
+                      selectedCardIndex,
+                      setSelectedCardIndex,
+                      setSelectedRoute
+                    )}
                   />
                 </div>
               );
@@ -255,7 +448,29 @@ export default function FlightsContent() {
             return null;
           })}
       </div>
-
+      <div className="flightControlPanel">
+        <FlightControlPanel
+          state={flightControlPanelState}
+          flightControlSelectFlight={{
+            title: getPhrase("FlightControlSelect", language),
+          }}
+          flightControlEditFlight={{
+            title: getPhrase("FlightControlEdit", language),
+            onClick: () => {
+              setIsChanging(false);
+              setflightControlPanelState(selectedFlight ? "confirm" : "select");
+            },
+          }}
+          flightControlConfirmFlight={{
+            title: getPhrase("FlightControlConfirm", language),
+            time: selectedFlight?.time || "",
+            flightTime: selectedFlight?.flightTime || "",
+            connections: selectedFlight?.connections || "",
+            buttonTitle: getPhrase("FlightControlConfirmButton", language),
+            onClick: () => router.push(`/${language}/flights/${selectedRoute}`),
+          }}
+        />
+      </div>
       <BottomBar
         copyright={mockBottomBar.copyright[language]}
         createdby={mockBottomBar.createdBy[language]}

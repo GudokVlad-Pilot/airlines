@@ -4,6 +4,7 @@ import { IoIosTime } from "react-icons/io";
 import "./flightCard.css";
 
 export type FlightCardProps = {
+  isSelected?: boolean;
   time: string;
   flightTime: string;
   connections: string;
@@ -16,6 +17,7 @@ export type FlightCardProps = {
 };
 
 export default function FlightCard({
+  isSelected,
   backgroundColor,
   basicColor,
   accentColor,
@@ -28,7 +30,7 @@ export default function FlightCard({
 }: FlightCardProps) {
   return (
     <div
-      className="flightCardBox"
+      className={`flightCardBox ${isSelected ? "selected" : ""}`}
       onClick={onClick}
       style={{ backgroundColor: backgroundColor || colors.secondary }}
     >

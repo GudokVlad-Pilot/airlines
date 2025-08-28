@@ -14,3 +14,14 @@ export const Default = {
     onClick: () => console.log("I am Example"),
   },
 };
+
+export const Selected = {
+  args: {
+    isSelected: true,
+    time: "16:00 - 18:30",
+    flightTime: "2h 30m",
+    connections: "Direct",
+    price: "240$",
+    onClick: () => console.log("I am Example"),
+  },
+};

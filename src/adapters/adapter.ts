@@ -4,8 +4,9 @@ import {
   dictionaryQuery,
   pagesQuery,
   routesQuery,
+  staticRouteQuery,
 } from "./queries";
-import { Airport, Dictionary, Page, Route } from "./types";
+import { Airport, Dictionary, Page, Route, StaticRoute } from "./types";
 
 export const adapters = {
   cms: () => {
@@ -53,6 +54,19 @@ export const adapters = {
           return result;
         } catch (error) {
           console.error("Failed to fetch routes:", error);
+          return [];
+        }
+      },
+      getStaticRoutes: async (): Promise<StaticRoute[]> => {
+        try {
+          const result = (await sanityClient.fetch(
+            staticRouteQuery,
+          )) as StaticRoute[];
+          console.log(result);
+          console.log("I am getStaticRoutes from Sanity");
+          return result;
+        } catch (error) {
+          console.error("Failed to fetch Static Routes:", error);
           return [];
         }
       },

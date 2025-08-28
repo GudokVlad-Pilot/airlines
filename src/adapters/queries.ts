@@ -47,3 +47,9 @@ export const routesQuery = `
     price
   }
 `;
+
+export const staticRouteQuery = `
+  *[_type == "routes"]{
+    _id,
+  }
+`;

@@ -177,6 +177,8 @@ export default function FlightsContent() {
 
     let url = `/${language}/flights?from=${originValue}&to=${destinationValue}&start=${startDateStr}`;
     if (endDateStr) url += `&end=${endDateStr}`;
+    setSelectedFlight(null);
+    setSelectedCardIndex(null);
     setflightControlPanelState("select");
     setIsChanging(false);
     router.push(url);

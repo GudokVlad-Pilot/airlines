@@ -7,15 +7,21 @@
   justify-content: space-between;
 }
 
+.flightControlEditFlightTitle {
+  font-family: "Manrope";
+  font-size: 24px;
+  font-weight: 400;
+}
+
 .flightControlEditFlightIcon {
-  color: aqua;
+  color: #89b8e9;
   cursor: pointer;
 }
 
 .flightControlEditFlightIcon:hover {
-  color: red;
+  color: white;
 }
 
 .flightControlEditFlightIcon:active {
-  color: purple;
+  color: #215e9e;
 }

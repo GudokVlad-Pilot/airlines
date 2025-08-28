@@ -12,6 +12,11 @@
   font-family: "Manrope";
 }
 
+.flightControlConfirmFlightTitle {
+  font-size: 24px;
+  font-weight: 400;
+}
+
 .flightControlConfirmFlightInfo {
   display: flex;
   align-content: center;
@@ -37,4 +42,5 @@
 
 .flightControlConfirmFlightButton {
   align-self: flex-end;
+  font-weight: 400;
 }

@@ -17,7 +17,7 @@ type Store = {
   setDictionary: (dictionary: Dictionary[]) => void;
   setAirports: (airports: Airport[]) => void;
   setRoutes: (routes: Route[]) => void;
-  setFlight: (flight: Route) => void;
+  setFlight: (flight: Route | null) => void;
   checkExpiration: () => void;
   lastUpdated: number;
 };

@@ -53,3 +53,26 @@ export const staticRouteQuery = `
     _id,
   }
 `;
+
+export const flightQuery = `
+  *[_type == "routes" && _id == $id][0]{
+    _id,
+    origin->{
+      _id,
+      iata,
+      title,
+      city,
+      country
+    },
+    destination->{
+      _id,
+      iata,
+      title,
+      city,
+      country
+    },
+    departureTime,
+    arrivalTime,
+    price
+  }
+`;

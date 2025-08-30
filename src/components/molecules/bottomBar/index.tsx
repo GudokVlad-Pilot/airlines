@@ -49,7 +49,7 @@ export default function BottomBar({
           className="createdByText"
           style={{ color: basicColor || colors.basic }}
         >
-          &nbsp; & &nbsp;
+          &nbsp;&&nbsp;
         </div>
         <div className="linkVladandCharlie">
           <a

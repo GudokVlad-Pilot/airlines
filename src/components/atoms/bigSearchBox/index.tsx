@@ -1,5 +1,5 @@
 import { colors } from "@/components/styles/colors";
-import { GoArrowRight } from "react-icons/go";
+import { FaArrowRightLong } from "react-icons/fa6";
 import "./bigSearchBox.css";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -109,6 +109,9 @@ export default function BigSearchBox({
                   "& .MuiInputLabel-root.Mui-focused": {
                     color: accentColor || colors.primaryLight,
                   },
+                  "& .MuiSvgIcon-root": {
+                    color: accentColor || colors.primaryLight,
+                  },
                 }}
               />
             )}
@@ -148,6 +151,7 @@ export default function BigSearchBox({
                 sx={{
                   width: 200,
                   mr: 2,
+                  ml: 2,
                   "& .MuiInputBase-root": {
                     height: 50,
                     color: basicColor || colors.basic,
@@ -163,6 +167,9 @@ export default function BigSearchBox({
                     color: accentColor || colors.primaryLight,
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
+                    color: accentColor || colors.primaryLight,
+                  },
+                  "& .MuiSvgIcon-root": {
                     color: accentColor || colors.primaryLight,
                   },
                 }}
@@ -182,23 +189,27 @@ export default function BigSearchBox({
                   endAdornment: null, // 🚀 removes the calendar icon
                 },
                 sx: {
-                  width: 135,
+                  width: 200, // TODO: fix lenght
                   mr: 2,
-                  "& .MuiInputBase-root": {
+                  ml: 2,
+                  "& .MuiPickersInputBase-root": {
                     height: 50,
                     color: basicColor || colors.basic,
                     borderRadius: 20,
                   },
-                  "& .MuiOutlinedInput-notchedOutline": {
+                  "& .MuiPickersOutlinedInput-notchedOutline": {
                     borderColor: accentColor || colors.primaryLight,
                   },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                  "&:hover .MuiPickersOutlinedInput-notchedOutline": {
                     borderColor: accentColor || colors.primaryLight,
                   },
                   "& .MuiInputLabel-root": {
                     color: accentColor || colors.primaryLight,
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
+                    color: accentColor || colors.primaryLight,
+                  },
+                  "& .MuiSvgIcon-root": {
                     color: accentColor || colors.primaryLight,
                   },
                 },
@@ -244,7 +255,7 @@ export default function BigSearchBox({
 
         {/* SEARCH BUTTON */}
         <button className="searchButton" onClick={onClick}>
-          <GoArrowRight />
+          <FaArrowRightLong size={20} />
         </button>
       </div>
     </LocalizationProvider>

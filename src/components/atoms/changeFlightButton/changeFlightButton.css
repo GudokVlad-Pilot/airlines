@@ -1,0 +1,28 @@
+.changeFlightButtonBox {
+  background-color: var(--btn-bg, #89b8e9);
+  color: var(--btn-color, white);
+  border: none;
+  border-radius: 20px;
+  height: 100px;
+  width: 135px;
+  font-family: "Manrope";
+  font-size: 18px; /* TODO: check sizes */
+  font-weight: 600;
+}
+
+.changeFlightButtonBox:hover:not(:disabled) {
+  background-color: var(--btn-bg-hover, #215e9e);
+  color: var(--btn-color-hover, white);
+  cursor: pointer;
+}
+
+.changeFlightButtonBox:active:not(:disabled) {
+  background-color: var(--btn-bg-active, #89b8e9);
+  color: var(--btn-color-active, white);
+}
+
+.changeFlightButtonBox:disabled {
+  background-color: var(--btn-bg-disabled, #cccccc);
+  color: var(--btn-color-disabled, #777777);
+  cursor: not-allowed;
+}

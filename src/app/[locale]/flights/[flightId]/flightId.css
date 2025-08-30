@@ -57,6 +57,13 @@
   flex-direction: column;
 }
 
+.flightCardRoute {
+  padding: 10px 0;
+  font-family: "Manrope";
+  font-weight: 600;
+  font-size: 14px;
+}
+
 .bottomPart {
   width: 100%;
 }

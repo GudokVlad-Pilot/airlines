@@ -53,14 +53,14 @@ export const Action = {
         isOpened={isOpened}
         onClick={() => setIsOpened((prev) => !prev)}
         passengers={passengers}
-        addPassangerButtonText="+ Add Passenger"
-        nextButtonText="Next"
         onAddPassangerButtonClick={handleAddPassenger}
       />
     );
   },
   args: {
     title: "Food on Board",
+    continueWithoutMealText: "Continue without a meal",
+    nextButtonText: "Next",
   },
 };
 
@@ -79,8 +79,6 @@ export const ActionNextDisabled = {
         isOpened={isOpened}
         onClick={() => setIsOpened(true)}
         passengers={passengers}
-        addPassangerButtonText="+ Add Passenger"
-        nextButtonText="Next"
         isNextDisabled={true}
         onAddPassangerButtonClick={handleAddPassenger}
       />
@@ -88,5 +86,7 @@ export const ActionNextDisabled = {
   },
   args: {
     title: "Food on Board",
+    continueWithoutMealText: "Continue without a meal",
+    nextButtonText: "Next",
   },
 };

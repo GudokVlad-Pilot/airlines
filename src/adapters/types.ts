@@ -59,3 +59,8 @@ export interface Route {
 export interface StaticRoute {
   _id: string;
 }
+
+export interface Ingredient {
+  title: string;
+  category: string[]; // e.g. ["Vegan", "Vegetarian", "Dairy-free"]
+}

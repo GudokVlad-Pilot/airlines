@@ -76,3 +76,20 @@ export const flightQuery = `
     price
   }
 `;
+
+export const mealsQuery = `
+  *[_type == "food"]{
+    _id,
+    title,
+    "image": image.asset -> url,
+    isActive,
+    ingredients[]->{
+      _id,
+      title,
+      category[]->{
+        _id,
+        title
+      }
+    }
+  }
+`;

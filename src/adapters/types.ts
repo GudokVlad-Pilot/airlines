@@ -60,7 +60,21 @@ export interface StaticRoute {
   _id: string;
 }
 
-export interface Ingredient {
+export interface Category {
+  _id: string;
   title: string;
-  category: string[]; // e.g. ["Vegan", "Vegetarian", "Dairy-free"]
+}
+
+export interface Ingredient {
+  _id: string;
+  title: string;
+  category: Category[];
+}
+
+export interface Meal {
+  _id: string;
+  title: string;
+  image: string;
+  isActive: boolean;
+  ingredients: Ingredient[];
 }

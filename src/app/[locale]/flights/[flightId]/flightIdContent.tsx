@@ -20,6 +20,7 @@ import { Route } from "@/adapters/types";
 import FlightTopContent from "@/components/molecules/flightTopContent";
 import PassengerInfo from "@/components/molecules/passengerInfo";
 import { PassengerInfoContentProps } from "@/components/atoms/passengerInfoContent";
+import FoodInfo from "@/components/molecules/foodInfo";
 
 const { getPages, getFlight, getDictionary } = adapters.cms();
 
@@ -39,6 +40,7 @@ export default function FlightIdContent() {
   const [isSidebarMounted, setIsSidebarMounted] = useState(false);
 
   const [isPassengerInfoOpened, setIsPassengerInfoOpened] = useState(true);
+  const [isFoodInfoOpened, setIsFoodInfoOpened] = useState(false);
 
   const getPhrase = (title: string, lang: "en" | "ru" | "fi") => {
     const item = dictionary.find((d) => d.title === title);
@@ -309,6 +311,17 @@ export default function FlightIdContent() {
               onAddPassangerButtonClick={handleAddPassenger}
               onNextButtonClick={() => setIsPassengerInfoOpened(false)}
               isNextDisabled={!isNextEnabled}
+            />
+            <FoodInfo
+              foodCardsBoxes={[]}
+              title={getPhrase("FlightInfoFoodInfoTitle", language)}
+              onClick={() => {
+                setIsFoodInfoOpened(true);
+              }}
+              isOpened={isFoodInfoOpened}
+              nextButtonText={getPhrase("FlightInfoNextButtonTitle", language)}
+              onNextButtonClick={() => setIsFoodInfoOpened(false)}
+              isNextDisabled={false}
             />
           </div>
           <div>Flight ID: {flightId}</div>

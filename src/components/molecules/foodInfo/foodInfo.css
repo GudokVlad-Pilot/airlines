@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+
 .foodInfoBox {
   color: white;
   background-color: #393e46;
@@ -29,17 +31,14 @@
   padding: 25px;
 }
 
-.foodInfoContent {
-  width: 100%;
-}
-
 .foodInfoData {
+  padding: 0 25px;
   place-self: center;
 }
 
 .foodInfoButtons {
   display: flex;
   justify-content: flex-end;
-  padding: 25px;
+  padding: 20px;
   gap: 15px;
 }

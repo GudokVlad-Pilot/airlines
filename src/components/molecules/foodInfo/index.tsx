@@ -1,29 +1,23 @@
-import PassengerInfoContent, {
-  PassengerInfoContentProps,
-} from "@/components/atoms/passengerInfoContent";
 import "./foodInfo.css";
 import CustomButton from "@/components/atoms/customButton";
+import FoodCardsBox, { FoodCardsBoxProps } from "../foodCardsBox";
 
 type Props = {
-  passengers: PassengerInfoContentProps[];
+  foodCardsBoxes: FoodCardsBoxProps[];
   title: string;
   isOpened?: boolean;
   onClick: () => void;
-  continueWithoutMealText: string;
   nextButtonText: string;
-  oncontinueWithoutMealButtonClick: () => void;
   onNextButtonClick: () => void;
   isNextDisabled: boolean;
 };
 
 export default function FoodInfo({
+  foodCardsBoxes,
   title,
   isOpened,
   onClick,
-  passengers,
-  continueWithoutMealText,
   nextButtonText,
-  oncontinueWithoutMealButtonClick,
   onNextButtonClick,
   isNextDisabled,
 }: Props) {
@@ -41,16 +35,15 @@ export default function FoodInfo({
       {isOpened && (
         <div className="foodInfoContent">
           <div className="foodInfoData">
-            {passengers.map((p, index) => (
-              <PassengerInfoContent key={index} {...p} />
+            {foodCardsBoxes.map((f, index) => (
+              <FoodCardsBox key={index} {...f} />
             ))}
           </div>
-
           <div className="foodInfoButtons">
-            <CustomButton
+            {/* <CustomButton
               title={continueWithoutMealText}
               onClick={oncontinueWithoutMealButtonClick}
-            />
+            /> */}
             <CustomButton
               title={nextButtonText}
               onClick={onNextButtonClick}

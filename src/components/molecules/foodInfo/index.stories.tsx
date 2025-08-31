@@ -1,50 +1,83 @@
 import { useState } from "react";
 import FoodInfo from ".";
-
-const createPassenger = (index: number) => ({
-  title: `Passenger ${index + 1}`,
-  firstNameTitle: "First Name",
-  lastNameTitle: "Last Name",
-  emailTitle: "Email",
-  phoneTitle: "Phone",
-  firstNameValue: "",
-  lastNameValue: "",
-  emailValue: "",
-  phoneValue: "",
-  onFirstNameValueChange: () => {},
-  onLastNameValueChange: () => {},
-  onEmailValueChange: () => {},
-  onPhoneValueChange: () => {},
-});
+import { FoodCardsBoxProps } from "../foodCardsBox";
+import { FoodCardProps } from "@/components/atoms/foodCard";
 
 export default {
   title: "molecules/FoodInfo",
   component: FoodInfo,
 };
 
-export const Default = {
-  args: {
-    title: "Food on Board",
+const sampleFoodCards: FoodCardProps[] = [
+  {
+    title: "Chicken Salad",
+    image: "/assets/images/placeholder-4-3.png",
+    ingredientsText: "Ingredients",
+    ingredients: "Chicken, Lettuce, Tomato",
+    isSelected: false,
   },
-};
-
-export const Opened = {
-  args: {
-    title: "Food on Board",
-    isOpened: true,
-    passengers: [createPassenger(0)],
-    continueWithoutMealText: "Continue without a meal",
-    nextButtonText: "Next",
+  {
+    title: "Vegan Bowl",
+    image: "/assets/images/placeholder-4-3.png",
+    ingredientsText: "Ingredients",
+    ingredients: "Quinoa, Beans, Avocado",
+    isSelected: false,
   },
-};
+  {
+    title: "Pasta Carbonara",
+    image: "/assets/images/placeholder-4-3.png",
+    ingredientsText: "Ingredients",
+    ingredients: "Pasta, Bacon, Cheese",
+    isSelected: false,
+  },
+  {
+    title: "Chicken Salad",
+    image: "/assets/images/placeholder-4-3.png",
+    ingredientsText: "Ingredients",
+    ingredients: "Chicken, Lettuce, Tomato",
+    isSelected: false,
+  },
+  {
+    title: "Vegan Bowl",
+    image: "/assets/images/placeholder-4-3.png",
+    ingredientsText: "Ingredients",
+    ingredients: "Quinoa, Beans, Avocado",
+    isSelected: false,
+  },
+  {
+    title: "Pasta Carbonara",
+    image: "/assets/images/placeholder-4-3.png",
+    ingredientsText: "Ingredients",
+    ingredients: "Pasta, Bacon, Cheese",
+    isSelected: false,
+  },
+];
 
-export const Action = {
+const sampleFoodCardsBoxes: FoodCardsBoxProps[] = [
+  {
+    title: "Passenger 1",
+    foodCards: sampleFoodCards,
+  },
+  {
+    title: "Passenger 2",
+    foodCards: sampleFoodCards,
+  },
+];
+
+export const OnlyOneSelectable = {
   render: (args: any) => {
     const [isOpened, setIsOpened] = useState(false);
-    const [passengers, setPassengers] = useState([createPassenger(0)]);
+    const [foodBoxes, setFoodBoxes] = useState(sampleFoodCardsBoxes);
 
-    const handleAddPassenger = () => {
-      setPassengers((prev) => [...prev, createPassenger(prev.length)]);
+    const handleCardClick = (boxIndex: number, cardIndex: number) => {
+      const updatedBoxes = [...foodBoxes];
+      updatedBoxes[boxIndex].foodCards = updatedBoxes[boxIndex].foodCards.map(
+        (card, idx) => ({
+          ...card,
+          isSelected: idx === cardIndex, // only the clicked card is selected
+        })
+      );
+      setFoodBoxes(updatedBoxes);
     };
 
     return (
@@ -52,8 +85,13 @@ export const Action = {
         {...args}
         isOpened={isOpened}
         onClick={() => setIsOpened((prev) => !prev)}
-        passengers={passengers}
-        onAddPassangerButtonClick={handleAddPassenger}
+        foodCardsBoxes={foodBoxes.map((box, boxIndex) => ({
+          ...box,
+          foodCards: box.foodCards.map((card, cardIndex) => ({
+            ...card,
+            onClick: () => handleCardClick(boxIndex, cardIndex),
+          })),
+        }))}
       />
     );
   },
@@ -61,32 +99,6 @@ export const Action = {
     title: "Food on Board",
     continueWithoutMealText: "Continue without a meal",
     nextButtonText: "Next",
-  },
-};
-
-export const ActionNextDisabled = {
-  render: (args: any) => {
-    const [isOpened, setIsOpened] = useState(false);
-    const [passengers, setPassengers] = useState([createPassenger(0)]);
-
-    const handleAddPassenger = () => {
-      setPassengers((prev) => [...prev, createPassenger(prev.length)]);
-    };
-
-    return (
-      <FoodInfo
-        {...args}
-        isOpened={isOpened}
-        onClick={() => setIsOpened(true)}
-        passengers={passengers}
-        isNextDisabled={true}
-        onAddPassangerButtonClick={handleAddPassenger}
-      />
-    );
-  },
-  args: {
-    title: "Food on Board",
-    continueWithoutMealText: "Continue without a meal",
-    nextButtonText: "Next",
+    isNextDisabled: false,
   },
 };

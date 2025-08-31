@@ -492,7 +492,10 @@ export default function FlightsContent() {
             flightTime: selectedFlight?.flightTime || "",
             connections: selectedFlight?.connections || "",
             buttonTitle: getPhrase("FlightControlConfirmButton", language),
-            onClick: () => router.push(`/${language}/flights/${selectedRoute}`),
+            onClick: () =>
+              router.push(
+                `/${language}/flights/${selectedRoute}?${searchParams}`
+              ),
           }}
         />
       </div>

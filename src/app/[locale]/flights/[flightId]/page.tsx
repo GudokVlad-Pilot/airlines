@@ -2,7 +2,7 @@
 import { adapters } from "@/adapters/adapter";
 import { useStore } from "@/adapters/zustand/store";
 import LoaderWithText from "@/components/molecules/loaderWithText";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   languages,
@@ -23,6 +23,8 @@ import FlightTopContent from "@/components/molecules/flightTopContent";
 const { getPages, getFlight, getDictionary } = adapters.cms();
 
 export default function FlightIdPage() {
+  const searchParams = useSearchParams();
+
   const { pages, dictionary, flight, setPages, setDictionary, setFlight } =
     useStore();
   const params = useParams();
@@ -164,7 +166,9 @@ export default function FlightIdPage() {
             origin={`${flight.origin.city[language]} (${flight.origin.iata})`}
             destination={`${flight.destination.city[language]} (${flight.destination.iata})`}
             changeButtonTitle={getPhrase("FlightChangeButton", language)}
-            onChangeButtonClick={() => alert("Get this done")}
+            onChangeButtonClick={() =>
+              router.push(`/${language}/flights?${searchParams}`)
+            }
             flightCard={{
               isStatic: true,
               isSelected: true,

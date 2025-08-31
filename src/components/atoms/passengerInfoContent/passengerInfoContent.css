@@ -1,0 +1,12 @@
+.passengerInfoContentBox {
+  width: 100%;
+  color: #89b8e9;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.passengerInfoContentName {
+  display: flex;
+  gap: 15px;
+}

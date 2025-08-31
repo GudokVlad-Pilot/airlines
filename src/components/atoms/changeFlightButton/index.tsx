@@ -1,8 +1,8 @@
 import CircularProgress from "@mui/material/CircularProgress";
-import "./customButton.css";
+import "./changeFlightButton.css";
 import { colors } from "@/components/styles/colors";
 
-export type CustomButtonProps = {
+export type ChangeFlightButtonProps = {
   title: string;
   onClick: () => void;
   isDisabled?: boolean;
@@ -21,7 +21,7 @@ export type CustomButtonProps = {
   disabledTextColor?: string;
 };
 
-export default function CustomButton({
+export default function ChangeFlightButton({
   title,
   onClick,
   isDisabled,
@@ -34,10 +34,10 @@ export default function CustomButton({
   hoverTextColor,
   activeTextColor,
   disabledTextColor,
-}: CustomButtonProps) {
+}: ChangeFlightButtonProps) {
   return (
     <button
-      className="customButtonBox"
+      className="changeFlightButtonBox"
       onClick={onClick}
       disabled={isDisabled}
       style={
@@ -55,7 +55,7 @@ export default function CustomButton({
     >
       {isLoading ? (
         <CircularProgress
-          className="customButtonLoader"
+          className="changeFlightButtonLoader"
           style={{ color: textColor || colors.basic }}
           size={20}
         />

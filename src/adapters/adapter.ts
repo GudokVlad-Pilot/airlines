@@ -2,6 +2,7 @@ import { sanityClient } from "./clients/sanity";
 import {
   airportsQuery,
   dictionaryQuery,
+  flightQuery,
   pagesQuery,
   routesQuery,
   staticRouteQuery,
@@ -68,6 +69,19 @@ export const adapters = {
         } catch (error) {
           console.error("Failed to fetch Static Routes:", error);
           return [];
+        }
+      },
+      getFlight: async (flightId: string): Promise<Route | null> => {
+        try {
+          const result = (await sanityClient.fetch(flightQuery, {
+            id: flightId,
+          })) as Route;
+          console.log(result);
+          console.log("I am getFlight from Sanity");
+          return result;
+        } catch (error) {
+          console.error("Failed to fetch flight:", error);
+          return null;
         }
       },
     };

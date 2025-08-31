@@ -1,14 +1,12 @@
 "use client";
-import { useParams } from "next/navigation";
+
+import { Suspense } from "react";
+import FlightIdContent from "./flightIdContent";
 
 export default function FlightIdPage() {
-  const params = useParams();
-  const { locale, flightId } = params;
-
   return (
-    <div>
-      <h1>Flight ID: {flightId}</h1>
-      <p>Locale: {locale}</p>
-    </div>
+    <Suspense fallback={<div>Loading flight...</div>}>
+      <FlightIdContent />
+    </Suspense>
   );
 }

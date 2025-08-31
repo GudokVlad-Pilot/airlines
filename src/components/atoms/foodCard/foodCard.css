@@ -1,0 +1,46 @@
+.foodCardBox {
+  width: 270px;
+  height: 330px;
+}
+
+.foodCardBox.selected {
+  border-radius: 20px;
+}
+
+.foodCardImageBox {
+  position: relative; /* make children absolute relative to this */
+  overflow: hidden; /* ensure nothing spills out */
+}
+
+.foodCardImage {
+  border-radius: 20px;
+  width: 270px;
+  height: auto;
+  aspect-ratio: 4/3;
+}
+
+.foodCardBox.selected .foodCardImage {
+  opacity: 0.3;
+}
+
+.foodCardCheckmark {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* perfectly center the icon */
+  color: #215e9e;
+}
+
+.foodCardText {
+  color: white;
+  font-family: "Manrope";
+}
+
+.foodCardTitle {
+  font-size: 24px;
+}
+
+.foodCardIngredients {
+  font-size: 14px;
+}

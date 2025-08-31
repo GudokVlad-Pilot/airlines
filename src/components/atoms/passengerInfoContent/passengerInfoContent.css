@@ -1,0 +1,61 @@
+.passengerInfoContentBox {
+  width: 100%;
+  color: #89b8e9;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.passengerInfoContentTitle {
+  font-family: "Manrope";
+  font-size: 24px;
+  padding-top: 25px;
+}
+
+.passangerInfoContentInputBox {
+  font-family: "Manrope";
+  font-size: 14px;
+}
+
+.passengerInfoContentName {
+  display: flex;
+  gap: 30px;
+}
+
+.passangerInfoContentNameInput,
+.passangerInfoContentPhoneInput {
+  width: 256px;
+}
+
+.passangerInfoContentEmailInput {
+  width: 565px;
+}
+
+.passangerInfoContentNameInput,
+.passangerInfoContentEmailInput,
+.passangerInfoContentPhoneInput {
+  margin-top: 5px;
+  padding: 0 10px;
+  border: 1px solid #89b8e9;
+  border-radius: 20px;
+  height: 37px;
+  font-family: "Manrope";
+  font-size: 14px;
+  color: #fff;
+  background: transparent;
+  outline: none;
+}
+
+.passangerInfoContentNameInput:focus,
+.passangerInfoContentEmailInput:focus,
+.passangerInfoContentPhoneInput:focus {
+  border: 1px solid #215e9e;
+  outline: none; /* prevent dark outline */
+}
+
+.passangerInfoContentNameInput:hover,
+.passangerInfoContentEmailInput:hover,
+.passangerInfoContentPhoneInput:hover {
+  border: 1px solid black; /* TODO: check the needed color*/
+  outline: none;
+}

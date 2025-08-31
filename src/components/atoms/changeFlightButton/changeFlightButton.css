@@ -1,28 +1,27 @@
-.customButtonBox {
+.changeFlightButtonBox {
   background-color: var(--btn-bg, #89b8e9);
   color: var(--btn-color, white);
   border: none;
   border-radius: 20px;
-  height: 50px;
-  padding: 0 30px; /* Button width is set dynamically */
-  /* width: 120px; */
+  height: 100px;
+  width: 135px;
   font-family: "Manrope";
-  font-size: 14px;
+  font-size: 18px; /* TODO: check sizes */
   font-weight: 600;
 }
 
-.customButtonBox:hover:not(:disabled) {
+.changeFlightButtonBox:hover:not(:disabled) {
   background-color: var(--btn-bg-hover, #215e9e);
   color: var(--btn-color-hover, white);
   cursor: pointer;
 }
 
-.customButtonBox:active:not(:disabled) {
+.changeFlightButtonBox:active:not(:disabled) {
   background-color: var(--btn-bg-active, #89b8e9);
   color: var(--btn-color-active, white);
 }
 
-.customButtonBox:disabled {
+.changeFlightButtonBox:disabled {
   background-color: var(--btn-bg-disabled, #cccccc);
   color: var(--btn-color-disabled, #777777);
   cursor: not-allowed;

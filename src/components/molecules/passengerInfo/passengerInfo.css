@@ -1,0 +1,44 @@
+.passengerInfoBox {
+  color: white;
+  background-color: #393e46;
+  height: 50px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.passengerInfoBox.opened {
+  cursor: default;
+  height: auto;
+}
+
+.passengerInfoHeader {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.passengerInfoTitle {
+  font-family: "Manrope";
+  font-size: 24px;
+  padding: 25px;
+}
+
+.passengerInfoContent {
+  width: 100%;
+}
+
+.passengerInfoData {
+  place-self: center;
+}
+
+.passengerInfoButtons {
+  display: flex;
+  justify-content: space-between;
+  padding: 25px;
+}

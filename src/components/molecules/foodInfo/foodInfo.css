@@ -1,0 +1,45 @@
+.foodInfoBox {
+  color: white;
+  background-color: #393e46;
+  height: 50px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.foodInfoBox.opened {
+  cursor: default;
+  height: auto;
+}
+
+.foodInfoHeader {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.foodInfoTitle {
+  font-family: "Manrope";
+  font-size: 24px;
+  padding: 25px;
+}
+
+.foodInfoContent {
+  width: 100%;
+}
+
+.foodInfoData {
+  place-self: center;
+}
+
+.foodInfoButtons {
+  display: flex;
+  justify-content: flex-end;
+  padding: 25px;
+  gap: 15px;
+}

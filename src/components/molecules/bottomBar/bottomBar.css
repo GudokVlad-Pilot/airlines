@@ -32,3 +32,8 @@ a:visited {
   text-decoration: none;
   color: white;
 }
+
+a:visited:hover {
+  text-decoration: none;
+  color: #89b8e9;
+}

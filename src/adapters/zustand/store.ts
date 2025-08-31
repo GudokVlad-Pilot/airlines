@@ -10,12 +10,14 @@ type Store = {
   dictionary: Dictionary[];
   airports: Airport[];
   routes: Route[];
+  flight: Route | null;
   inc: () => void;
   reset: () => void;
   setPages: (pages: Page[]) => void;
   setDictionary: (dictionary: Dictionary[]) => void;
   setAirports: (airports: Airport[]) => void;
   setRoutes: (routes: Route[]) => void;
+  setFlight: (flight: Route | null) => void;
   checkExpiration: () => void;
   lastUpdated: number;
 };
@@ -29,6 +31,7 @@ export const useStore = create<Store>()(
       dictionary: [],
       airports: [],
       routes: [],
+      flight: null,
       inc: () => set({ count: get().count + 1, lastUpdated: Date.now() }),
       reset: () => set({ count: 1, lastUpdated: Date.now() }),
       setPages: (pages) => {
@@ -46,6 +49,10 @@ export const useStore = create<Store>()(
       setRoutes: (routes) => {
         console.log("I am fetched routes");
         set({ routes });
+      },
+      setFlight: (flight) => {
+        console.log("I am fetched flight");
+        set({ flight });
       },
       checkExpiration: () => {
         const now = Date.now();

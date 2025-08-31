@@ -43,6 +43,7 @@ export default function PassengerInfo({
           </div>
           <div className="passengerInfoButtons">
             <CustomButton
+              isDisabled //TODO: add this button later
               title={addPassangerButtonText}
               onClick={onAddPassangerButtonClick}
             />

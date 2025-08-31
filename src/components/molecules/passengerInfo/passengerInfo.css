@@ -6,16 +6,37 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-radius: 20px;
 }
 
 .passengerInfoBox.opened {
-  height: 400px;
+  height: auto;
 }
 
-.passengerInfoTitle {
+.passengerInfoHeader {
   display: flex;
   align-items: center;
   height: 50px;
   width: 100%;
   justify-content: flex-start;
+}
+
+.passengerInfoTitle {
+  font-family: "Manrope";
+  font-size: 24px;
+  padding: 25px;
+}
+
+.passengerInfoContent {
+  width: 100%;
+}
+
+.passengerInfoData {
+  place-self: center;
+}
+
+.passengerInfoButtons {
+  display: flex;
+  justify-content: space-between;
+  padding: 25px;
 }

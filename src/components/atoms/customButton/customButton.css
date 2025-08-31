@@ -4,7 +4,8 @@
   border: none;
   border-radius: 20px;
   height: 50px;
-  width: 120px;
+  padding: 0 30px; /* Button width is set dynamically */
+  /* width: 120px; */
   font-family: "Manrope";
   font-size: 14px;
   font-weight: 600;

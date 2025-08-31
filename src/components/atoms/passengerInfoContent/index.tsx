@@ -1,20 +1,44 @@
 import "./passengerInfoContent.css";
 
-export type Props = {
+export type PassengerInfoContentProps = {
   title: string;
+  firstNamePlaceholder: string;
+  lastNamePlaceholder: string;
+  emailPlaceholder: string;
+  phonePlaceholder: string;
   firstNameTitle: string;
   lastNameTitle: string;
   phoneTitle: string;
   emailTitle: string;
+  firstNameValue: string;
+  lastNameValue: string;
+  emailValue: string;
+  phoneValue: string;
+  onFirstNameValueChange: (value: string) => void;
+  onLastNameValueChange: (value: string) => void;
+  onEmailValueChange: (value: string) => void;
+  onPhoneValueChange: (value: string) => void;
 };
 
 export default function PassengerInfoContent({
   title,
+  firstNamePlaceholder,
+  lastNamePlaceholder,
+  emailPlaceholder,
+  phonePlaceholder,
   firstNameTitle,
   lastNameTitle,
   emailTitle,
   phoneTitle,
-}: Props) {
+  firstNameValue,
+  lastNameValue,
+  emailValue,
+  phoneValue,
+  onFirstNameValueChange,
+  onLastNameValueChange,
+  onEmailValueChange,
+  onPhoneValueChange,
+}: PassengerInfoContentProps) {
   return (
     <div className="passengerInfoContentBox">
       <div className="passengerInfoContentTitle">{title}</div>
@@ -24,7 +48,9 @@ export default function PassengerInfoContent({
           <input
             className="passangerInfoContentNameInput"
             type="text"
-            placeholder="John"
+            placeholder={firstNamePlaceholder}
+            value={firstNameValue}
+            onChange={(e) => onFirstNameValueChange(e.target.value)}
           />
         </div>
         <div className="passangerInfoContentInputBox">
@@ -32,7 +58,9 @@ export default function PassengerInfoContent({
           <input
             className="passangerInfoContentNameInput"
             type="text"
-            placeholder="Smith"
+            placeholder={lastNamePlaceholder}
+            value={lastNameValue}
+            onChange={(e) => onLastNameValueChange(e.target.value)}
           />
         </div>
       </div>
@@ -42,7 +70,9 @@ export default function PassengerInfoContent({
           <input
             className="passangerInfoContentEmailInput"
             type="text"
-            placeholder="example@email.com"
+            placeholder={emailPlaceholder}
+            value={emailValue}
+            onChange={(e) => onEmailValueChange(e.target.value)}
           />
         </div>
       </div>
@@ -52,8 +82,10 @@ export default function PassengerInfoContent({
           <input
             className="passangerInfoContentPhoneInput"
             type="tel"
-            placeholder="+1234567890"
+            placeholder={phonePlaceholder}
             pattern="^\+[0-9]*$"
+            value={phoneValue}
+            onChange={(e) => onPhoneValueChange(e.target.value)}
           />
         </div>
       </div>

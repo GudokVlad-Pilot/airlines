@@ -1,5 +1,5 @@
 import { useState } from "react";
-import PassengerInfo from ".";
+import FoodInfo from ".";
 
 const createPassenger = (index: number) => ({
   title: `Passenger ${index + 1}`,
@@ -18,22 +18,22 @@ const createPassenger = (index: number) => ({
 });
 
 export default {
-  title: "molecules/PassengerInfo",
-  component: PassengerInfo,
+  title: "molecules/FoodInfo",
+  component: FoodInfo,
 };
 
 export const Default = {
   args: {
-    title: "Passenger Information",
+    title: "Food on Board",
   },
 };
 
 export const Opened = {
   args: {
-    title: "Passenger Information",
+    title: "Food on Board",
     isOpened: true,
     passengers: [createPassenger(0)],
-    addPassangerButtonText: "+ Add Passenger",
+    continueWithoutMealText: "Continue without a meal",
     nextButtonText: "Next",
   },
 };
@@ -48,7 +48,7 @@ export const Action = {
     };
 
     return (
-      <PassengerInfo
+      <FoodInfo
         {...args}
         isOpened={isOpened}
         onClick={() => setIsOpened((prev) => !prev)}
@@ -60,7 +60,7 @@ export const Action = {
     );
   },
   args: {
-    title: "Passenger Information",
+    title: "Food on Board",
   },
 };
 
@@ -74,7 +74,7 @@ export const ActionNextDisabled = {
     };
 
     return (
-      <PassengerInfo
+      <FoodInfo
         {...args}
         isOpened={isOpened}
         onClick={() => setIsOpened(true)}
@@ -87,6 +87,6 @@ export const ActionNextDisabled = {
     );
   },
   args: {
-    title: "Passenger Information",
+    title: "Food on Board",
   },
 };

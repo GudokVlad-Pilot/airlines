@@ -1,4 +1,4 @@
-.passengerInfoBox {
+.foodInfoBox {
   color: white;
   background-color: #393e46;
   height: 50px;
@@ -10,12 +10,12 @@
   cursor: pointer;
 }
 
-.passengerInfoBox.opened {
+.foodInfoBox.opened {
   cursor: default;
   height: auto;
 }
 
-.passengerInfoHeader {
+.foodInfoHeader {
   display: flex;
   align-items: center;
   height: 50px;
@@ -23,22 +23,23 @@
   justify-content: flex-start;
 }
 
-.passengerInfoTitle {
+.foodInfoTitle {
   font-family: "Manrope";
   font-size: 24px;
   padding: 25px;
 }
 
-.passengerInfoContent {
+.foodInfoContent {
   width: 100%;
 }
 
-.passengerInfoData {
+.foodInfoData {
   place-self: center;
 }
 
-.passengerInfoButtons {
+.foodInfoButtons {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 25px;
+  gap: 15px;
 }

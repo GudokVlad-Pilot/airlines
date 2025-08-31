@@ -1,7 +1,7 @@
 import PassengerInfoContent, {
   PassengerInfoContentProps,
 } from "@/components/atoms/passengerInfoContent";
-import "./passengerInfo.css";
+import "./foodInfo.css";
 import CustomButton from "@/components/atoms/customButton";
 
 type Props = {
@@ -9,47 +9,47 @@ type Props = {
   title: string;
   isOpened?: boolean;
   onClick: () => void;
-  addPassangerButtonText: string;
+  continueWithoutMealText: string;
   nextButtonText: string;
-  onAddPassangerButtonClick: () => void;
+  oncontinueWithoutMealButtonClick: () => void;
   onNextButtonClick: () => void;
   isNextDisabled: boolean;
 };
 
-export default function PassengerInfo({
+export default function FoodInfo({
   title,
   isOpened,
   onClick,
   passengers,
-  addPassangerButtonText,
+  continueWithoutMealText,
   nextButtonText,
-  onAddPassangerButtonClick,
+  oncontinueWithoutMealButtonClick,
   onNextButtonClick,
   isNextDisabled,
 }: Props) {
   return (
     <div
-      className={`passengerInfoBox ${isOpened ? "opened" : ""}`}
+      className={`foodInfoBox ${isOpened ? "opened" : ""}`}
       onClick={() => {
         if (!isOpened) onClick();
       }}
     >
-      <div className="passengerInfoHeader">
-        <div className="passengerInfoTitle">{title}</div>
+      <div className="foodInfoHeader">
+        <div className="foodInfoTitle">{title}</div>
       </div>
 
       {isOpened && (
-        <div className="passengerInfoContent">
-          <div className="passengerInfoData">
+        <div className="foodInfoContent">
+          <div className="foodInfoData">
             {passengers.map((p, index) => (
               <PassengerInfoContent key={index} {...p} />
             ))}
           </div>
 
-          <div className="passengerInfoButtons">
+          <div className="foodInfoButtons">
             <CustomButton
-              title={addPassangerButtonText}
-              onClick={onAddPassangerButtonClick}
+              title={continueWithoutMealText}
+              onClick={oncontinueWithoutMealButtonClick}
             />
             <CustomButton
               title={nextButtonText}

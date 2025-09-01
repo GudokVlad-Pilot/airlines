@@ -16,7 +16,7 @@ import "./flightId.css";
 import { colors } from "@/components/styles/colors";
 import BottomBar from "@/components/molecules/bottomBar";
 import { FlightCardProps } from "@/components/atoms/flightCard";
-import { Route } from "@/adapters/types";
+import { Meal, Route } from "@/adapters/types";
 import FlightTopContent from "@/components/molecules/flightTopContent";
 import PassengerInfo from "@/components/molecules/passengerInfo";
 import { PassengerInfoContentProps } from "@/components/atoms/passengerInfoContent";
@@ -81,29 +81,7 @@ export default function FlightIdContent() {
     },
   ]);
 
-  const [mealCards, setMealCards] = useState<FoodCardProps[]>([
-    {
-      title: "Chicken Salad",
-      image: "/assets/images/placeholder-4-3.png",
-      ingredientsText: "Ingredients",
-      ingredients: "Chicken, Lettuce, Tomato",
-      isSelected: false,
-    },
-    {
-      title: "Vegan Bowl",
-      image: "/assets/images/placeholder-4-3.png",
-      ingredientsText: "Ingredients",
-      ingredients: "Quinoa, Beans, Avocado",
-      isSelected: false,
-    },
-    {
-      title: "Pasta Carbonara",
-      image: "/assets/images/placeholder-4-3.png",
-      ingredientsText: "Ingredients",
-      ingredients: "Pasta, Bacon, Cheese",
-      isSelected: false,
-    },
-  ]); // Hardcoded for now
+  const [mealCards, setMealCards] = useState<FoodCardProps[]>([]);
 
   const [foodPacks, setFoodPacks] = useState<FoodCardsBoxProps[]>([
     {
@@ -290,7 +268,7 @@ export default function FlightIdContent() {
         setPages(pages);
         setDictionary(dictionary);
         setFlight(flight);
-        setMeals(meals);
+        setMeals(meals); // meals are raw Sanity meals
         setLoading(false);
       })
       .catch((err) => {
@@ -299,6 +277,33 @@ export default function FlightIdContent() {
         console.error(err);
       });
   }, [flightId]);
+
+  // Build mealCards after dictionary + meals + language are ready
+  useEffect(() => {
+    if (!dictionary.length || !meals.length) return;
+
+    const mappedMeals: FoodCardProps[] = meals.map((m: Meal) => ({
+      title: m.title?.[language] || "Untitled meal",
+      image: m.image || "/assets/images/placeholder-4-3.png",
+      ingredientsText: getPhrase(
+        "FlightInfoFoodInfoIngredientsTitle",
+        language
+      ),
+      ingredients: m.ingredients?.length
+        ? m.ingredients.map((ing) => ing.title?.[language]).join(", ")
+        : getPhrase("FlightInfoFoodInfoNoIngredients", language),
+      isSelected: false,
+    }));
+
+    setMealCards(mappedMeals);
+
+    setFoodPacks([
+      {
+        title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
+        foodCards: mappedMeals,
+      },
+    ]);
+  }, [dictionary, language, meals]);
 
   if (loading) return <LoaderWithText text={loaderTextByLanguage[language]} />;
   if (error)

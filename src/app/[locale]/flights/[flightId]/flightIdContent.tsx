@@ -82,7 +82,6 @@ export default function FlightIdContent() {
   ]);
 
   const [mealCards, setMealCards] = useState<FoodCardProps[]>([]);
-
   const [foodPacks, setFoodPacks] = useState<FoodCardsBoxProps[]>([
     {
       title: "Passenger 1",
@@ -90,7 +89,7 @@ export default function FlightIdContent() {
     },
   ]);
 
-  // ✅ Update passenger field labels whenever dictionary or language changes
+  // Update passenger fields & food packs whenever dictionary or language changes
   useEffect(() => {
     setPassengers((prev) =>
       prev.map((p, index) => ({
@@ -112,19 +111,21 @@ export default function FlightIdContent() {
         phonePlaceholder: "+1234567890",
       }))
     );
-    setFoodPacks([
-      {
-        title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
+
+    setFoodPacks((prev) =>
+      prev.map((p, index) => ({
+        ...p,
+        title: `${getPhrase("FlightInfoPassengerTitle", language)} ${index + 1}`,
         foodCards: mealCards,
-      },
-    ]);
+      }))
+    );
   }, [dictionary, language, mealCards]);
 
   // Add passenger
   const handleAddPassenger = () => {
     const index = passengers.length;
-    setPassengers([
-      ...passengers,
+    setPassengers((prev) => [
+      ...prev,
       {
         title: `${getPhrase("FlightInfoPassengerTitle", language)} ${index + 1}`,
         firstNameTitle: getPhrase("FlightInfoFirstNameTitle", language),
@@ -151,8 +152,9 @@ export default function FlightIdContent() {
         phonePlaceholder: "+1234567890",
       },
     ]);
-    setFoodPacks([
-      ...foodPacks,
+
+    setFoodPacks((prev) => [
+      ...prev,
       {
         title: `${getPhrase("FlightInfoPassengerTitle", language)} ${index + 1}`,
         foodCards: mealCards,
@@ -189,6 +191,7 @@ export default function FlightIdContent() {
         phonePlaceholder: "+1234567890",
       },
     ]);
+
     setFoodPacks([
       {
         title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
@@ -197,7 +200,7 @@ export default function FlightIdContent() {
     ]);
   };
 
-  // Update passenger values
+  // Update passenger fields
   const handlePassengerChange = (
     index: number,
     field: keyof PassengerInfoContentProps,
@@ -210,7 +213,7 @@ export default function FlightIdContent() {
     });
   };
 
-  // Controlled passengers (with callbacks + validation)
+  // Controlled passengers
   const controlledPassengers = passengers.map((p, index) => ({
     ...p,
     onFirstNameValueChange: (v: string) =>
@@ -258,17 +261,12 @@ export default function FlightIdContent() {
       setLoading(false);
       return;
     }
-    Promise.all([
-      getPages(),
-      getDictionary(),
-      getFlight(flightId.toString()),
-      getMeals(),
-    ])
+    Promise.all([getPages(), getDictionary(), getFlight(flightId), getMeals()])
       .then(([pages, dictionary, flight, meals]) => {
         setPages(pages);
         setDictionary(dictionary);
         setFlight(flight);
-        setMeals(meals); // meals are raw Sanity meals
+        setMeals(meals);
         setLoading(false);
       })
       .catch((err) => {
@@ -297,13 +295,31 @@ export default function FlightIdContent() {
 
     setMealCards(mappedMeals);
 
-    setFoodPacks([
-      {
-        title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
-        foodCards: mappedMeals,
-      },
-    ]);
+    setFoodPacks((prev) => prev.map((p) => ({ ...p, foodCards: mappedMeals })));
   }, [dictionary, language, meals]);
+
+  // Handle meal selection: one per passenger
+  const handleMealSelect = (passengerIndex: number, cardIndex: number) => {
+    setFoodPacks((prev) => {
+      const updated = [...prev];
+      updated[passengerIndex].foodCards = updated[passengerIndex].foodCards.map(
+        (card, idx) => ({
+          ...card,
+          isSelected: idx === cardIndex,
+        })
+      );
+      return updated;
+    });
+  };
+
+  // Map foodPacks to add onClick
+  const foodCardsWithClick = foodPacks.map((box, passengerIndex) => ({
+    ...box,
+    foodCards: box.foodCards.map((card, cardIndex) => ({
+      ...card,
+      onClick: () => handleMealSelect(passengerIndex, cardIndex),
+    })),
+  }));
 
   if (loading) return <LoaderWithText text={loaderTextByLanguage[language]} />;
   if (error)
@@ -387,22 +403,19 @@ export default function FlightIdContent() {
               onNextButtonClick={() => setIsPassengerInfoOpened(false)}
               isNextDisabled={!isNextEnabled}
             />
+
             <FoodInfo
-              foodCardsBoxes={foodPacks}
+              foodCardsBoxes={foodCardsWithClick}
               title={getPhrase("FlightInfoFoodInfoTitle", language)}
-              onClick={() => {
-                setIsFoodInfoOpened(true);
-              }}
+              onClick={() => setIsFoodInfoOpened(true)}
               isOpened={isFoodInfoOpened}
               nextButtonText={getPhrase("FlightInfoNextButtonTitle", language)}
               onNextButtonClick={() => setIsFoodInfoOpened(false)}
               isNextDisabled={false}
             />
           </div>
-          <div>Flight ID: {flightId}</div>
-          <div>Flight: {flight?.origin.city.en}</div>
-          <div>Locale: {locale}</div>
-          {/* Debugging section for passengers */}
+
+          {/* Debug Section */}
           <div
             style={{
               marginTop: "20px",
@@ -412,16 +425,26 @@ export default function FlightIdContent() {
             }}
           >
             <h3>Passengers Debug</h3>
-            {passengers.map((p, i) => (
-              <div key={i} style={{ marginBottom: "10px" }}>
-                <strong>{p.title}</strong>
-                <div>First Name: {p.firstNameValue}</div>
-                <div>Last Name: {p.lastNameValue}</div>
-                <div>Email: {p.emailValue}</div>
-                <div>Phone: {p.phoneValue}</div>
-              </div>
-            ))}
+            {passengers.map((p, i) => {
+              const selectedMeal =
+                foodPacks[i]?.foodCards.find((c) => c.isSelected)?.title ||
+                "None";
+              return (
+                <div key={i} style={{ marginBottom: "10px" }}>
+                  <strong>{p.title}</strong>
+                  <div>First Name: {p.firstNameValue}</div>
+                  <div>Last Name: {p.lastNameValue}</div>
+                  <div>Email: {p.emailValue}</div>
+                  <div>Phone: {p.phoneValue}</div>
+                  <div>Selected Meal: {selectedMeal}</div>
+                </div>
+              );
+            })}
           </div>
+
+          <div>Flight ID: {flightId}</div>
+          <div>Flight: {flight?.origin.city.en}</div>
+          <div>Locale: {locale}</div>
         </div>
       )}
 

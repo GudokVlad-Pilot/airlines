@@ -74,7 +74,7 @@ export interface Ingredient {
 export interface Meal {
   _id: string;
   title: string;
-  image: string;
+  image?: string;
   isActive: boolean;
   ingredients: Ingredient[];
 }

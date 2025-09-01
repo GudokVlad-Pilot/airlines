@@ -21,13 +21,23 @@ import FlightTopContent from "@/components/molecules/flightTopContent";
 import PassengerInfo from "@/components/molecules/passengerInfo";
 import { PassengerInfoContentProps } from "@/components/atoms/passengerInfoContent";
 import FoodInfo from "@/components/molecules/foodInfo";
+import { FoodCardsBoxProps } from "@/components/molecules/foodCardsBox";
+import { FoodCardProps } from "@/components/atoms/foodCard";
 
-const { getPages, getFlight, getDictionary } = adapters.cms();
+const { getPages, getFlight, getDictionary, getMeals } = adapters.cms();
 
 export default function FlightIdContent() {
   const searchParams = useSearchParams();
-  const { pages, dictionary, flight, setPages, setDictionary, setFlight } =
-    useStore();
+  const {
+    pages,
+    dictionary,
+    flight,
+    meals,
+    setPages,
+    setDictionary,
+    setFlight,
+    setMeals,
+  } = useStore();
   const params = useParams();
   const router = useRouter();
   const locale = params?.locale?.toString() ?? "en";
@@ -69,6 +79,13 @@ export default function FlightIdContent() {
     },
   ]);
 
+  const [foodPacks, setFoodPacks] = useState<FoodCardsBoxProps[]>([
+    {
+      title: "Passenger 1",
+      foodCards: [],
+    },
+  ]);
+
   // ✅ Update passenger field labels whenever dictionary or language changes
   useEffect(() => {
     setPassengers((prev) =>
@@ -91,6 +108,12 @@ export default function FlightIdContent() {
         phonePlaceholder: "+1234567890",
       }))
     );
+    setFoodPacks([
+      {
+        title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
+        foodCards: [],
+      },
+    ]);
   }, [dictionary, language]);
 
   // Add passenger
@@ -124,6 +147,13 @@ export default function FlightIdContent() {
         phonePlaceholder: "+1234567890",
       },
     ]);
+    setFoodPacks([
+      ...foodPacks,
+      {
+        title: `${getPhrase("FlightInfoPassengerTitle", language)} ${index + 1}`,
+        foodCards: [],
+      },
+    ]);
   };
 
   // Reset passengers
@@ -153,6 +183,12 @@ export default function FlightIdContent() {
         ),
         emailPlaceholder: "example@email.com",
         phonePlaceholder: "+1234567890",
+      },
+    ]);
+    setFoodPacks([
+      {
+        title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
+        foodCards: [],
       },
     ]);
   };
@@ -218,11 +254,17 @@ export default function FlightIdContent() {
       setLoading(false);
       return;
     }
-    Promise.all([getPages(), getDictionary(), getFlight(flightId.toString())])
-      .then(([pages, dictionary, flight]) => {
+    Promise.all([
+      getPages(),
+      getDictionary(),
+      getFlight(flightId.toString()),
+      getMeals(),
+    ])
+      .then(([pages, dictionary, flight, meals]) => {
         setPages(pages);
         setDictionary(dictionary);
         setFlight(flight);
+        setMeals(meals);
         setLoading(false);
       })
       .catch((err) => {
@@ -313,7 +355,7 @@ export default function FlightIdContent() {
               isNextDisabled={!isNextEnabled}
             />
             <FoodInfo
-              foodCardsBoxes={[]}
+              foodCardsBoxes={foodPacks}
               title={getPhrase("FlightInfoFoodInfoTitle", language)}
               onClick={() => {
                 setIsFoodInfoOpened(true);

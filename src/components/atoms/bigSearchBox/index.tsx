@@ -8,6 +8,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
 import { Airport } from "@/adapters/types";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export type BigSearchBoxProps = {
   isReturn?: boolean;
@@ -30,6 +31,7 @@ export type BigSearchBoxProps = {
   locale?: "en" | "ru" | "fi";
   airports: Airport[];
   destinations?: Airport[];
+  isLoading?: boolean;
 };
 
 export default function BigSearchBox({
@@ -53,6 +55,7 @@ export default function BigSearchBox({
   locale,
   airports,
   destinations,
+  isLoading,
 }: BigSearchBoxProps) {
   return (
     <LocalizationProvider
@@ -255,7 +258,16 @@ export default function BigSearchBox({
 
         {/* SEARCH BUTTON */}
         <button className="searchButton" onClick={onClick}>
-          <FaArrowRightLong size={20} />
+          {isLoading ? (
+            <CircularProgress
+              className="searchButtonLoader"
+              size={20}
+              // style={{ color: textColor || colors.basic }}
+              style={{ color: colors.basic }}
+            />
+          ) : (
+            <FaArrowRightLong size={20} />
+          )}
         </button>
       </div>
     </LocalizationProvider>

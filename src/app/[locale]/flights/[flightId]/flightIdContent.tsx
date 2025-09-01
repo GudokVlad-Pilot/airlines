@@ -81,10 +81,34 @@ export default function FlightIdContent() {
     },
   ]);
 
+  const [mealCards, setMealCards] = useState<FoodCardProps[]>([
+    {
+      title: "Chicken Salad",
+      image: "/assets/images/placeholder-4-3.png",
+      ingredientsText: "Ingredients",
+      ingredients: "Chicken, Lettuce, Tomato",
+      isSelected: false,
+    },
+    {
+      title: "Vegan Bowl",
+      image: "/assets/images/placeholder-4-3.png",
+      ingredientsText: "Ingredients",
+      ingredients: "Quinoa, Beans, Avocado",
+      isSelected: false,
+    },
+    {
+      title: "Pasta Carbonara",
+      image: "/assets/images/placeholder-4-3.png",
+      ingredientsText: "Ingredients",
+      ingredients: "Pasta, Bacon, Cheese",
+      isSelected: false,
+    },
+  ]); // Hardcoded for now
+
   const [foodPacks, setFoodPacks] = useState<FoodCardsBoxProps[]>([
     {
       title: "Passenger 1",
-      foodCards: [],
+      foodCards: mealCards,
     },
   ]);
 
@@ -113,10 +137,10 @@ export default function FlightIdContent() {
     setFoodPacks([
       {
         title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
-        foodCards: [],
+        foodCards: mealCards,
       },
     ]);
-  }, [dictionary, language]);
+  }, [dictionary, language, mealCards]);
 
   // Add passenger
   const handleAddPassenger = () => {
@@ -153,7 +177,7 @@ export default function FlightIdContent() {
       ...foodPacks,
       {
         title: `${getPhrase("FlightInfoPassengerTitle", language)} ${index + 1}`,
-        foodCards: [],
+        foodCards: mealCards,
       },
     ]);
   };
@@ -190,7 +214,7 @@ export default function FlightIdContent() {
     setFoodPacks([
       {
         title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
-        foodCards: [],
+        foodCards: mealCards,
       },
     ]);
   };

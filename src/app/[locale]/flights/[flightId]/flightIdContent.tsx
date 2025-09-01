@@ -49,6 +49,8 @@ export default function FlightIdContent() {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isSidebarMounted, setIsSidebarMounted] = useState(false);
 
+  const [isChangeLoading, setIsChangeLoading] = useState<boolean>(false);
+
   const [isPassengerInfoOpened, setIsPassengerInfoOpened] = useState(true);
   const [isFoodInfoOpened, setIsFoodInfoOpened] = useState(false);
 
@@ -325,14 +327,16 @@ export default function FlightIdContent() {
             origin={`${flight.origin.city[language]} (${flight.origin.iata})`}
             destination={`${flight.destination.city[language]} (${flight.destination.iata})`}
             changeButtonTitle={getPhrase("FlightChangeButton", language)}
-            onChangeButtonClick={() =>
-              router.push(`/${language}/flights?${searchParams}`)
-            }
+            onChangeButtonClick={() => {
+              setIsChangeLoading(true);
+              router.push(`/${language}/flights?${searchParams}`);
+            }}
             flightCard={{
               isStatic: true,
               isSelected: true,
               ...buildSingleFlightCard(flight, language, getPhrase),
             }}
+            isButtonLoading={isChangeLoading}
           />
 
           {/* Passenger Info */}

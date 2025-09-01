@@ -10,6 +10,7 @@ type Props = {
   changeButtonTitle: string;
   onChangeButtonClick: () => void;
   flightCard: FlightCardProps;
+  isButtonLoading?: boolean;
 };
 
 export default function FlightTopContent({
@@ -19,6 +20,7 @@ export default function FlightTopContent({
   changeButtonTitle,
   onChangeButtonClick,
   accentColor,
+  isButtonLoading,
 }: Props) {
   return (
     <div className="flightTopContentBox">
@@ -35,6 +37,7 @@ export default function FlightTopContent({
         <ChangeFlightButton
           title={changeButtonTitle}
           onClick={onChangeButtonClick}
+          isLoading={isButtonLoading}
         />
       </div>
     </div>

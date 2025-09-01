@@ -72,8 +72,6 @@ export default function FlightsContent() {
   const [isConfirmationLoading, setIsConfimationLoading] =
     useState<boolean>(false);
 
-  console.log(isConfirmationLoading);
-
   const openSidebar = () => {
     setIsSidebarMounted(true);
     requestAnimationFrame(() => setIsSidebarVisible(true));

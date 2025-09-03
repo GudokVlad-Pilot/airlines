@@ -64,6 +64,11 @@ export default function FlightIdContent() {
   const [isConfirmationInfoOpened, setIsConfirmationInfoOpened] =
     useState(false);
 
+  const [isFoodInfoClickable, setIsFoodInfoClickable] = useState(false);
+  const [isExtrasInfoClickable, setIsExtrasInfoClickable] = useState(false);
+  const [isConfirmationInfoClickable, setIsConfirmationInfoClickable] =
+    useState(false);
+
   const getPhrase = (title: string, lang: "en" | "ru" | "fi") => {
     const item = dictionary.find((d) => d.title === title);
     return item ? item.phrase[lang] : "";
@@ -224,7 +229,6 @@ export default function FlightIdContent() {
         phonePlaceholder: "+1234567890",
       },
     ]);
-
     setFoodPacks([
       {
         title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
@@ -240,21 +244,21 @@ export default function FlightIdContent() {
   };
 
   const resetMeals = () => {
-    setFoodPacks([
-      {
-        title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
+    setFoodPacks(
+      passengers.map((_, index) => ({
+        title: `${getPhrase("FlightInfoPassengerTitle", language)} ${index + 1}`,
         foodCards: mealCards,
-      },
-    ]);
+      }))
+    );
   };
 
   const resetExtras = () => {
-    setExtrasPacks([
-      {
-        title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
+    setExtrasPacks(
+      passengers.map((_, index) => ({
+        title: `${getPhrase("FlightInfoPassengerTitle", language)} ${index + 1}`,
         extrasCards: additionalCards,
-      },
-    ]);
+      }))
+    );
   };
 
   // Update passenger fields
@@ -291,6 +295,10 @@ export default function FlightIdContent() {
       p.lastNameValue.trim() !== "" &&
       /^\S+@\S+\.\S+$/.test(p.emailValue) &&
       /^\+?[0-9]{5,15}$/.test(p.phoneValue)
+  );
+
+  const isNextFoodEnabled = foodPacks.every((pack) =>
+    pack.foodCards.some((card) => card.isSelected)
   );
 
   // Sidebar
@@ -547,7 +555,15 @@ export default function FlightIdContent() {
               isOpened={isPassengerInfoOpened}
               onClick={() => {
                 setIsPassengerInfoOpened(true);
+                setIsFoodInfoOpened(false);
+                setIsExtrasInfoOpened(false);
+                setIsConfirmationInfoOpened(false);
+                setIsConfirmationInfoClickable(false);
+                setIsExtrasInfoClickable(false);
+                setIsFoodInfoClickable(false);
                 resetPassengers();
+                // resetMeals();
+                // resetExtras();
               }}
               addPassangerButtonText={getPhrase(
                 "FlightInfoAddPassengerButtonTitle",
@@ -555,42 +571,83 @@ export default function FlightIdContent() {
               )}
               nextButtonText={getPhrase("FlightInfoNextButtonTitle", language)}
               onAddPassangerButtonClick={handleAddPassenger}
-              onNextButtonClick={() => setIsPassengerInfoOpened(false)}
+              onNextButtonClick={() => {
+                setIsPassengerInfoOpened(false);
+                setIsFoodInfoOpened(true);
+              }}
               isNextDisabled={!isNextEnabled}
             />
             <FoodInfo
+              isClickable={isFoodInfoClickable}
               foodCardsBoxes={foodCardsWithClick}
               title={getPhrase("FlightInfoFoodInfoTitle", language)}
-              onClick={() => setIsFoodInfoOpened(true)}
+              onClick={() => {
+                setIsPassengerInfoOpened(false);
+                setIsFoodInfoOpened(true);
+                setIsExtrasInfoOpened(false);
+                setIsConfirmationInfoOpened(false);
+                setIsConfirmationInfoClickable(false);
+                setIsExtrasInfoClickable(false);
+                resetMeals();
+                resetExtras();
+              }}
               isOpened={isFoodInfoOpened}
               nextButtonText={getPhrase("FlightInfoNextButtonTitle", language)}
-              onNextButtonClick={() => setIsFoodInfoOpened(false)}
-              isNextDisabled={false}
+              onNextButtonClick={() => {
+                setIsFoodInfoOpened(false);
+                setIsExtrasInfoOpened(true);
+                setIsFoodInfoClickable(true);
+              }}
+              isNextDisabled={!isNextFoodEnabled}
             />
             <ExtrasInfo
+              isClickable={isExtrasInfoClickable}
               extrasCardsBoxes={extrasCardsWithClick}
               title={getPhrase("FlightInfoExtrasInfoTitle", language)}
-              onClick={() => setIsExtrasInfoOpened(true)}
+              onClick={() => {
+                setIsPassengerInfoOpened(false);
+                setIsFoodInfoOpened(false);
+                setIsExtrasInfoOpened(true);
+                setIsConfirmationInfoOpened(false);
+                setIsConfirmationInfoClickable(false);
+                resetExtras();
+              }}
               isOpened={isExtrasInfoOpened}
               nextButtonText={getPhrase("FlightInfoNextButtonTitle", language)}
-              onNextButtonClick={() => setIsExtrasInfoOpened(false)}
+              onNextButtonClick={() => {
+                setIsExtrasInfoOpened(false);
+                setIsConfirmationInfoOpened(true);
+                setIsExtrasInfoClickable(true);
+              }}
               isNextDisabled={false}
             />
             <ConfirmationInfo
+              isClickable={isConfirmationInfoClickable}
               passengerConfirmationCards={passengerConfirmationCards}
               title={getPhrase("FlightInfoConfirmationInfoTitle", language)}
-              onClick={() => setIsConfirmationInfoOpened(true)}
+              onClick={() => {
+                setIsPassengerInfoOpened(false);
+                setIsFoodInfoOpened(false);
+                setIsExtrasInfoOpened(false);
+                setIsConfirmationInfoOpened(true);
+              }}
               isOpened={isConfirmationInfoOpened}
               nextButtonText={getPhrase("FlightInfoNextButtonTitle", language)}
-              onNextButtonClick={() => setIsConfirmationInfoOpened(false)}
+              onNextButtonClick={() => {
+                {
+                  setIsConfirmationInfoOpened(false);
+                  setIsConfirmationInfoClickable(true);
+                }
+              }}
               isNextDisabled={false}
               continueEditingText={getPhrase(
                 "FlightInfoContinueEditingButtonTitle",
                 language
               )}
-              onContinueEditingButtonClick={() =>
-                setIsConfirmationInfoOpened(false)
-              }
+              onContinueEditingButtonClick={() => {
+                setIsConfirmationInfoOpened(false);
+                setIsExtrasInfoOpened(true);
+              }}
               pricePlaceholder={getPhrase(
                 "FlightInfoConfirmationInfoPricePlaceHolder",
                 language

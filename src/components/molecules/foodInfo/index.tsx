@@ -10,6 +10,7 @@ type Props = {
   nextButtonText: string;
   onNextButtonClick: () => void;
   isNextDisabled: boolean;
+  isClickable?: boolean;
 };
 
 export default function FoodInfo({
@@ -20,12 +21,14 @@ export default function FoodInfo({
   nextButtonText,
   onNextButtonClick,
   isNextDisabled,
+  isClickable,
 }: Props) {
   return (
     <div
       className={`foodInfoBox ${isOpened ? "opened" : ""}`}
+      style={{ cursor: isClickable ? "pointer" : "default" }}
       onClick={() => {
-        if (!isOpened) onClick();
+        if (!isOpened && isClickable) onClick();
       }}
     >
       <div className="foodInfoHeader">

@@ -16,6 +16,7 @@ type Props = {
   onContinueEditingButtonClick: () => void;
   pricePlaceholder: string;
   price: string;
+  isClickable?: boolean;
 };
 
 export default function ConfirmationInfo({
@@ -30,12 +31,14 @@ export default function ConfirmationInfo({
   onContinueEditingButtonClick,
   pricePlaceholder,
   price,
+  isClickable,
 }: Props) {
   return (
     <div
       className={`confirmationInfoBox ${isOpened ? "opened" : ""}`}
+      style={{ cursor: isClickable ? "pointer" : "default" }}
       onClick={() => {
-        if (!isOpened) onClick();
+        if (!isOpened && isClickable) onClick();
       }}
     >
       <div className="confirmationInfoHeader">

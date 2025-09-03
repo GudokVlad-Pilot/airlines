@@ -10,6 +10,7 @@ type Props = {
   nextButtonText: string;
   onNextButtonClick: () => void;
   isNextDisabled: boolean;
+  isClickable?: boolean;
   // continueWithoutExtrasText: string;
   // onContinueWithoutExtrasButtonClick: () => void;
 };
@@ -22,12 +23,14 @@ export default function ExtrasInfo({
   nextButtonText,
   onNextButtonClick,
   isNextDisabled,
+  isClickable,
 }: Props) {
   return (
     <div
       className={`extrasInfoBox ${isOpened ? "opened" : ""}`}
+      style={{ cursor: isClickable ? "pointer" : "default" }}
       onClick={() => {
-        if (!isOpened) onClick();
+        if (!isOpened && isClickable) onClick();
       }}
     >
       <div className="extrasInfoHeader">

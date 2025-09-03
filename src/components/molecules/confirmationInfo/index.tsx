@@ -1,9 +1,11 @@
 import "./confirmationInfo.css";
 import CustomButton from "@/components/atoms/customButton";
-import ExtrasCardsBox, { ExtrasCardsBoxProps } from "../extrasCardsBox";
+import PassengerConfirmationCard, {
+  PassengerConfirmationCardProps,
+} from "@/components/atoms/passengerConfirmationCard";
 
 type Props = {
-  //   extrasCardsBoxes: ExtrasCardsBoxProps[];
+  passengerConfirmationCards: PassengerConfirmationCardProps[];
   title: string;
   isOpened?: boolean;
   onClick: () => void;
@@ -12,10 +14,12 @@ type Props = {
   isNextDisabled: boolean;
   continueEditingText: string;
   onContinueEditingButtonClick: () => void;
+  pricePlaceholder: string;
+  price: string;
 };
 
 export default function ConfirmationInfo({
-  //   extrasCardsBoxes,
+  passengerConfirmationCards,
   title,
   isOpened,
   onClick,
@@ -24,6 +28,8 @@ export default function ConfirmationInfo({
   isNextDisabled,
   continueEditingText,
   onContinueEditingButtonClick,
+  pricePlaceholder,
+  price,
 }: Props) {
   return (
     <div
@@ -38,11 +44,14 @@ export default function ConfirmationInfo({
 
       {isOpened && (
         <div className="confirmationInfoContent">
-          {/* <div className="confirmationInfoData">
-            {extrasCardsBoxes.map((f, index) => (
-              <ExtrasCardsBox key={index} {...f} />
+          <div className="confirmationInfoData">
+            {passengerConfirmationCards.map((f, index) => (
+              <PassengerConfirmationCard key={index} {...f} />
             ))}
-          </div> */}
+          </div>
+          <div className="confirmationInfoPrice">
+            {pricePlaceholder}: {price}
+          </div>
           <div className="confirmationInfoButtons">
             <CustomButton
               title={continueEditingText}

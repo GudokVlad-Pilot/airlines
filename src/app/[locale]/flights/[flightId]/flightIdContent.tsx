@@ -26,6 +26,7 @@ import { FoodCardProps } from "@/components/atoms/foodCard";
 import ExtrasInfo from "@/components/molecules/extrasInfo";
 import { ExtrasCardProps } from "@/components/atoms/extrasCard";
 import { ExtrasCardsBoxProps } from "@/components/molecules/extrasCardsBox";
+import ConfirmationInfo from "@/components/molecules/confirmationInfo";
 
 const { getPages, getFlight, getDictionary, getMeals, getExtras } =
   adapters.cms();
@@ -60,6 +61,8 @@ export default function FlightIdContent() {
   const [isPassengerInfoOpened, setIsPassengerInfoOpened] = useState(true);
   const [isFoodInfoOpened, setIsFoodInfoOpened] = useState(false);
   const [isExtrasInfoOpened, setIsExtrasInfoOpened] = useState(false);
+  const [isConfirmationInfoOpened, setIsConfirmationInfoOpened] =
+    useState(false);
 
   const getPhrase = (title: string, lang: "en" | "ru" | "fi") => {
     const item = dictionary.find((d) => d.title === title);
@@ -506,6 +509,27 @@ export default function FlightIdContent() {
               nextButtonText={getPhrase("FlightInfoNextButtonTitle", language)}
               onNextButtonClick={() => setIsExtrasInfoOpened(false)}
               isNextDisabled={false}
+            />
+            <ConfirmationInfo
+              passengerConfirmationCards={[]}
+              title={getPhrase("FlightInfoConfirmationInfoTitle", language)}
+              onClick={() => setIsConfirmationInfoOpened(true)}
+              isOpened={isConfirmationInfoOpened}
+              nextButtonText={getPhrase("FlightInfoNextButtonTitle", language)}
+              onNextButtonClick={() => setIsConfirmationInfoOpened(false)}
+              isNextDisabled={false}
+              continueEditingText={getPhrase(
+                "FlightInfoNextButtonTitle",
+                language
+              )}
+              onContinueEditingButtonClick={() =>
+                setIsConfirmationInfoOpened(false)
+              }
+              pricePlaceholder={getPhrase(
+                "FlightInfoConfirmationInfoPricePlaceHolder",
+                language
+              )}
+              price={""}
             />
           </div>
 

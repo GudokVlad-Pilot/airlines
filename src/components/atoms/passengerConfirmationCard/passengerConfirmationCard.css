@@ -1,11 +1,16 @@
 .passengerConfirmationCardBox {
+  width: 450px;
+  /* border: 1px solid white; */
+}
+
+.passengerConfirmationCardSmallBox {
   border-radius: 20px;
   border: 1px solid white;
   padding: 20px;
-  width: 410px;
+  margin: 20px;
 }
 
-.passengerConfirmationCardTitle {
+.passengerConfirmationCardBigText {
   font-family: "Manrope";
   font-size: 24px;
   color: #89b8e9;

@@ -32,8 +32,19 @@
 }
 
 .confirmationInfoData {
-  padding: 0 25px;
-  place-self: center;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
+  gap: 0; /* no space between cards */
+}
+
+.confirmationInfoPrice {
+  font-family: "Manrope";
+  font-size: 24px;
+  font-weight: 600;
+  color: #89b8e9;
+  padding: 25px;
+  width: 850px;
 }
 
 .confirmationInfoButtons {

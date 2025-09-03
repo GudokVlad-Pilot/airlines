@@ -16,15 +16,19 @@ import "./flightId.css";
 import { colors } from "@/components/styles/colors";
 import BottomBar from "@/components/molecules/bottomBar";
 import { FlightCardProps } from "@/components/atoms/flightCard";
-import { Meal, Route } from "@/adapters/types";
+import { Extra, Meal, Route } from "@/adapters/types";
 import FlightTopContent from "@/components/molecules/flightTopContent";
 import PassengerInfo from "@/components/molecules/passengerInfo";
 import { PassengerInfoContentProps } from "@/components/atoms/passengerInfoContent";
 import FoodInfo from "@/components/molecules/foodInfo";
 import { FoodCardsBoxProps } from "@/components/molecules/foodCardsBox";
 import { FoodCardProps } from "@/components/atoms/foodCard";
+import ExtrasInfo from "@/components/molecules/extrasInfo";
+import { ExtrasCardProps } from "@/components/atoms/extrasCard";
+import { ExtrasCardsBoxProps } from "@/components/molecules/extrasCardsBox";
 
-const { getPages, getFlight, getDictionary, getMeals } = adapters.cms();
+const { getPages, getFlight, getDictionary, getMeals, getExtras } =
+  adapters.cms();
 
 export default function FlightIdContent() {
   const searchParams = useSearchParams();
@@ -33,10 +37,12 @@ export default function FlightIdContent() {
     dictionary,
     flight,
     meals,
+    extras,
     setPages,
     setDictionary,
     setFlight,
     setMeals,
+    setExtras,
   } = useStore();
   const params = useParams();
   const router = useRouter();
@@ -53,6 +59,7 @@ export default function FlightIdContent() {
 
   const [isPassengerInfoOpened, setIsPassengerInfoOpened] = useState(true);
   const [isFoodInfoOpened, setIsFoodInfoOpened] = useState(false);
+  const [isExtrasInfoOpened, setIsExtrasInfoOpened] = useState(false);
 
   const getPhrase = (title: string, lang: "en" | "ru" | "fi") => {
     const item = dictionary.find((d) => d.title === title);
@@ -88,6 +95,13 @@ export default function FlightIdContent() {
       foodCards: mealCards,
     },
   ]);
+  const [additionalCards, setAdditionalCards] = useState<ExtrasCardProps[]>([]);
+  const [extrasPacks, setExtrasPacks] = useState<ExtrasCardsBoxProps[]>([
+    {
+      title: "Passenger 1",
+      extrasCards: additionalCards,
+    },
+  ]);
 
   // Update passenger fields & food packs whenever dictionary or language changes
   useEffect(() => {
@@ -119,7 +133,15 @@ export default function FlightIdContent() {
         foodCards: mealCards,
       }))
     );
-  }, [dictionary, language, mealCards]);
+
+    setExtrasPacks((prev) =>
+      prev.map((p, index) => ({
+        ...p,
+        title: `${getPhrase("FlightInfoPassengerTitle", language)} ${index + 1}`,
+        extrasCards: additionalCards,
+      }))
+    );
+  }, [dictionary, language, mealCards, additionalCards]);
 
   // Add passenger
   const handleAddPassenger = () => {
@@ -160,6 +182,14 @@ export default function FlightIdContent() {
         foodCards: mealCards,
       },
     ]);
+
+    setExtrasPacks((prev) => [
+      ...prev,
+      {
+        title: `${getPhrase("FlightInfoPassengerTitle", language)} ${index + 1}`,
+        extrasCards: additionalCards,
+      },
+    ]);
   };
 
   // Reset passengers
@@ -196,6 +226,12 @@ export default function FlightIdContent() {
       {
         title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
         foodCards: mealCards,
+      },
+    ]);
+    setExtrasPacks([
+      {
+        title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
+        extrasCards: additionalCards,
       },
     ]);
   };
@@ -261,12 +297,19 @@ export default function FlightIdContent() {
       setLoading(false);
       return;
     }
-    Promise.all([getPages(), getDictionary(), getFlight(flightId), getMeals()])
-      .then(([pages, dictionary, flight, meals]) => {
+    Promise.all([
+      getPages(),
+      getDictionary(),
+      getFlight(flightId),
+      getMeals(),
+      getExtras(),
+    ])
+      .then(([pages, dictionary, flight, meals, extras]) => {
         setPages(pages);
         setDictionary(dictionary);
         setFlight(flight);
         setMeals(meals);
+        setExtras(extras);
         setLoading(false);
       })
       .catch((err) => {
@@ -278,7 +321,7 @@ export default function FlightIdContent() {
 
   // Build mealCards after dictionary + meals + language are ready
   useEffect(() => {
-    if (!dictionary.length || !meals.length) return;
+    if (!dictionary.length || !meals.length || !extras.length) return;
 
     const mappedMeals: FoodCardProps[] = meals.map((m: Meal) => ({
       title: m.title?.[language] || "Untitled meal",
@@ -293,10 +336,22 @@ export default function FlightIdContent() {
       isSelected: false,
     }));
 
+    const mappedAdditionals: ExtrasCardProps[] = extras.map((x: Extra) => ({
+      title: x.title?.[language] || "Untitled option",
+      image: `${x.image}?w=300` || "/assets/images/placeholder-4-3.png",
+      description: x.description?.[language] || "No description",
+      price: x.price ? `+${x.price}€` : "+0€",
+      isSelected: false,
+    }));
+
     setMealCards(mappedMeals);
+    setAdditionalCards(mappedAdditionals);
 
     setFoodPacks((prev) => prev.map((p) => ({ ...p, foodCards: mappedMeals })));
-  }, [dictionary, language, meals]);
+    setExtrasPacks((prev) =>
+      prev.map((p) => ({ ...p, extrasCards: mappedAdditionals }))
+    );
+  }, [dictionary, language, meals, extras]);
 
   // Handle meal selection: one per passenger
   const handleMealSelect = (passengerIndex: number, cardIndex: number) => {
@@ -312,12 +367,35 @@ export default function FlightIdContent() {
     });
   };
 
+  // Handle extras selection: multiple per passenger
+  const handleExtraToggle = (passengerIndex: number, cardIndex: number) => {
+    setExtrasPacks((prev) => {
+      const updated = [...prev];
+      updated[passengerIndex].extrasCards = updated[
+        passengerIndex
+      ].extrasCards.map((card, idx) => ({
+        ...card,
+        isSelected: idx === cardIndex,
+      }));
+      return updated;
+    });
+  };
+
   // Map foodPacks to add onClick
   const foodCardsWithClick = foodPacks.map((box, passengerIndex) => ({
     ...box,
     foodCards: box.foodCards.map((card, cardIndex) => ({
       ...card,
       onClick: () => handleMealSelect(passengerIndex, cardIndex),
+    })),
+  }));
+
+  // Map extrasPacks to add onClick
+  const extrasCardsWithClick = extrasPacks.map((box, passengerIndex) => ({
+    ...box,
+    extrasCards: box.extrasCards.map((card, cardIndex) => ({
+      ...card,
+      onClick: () => handleExtraToggle(passengerIndex, cardIndex),
     })),
   }));
 
@@ -413,6 +491,15 @@ export default function FlightIdContent() {
               onNextButtonClick={() => setIsFoodInfoOpened(false)}
               isNextDisabled={false}
             />
+            <ExtrasInfo
+              extrasCardsBoxes={extrasCardsWithClick}
+              title={getPhrase("FlightInfoExtrasInfoTitle", language)}
+              onClick={() => setIsExtrasInfoOpened(true)}
+              isOpened={isExtrasInfoOpened}
+              nextButtonText={getPhrase("FlightInfoNextButtonTitle", language)}
+              onNextButtonClick={() => setIsExtrasInfoOpened(false)}
+              isNextDisabled={false}
+            />
           </div>
 
           {/* Debug Section */}
@@ -429,6 +516,13 @@ export default function FlightIdContent() {
               const selectedMeal =
                 foodPacks[i]?.foodCards.find((c) => c.isSelected)?.title ||
                 "None";
+
+              const selectedExtras =
+                extrasPacks[i]?.extrasCards
+                  .filter((c) => c.isSelected)
+                  .map((c) => c.title)
+                  .join(", ") || "None";
+
               return (
                 <div key={i} style={{ marginBottom: "10px" }}>
                   <strong>{p.title}</strong>
@@ -437,6 +531,7 @@ export default function FlightIdContent() {
                   <div>Email: {p.emailValue}</div>
                   <div>Phone: {p.phoneValue}</div>
                   <div>Selected Meal: {selectedMeal}</div>
+                  <div>Selected Extras: {selectedExtras}</div>
                 </div>
               );
             })}

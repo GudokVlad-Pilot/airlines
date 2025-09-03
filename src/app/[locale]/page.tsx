@@ -147,7 +147,7 @@ export default function Home() {
     title: page.title?.[language] || "No Title",
     description: page.description?.[language] || "No Description",
     image: page.image
-      ? `${page.image}?w=100`
+      ? `${page.image}?w=300`
       : "/assets/images/placeholder-4-3.png",
     onClick: () => router.push(`/${language}/${page.slug}`),
   }));

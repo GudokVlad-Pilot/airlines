@@ -1,0 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+.extrasCardBox {
+  width: 270px;
+  /* height: 330px; */
+}
+
+.extrasCardBox.selected {
+  border-radius: 20px;
+}
+
+.extrasCardImageBox {
+  position: relative; /* make children absolute relative to this */
+  overflow: hidden; /* ensure nothing spills out */
+}
+
+.extrasCardImage {
+  border-radius: 20px;
+  width: 270px;
+  height: auto;
+  aspect-ratio: 4/3;
+}
+
+.extrasCardBox.selected .extrasCardImage {
+  opacity: 0.3;
+}
+
+.extrasCardCheckmark {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* perfectly center the icon */
+  color: #215e9e;
+}
+
+.extrasCardText {
+  color: white;
+  font-family: "Manrope";
+}
+
+.extrasCardTitle {
+  padding-top: 20px;
+  font-size: 24px;
+}
+
+.extrasCardDescription {
+  padding-top: 10px;
+  font-size: 14px;
+}
+
+.extrasCardPrice {
+  padding-top: 10px;
+  font-size: 24px;
+  font-weight: 600;
+}

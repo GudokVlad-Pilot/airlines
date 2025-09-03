@@ -282,7 +282,7 @@ export default function FlightIdContent() {
 
     const mappedMeals: FoodCardProps[] = meals.map((m: Meal) => ({
       title: m.title?.[language] || "Untitled meal",
-      image: m.image || "/assets/images/placeholder-4-3.png",
+      image: `${m.image}?w=300` || "/assets/images/placeholder-4-3.png",
       ingredientsText: getPhrase(
         "FlightInfoFoodInfoIngredientsTitle",
         language

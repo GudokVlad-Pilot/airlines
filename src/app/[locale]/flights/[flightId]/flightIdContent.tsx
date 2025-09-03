@@ -369,16 +369,24 @@ export default function FlightIdContent() {
 
   // Handle extras selection: multiple per passenger
   const handleExtraToggle = (passengerIndex: number, cardIndex: number) => {
-    setExtrasPacks((prev) => {
-      const updated = [...prev];
-      updated[passengerIndex].extrasCards = updated[
-        passengerIndex
-      ].extrasCards.map((card, idx) => ({
-        ...card,
-        isSelected: idx === cardIndex,
-      }));
-      return updated;
-    });
+    // setExtrasPacks((prev) => {
+    //   const updated = [...prev];
+    //   updated[passengerIndex].extrasCards = updated[
+    //     passengerIndex
+    //   ].extrasCards.map((card, idx) => ({
+    //     ...card,
+    //     isSelected: idx === cardIndex,
+    //   }));
+    //   return updated;
+    // });
+    const updatedExtras = [...extrasPacks];
+    updatedExtras[passengerIndex] = {
+      ...updatedExtras[passengerIndex],
+      extrasCards: updatedExtras[passengerIndex].extrasCards.map((card, idx) =>
+        idx === cardIndex ? { ...card, isSelected: !card.isSelected } : card
+      ),
+    };
+    setExtrasPacks(updatedExtras);
   };
 
   // Map foodPacks to add onClick
@@ -481,7 +489,6 @@ export default function FlightIdContent() {
               onNextButtonClick={() => setIsPassengerInfoOpened(false)}
               isNextDisabled={!isNextEnabled}
             />
-
             <FoodInfo
               foodCardsBoxes={foodCardsWithClick}
               title={getPhrase("FlightInfoFoodInfoTitle", language)}
@@ -535,6 +542,38 @@ export default function FlightIdContent() {
                 </div>
               );
             })}
+
+            {/* Total Price */}
+            <h3>Total Price</h3>
+            <div>
+              Base Flight Price: {flight?.price} € x {passengers.length}{" "}
+              passengers = {flight ? flight.price * passengers.length : 0} €
+            </div>
+            <div>
+              Extras Price:{" "}
+              {extrasPacks
+                .flatMap((pack) =>
+                  pack.extrasCards
+                    .filter((c) => c.isSelected)
+                    .map((c) => parsePrice(c.price))
+                )
+                .reduce((sum, val) => sum + val, 0)}{" "}
+              €
+            </div>
+            <div style={{ fontWeight: "bold" }}>
+              Grand Total:{" "}
+              {flight
+                ? flight.price * passengers.length +
+                  extrasPacks
+                    .flatMap((pack) =>
+                      pack.extrasCards
+                        .filter((c) => c.isSelected)
+                        .map((c) => parsePrice(c.price))
+                    )
+                    .reduce((sum, val) => sum + val, 0)
+                : 0}{" "}
+              €
+            </div>
           </div>
 
           <div>Flight ID: {flightId}</div>
@@ -552,6 +591,12 @@ export default function FlightIdContent() {
       </div>
     </div>
   );
+}
+
+// Helper to parse price strings like "+20€" → 20
+function parsePrice(priceStr: string): number {
+  const match = priceStr.match(/[-+]?\d+(\.\d+)?/);
+  return match ? parseFloat(match[0]) : 0;
 }
 
 // Helper

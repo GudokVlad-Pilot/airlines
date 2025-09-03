@@ -239,6 +239,24 @@ export default function FlightIdContent() {
     ]);
   };
 
+  const resetMeals = () => {
+    setFoodPacks([
+      {
+        title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
+        foodCards: mealCards,
+      },
+    ]);
+  };
+
+  const resetExtras = () => {
+    setExtrasPacks([
+      {
+        title: `${getPhrase("FlightInfoPassengerTitle", language)} 1`,
+        extrasCards: additionalCards,
+      },
+    ]);
+  };
+
   // Update passenger fields
   const handlePassengerChange = (
     index: number,
@@ -410,6 +428,54 @@ export default function FlightIdContent() {
     })),
   }));
 
+  const passengerConfirmationCards = passengers.map((p, i) => {
+    const selectedMeal =
+      foodPacks[i]?.foodCards.find((c) => c.isSelected)?.title || "None";
+
+    const selectedExtras =
+      extrasPacks[i]?.extrasCards
+        .filter((c) => c.isSelected)
+        .map((c) => c.title)
+        .join(", ") || "None";
+
+    return {
+      title: p.title,
+      firstNamePlaceholder: getPhrase("FlightInfoFirstNameTitle", language),
+      lastNamePlaceholder: getPhrase("FlightInfoLastNameTitle", language),
+      emailPlaceholder: getPhrase("FlightInfoEmailTitle", language),
+      phonePlaceholder: getPhrase("FlightInfoPhoneTitle", language),
+      firstName: p.firstNameValue,
+      lastName: p.lastNameValue,
+      email: p.emailValue,
+      phone: p.phoneValue,
+      route: `${flight?.origin.city[language]} (${flight?.origin.iata}) → ${
+        flight?.destination.city[language]
+      } (${flight?.destination.iata})`,
+      departureTimePlaceholder: getPhrase("FlightInfoDepartureTime", language),
+      departureTime: new Date(flight?.departureTime || "").toLocaleString(
+        language
+      ),
+      arrivalTimePlaceholder: getPhrase("FlightInfoArrivalTime", language),
+      arrivalTime: new Date(flight?.arrivalTime || "").toLocaleString(language),
+      mealPlaceholder: getPhrase("FlightInfoFoodInfoTitle", language),
+      meal: selectedMeal,
+      extrasPlaceholder: getPhrase("FlightInfoExtrasInfoTitle", language),
+      extras: selectedExtras,
+    };
+  });
+
+  const extrasPrice = extrasPacks
+    .flatMap((pack) =>
+      pack.extrasCards
+        .filter((c) => c.isSelected)
+        .map((c) => parsePrice(c.price))
+    )
+    .reduce((sum, val) => sum + val, 0);
+
+  const grandTotal = flight
+    ? flight.price * passengers.length + extrasPrice
+    : 0;
+
   if (loading) return <LoaderWithText text={loaderTextByLanguage[language]} />;
   if (error)
     return <div style={{ textAlign: "center", color: "red" }}>{error}</div>;
@@ -511,7 +577,7 @@ export default function FlightIdContent() {
               isNextDisabled={false}
             />
             <ConfirmationInfo
-              passengerConfirmationCards={[]}
+              passengerConfirmationCards={passengerConfirmationCards}
               title={getPhrase("FlightInfoConfirmationInfoTitle", language)}
               onClick={() => setIsConfirmationInfoOpened(true)}
               isOpened={isConfirmationInfoOpened}
@@ -519,7 +585,7 @@ export default function FlightIdContent() {
               onNextButtonClick={() => setIsConfirmationInfoOpened(false)}
               isNextDisabled={false}
               continueEditingText={getPhrase(
-                "FlightInfoNextButtonTitle",
+                "FlightInfoContinueEditingButtonTitle",
                 language
               )}
               onContinueEditingButtonClick={() =>
@@ -529,7 +595,7 @@ export default function FlightIdContent() {
                 "FlightInfoConfirmationInfoPricePlaceHolder",
                 language
               )}
-              price={""}
+              price={`${grandTotal} €`}
             />
           </div>
 

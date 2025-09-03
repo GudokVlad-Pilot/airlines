@@ -2,13 +2,22 @@ import { sanityClient } from "./clients/sanity";
 import {
   airportsQuery,
   dictionaryQuery,
+  extrasQuery,
   flightQuery,
   mealsQuery,
   pagesQuery,
   routesQuery,
   staticRouteQuery,
 } from "./queries";
-import { Airport, Dictionary, Meal, Page, Route, StaticRoute } from "./types";
+import {
+  Airport,
+  Dictionary,
+  Extra,
+  Meal,
+  Page,
+  Route,
+  StaticRoute,
+} from "./types";
 
 export const adapters = {
   cms: () => {
@@ -93,6 +102,17 @@ export const adapters = {
           return result;
         } catch (error) {
           console.error("Failed to fetch meals:", error);
+          return [];
+        }
+      },
+      getExtras: async (): Promise<Extra[]> => {
+        try {
+          const result = (await sanityClient.fetch(extrasQuery)) as Extra[];
+          console.log(result);
+          console.log("I am getExtras from Sanity");
+          return result;
+        } catch (error) {
+          console.error("Failed to fetch extras:", error);
           return [];
         }
       },

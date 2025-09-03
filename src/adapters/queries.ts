@@ -93,3 +93,14 @@ export const mealsQuery = `
     }
   }
 `;
+
+export const extrasQuery = `
+  *[_type == "extras"]{
+    _id,
+    title,
+    "image": image.asset -> url,
+    isActive,
+    description,
+    price,
+  }
+`;

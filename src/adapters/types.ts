@@ -90,3 +90,20 @@ export interface Meal {
   isActive: boolean;
   ingredients: Ingredient[];
 }
+
+export interface Extra {
+  _id: string;
+  title: {
+    en: string;
+    ru: string;
+    fi: string;
+  };
+  image?: string;
+  isActive: boolean;
+  description: {
+    en: string;
+    ru: string;
+    fi: string;
+  };
+  price: number;
+}

@@ -28,3 +28,14 @@ export const mockDays = {
   minutes: { en: "m", ru: "м", fi: "m" },
   days: { en: "D", ru: "Д", fi: "P" },
 };
+
+export const errorPlaceholder = {
+  en: "Something went wrong, please refresh the page.",
+  ru: "Что-то пошло не так, пожалуйста, обновите страницу.",
+  fi: "Jotain meni pieleen, päivitä sivu.",
+};
+export const profilePlaceholder = {
+  en: "Profile in progress...",
+  ru: "Профиль в разработке...",
+  fi: "Profiili käynnissä...",
+};

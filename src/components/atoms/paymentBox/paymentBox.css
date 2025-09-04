@@ -1,0 +1,61 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+
+.paymentBoxBox {
+  background-color: #393e46;
+  width: 850px; /* TODO: Fix it later */
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  font-family: "Manrope";
+  border-radius: 20px;
+}
+
+.paymentBoxTitle {
+  font-weight: 600;
+  font-size: 24px;
+  color: white;
+}
+
+.paymentBoxRadioGroup {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  color: white;
+  gap: 15px;
+  padding: 25px 0;
+}
+
+.paymentMethod {
+  margin: 0;
+  margin-right: 5px;
+}
+
+.paymentBoxCodeRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.paymentBoxCodeInput {
+  width: 565px;
+  margin-top: 5px;
+  padding: 0 10px;
+  border: 1px solid #89b8e9;
+  border-radius: 20px;
+  height: 50px;
+  font-family: "Manrope";
+  font-size: 14px;
+  color: #fff;
+  background: transparent;
+  outline: none;
+}
+
+.paymentBoxCodeInput:focus {
+  border: 1px solid #215e9e;
+  outline: none; /* prevent dark outline */
+}
+
+.paymentBoxCodeInput:hover {
+  border: 1px solid black; /* TODO: check the needed color*/
+  outline: none;
+}

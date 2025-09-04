@@ -9,7 +9,12 @@ import "./landingPage.css";
 import VideoBackground from "@/components/templates/video-background";
 import { colors } from "@/components/styles/colors";
 import NavCardsRow from "@/components/molecules/navCardsRow";
-import { languages, loaderTextByLanguage, mockBottomBar } from "./globalConsts";
+import {
+  languages,
+  loaderTextByLanguage,
+  mockBottomBar,
+  profilePlaceholder,
+} from "./globalConsts";
 import { useStore } from "@/adapters/zustand/store";
 import LoaderWithText from "@/components/molecules/loaderWithText";
 import SideBar from "@/components/molecules/sideBar";
@@ -167,7 +172,7 @@ export default function Home() {
             languages: languages,
           }}
           onLogoClick={() => router.push(`/${language}`)}
-          onProfileClick={() => alert("Profile is not ready")}
+          onProfileClick={() => alert(profilePlaceholder[language])}
           onMenuClick={() => {
             isSidebarMounted ? closeSidebar() : openSidebar();
           }}

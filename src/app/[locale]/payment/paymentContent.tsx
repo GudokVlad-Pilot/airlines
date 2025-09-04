@@ -16,6 +16,7 @@ import { adapters } from "@/adapters/adapter";
 import BottomBar from "@/components/molecules/bottomBar";
 import { colors } from "@/components/styles/colors";
 import "./payment.css";
+import PaymentInfo from "@/components/molecules/paymentLayout";
 
 const { getPages, getDictionary } = adapters.cms();
 const { getOrder, updateOrderPaid, applyOrderFullDiscount } =
@@ -38,7 +39,13 @@ export default function PaymentContent() {
     total: number;
     paid: boolean;
   } | null>(null);
-  const [updating, setUpdating] = useState(false);
+
+  const codeToCheck = "BirthdaySpecia1";
+  const [code, setCode] = useState("");
+  const [codeBoxDisabled, setCodeButtonDisabled] = useState(false);
+  const [codeButtonLoading, setCodeButtonLoading] = useState(false);
+  const [paymentBoxDisabled, setPaymentButtonDisabled] = useState(false);
+  const [paymentButtonLoading, setPaymentButtonLoading] = useState(false);
 
   const openSidebar = () => {
     setIsSidebarMounted(true);
@@ -87,26 +94,26 @@ export default function PaymentContent() {
 
   const markAsPaid = async () => {
     if (!orderId || !flightId || !orderData || orderData.paid) return;
-    setUpdating(true);
     const success = await updateOrderPaid(flightId, orderId);
     if (success) {
       setOrderData((prev) => (prev ? { ...prev, paid: true } : prev));
+      setPaymentButtonDisabled(true);
     } else {
       alert("Failed to mark order as paid");
     }
-    setUpdating(false);
+    setPaymentButtonLoading(false);
   };
 
   const applyDiscount = async () => {
     if (!orderId || !flightId || !orderData || orderData.paid) return;
-    setUpdating(true);
     const success = await applyOrderFullDiscount(flightId, orderId);
     if (success) {
       setOrderData((prev) => (prev ? { ...prev, total: 0 } : prev));
+      setCodeButtonDisabled(true);
     } else {
       alert("Failed to apply order discount");
     }
-    setUpdating(false);
+    setCodeButtonLoading(false);
   };
 
   if (loading) return <LoaderWithText text={loaderTextByLanguage[language]} />;
@@ -163,42 +170,66 @@ export default function PaymentContent() {
 
       {/* Payment content */}
       <div className="paymentContent">
-        <p>Order ID: {orderId}</p>
-        {orderData ? (
-          <>
-            <p>Total: {orderData.total}</p>
-            <p>Paid: {orderData.paid ? "✅ Yes" : "❌ No"}</p>
-
-            {orderData.total !== 0 && (
-              <button
-                onClick={applyDiscount}
-                disabled={updating}
-                style={{
-                  marginTop: "10px",
-                  padding: "8px 16px",
-                  cursor: updating ? "not-allowed" : "pointer",
-                }}
-              >
-                {updating ? "Applying discount" : "Apply Discount"}
-              </button>
+        {orderData && orderId && flightId ? (
+          <PaymentInfo
+            isPaid={orderData.paid}
+            confimationMessage={getPhrase(
+              "PaymentBoxConfirmationMessage",
+              language
             )}
-
-            {!orderData.paid && (
-              <button
-                onClick={markAsPaid}
-                disabled={updating}
-                style={{
-                  marginTop: "10px",
-                  padding: "8px 16px",
-                  cursor: updating ? "not-allowed" : "pointer",
-                }}
-              >
-                {updating ? "Marking as Paid..." : "Mark as Paid"}
-              </button>
+            confimationThanks={getPhrase(
+              "PaymentBoxConfirmationThanks",
+              language
             )}
-          </>
+            paymentBox={{
+              title: getPhrase("PaymentBoxTitle", language),
+              codePlaceholder: getPhrase(
+                "PaymentCodePlaceholderTitle",
+                language
+              ),
+              codeValue: code,
+              onCodeValueChange: setCode,
+              codeButtonTitle: getPhrase("PaymentBoxCodeButtonTitle", language),
+              onCodeButtonClick: () => {
+                setCodeButtonLoading(true);
+                if (code === codeToCheck) {
+                  applyDiscount();
+                } else {
+                  alert("Invalid code");
+                  setCodeButtonLoading(false);
+                }
+              },
+              isCodeButtonDisabled: orderData.total == 0 || codeBoxDisabled,
+              isCodeButtonLoading: codeButtonLoading,
+            }}
+            orderPlaceholder={getPhrase("PaymentOrderPlaceholder", language)}
+            orderId={orderId}
+            totalPlaceholder={getPhrase(
+              "FlightInfoConfirmationInfoPricePlaceHolder",
+              language
+            )}
+            total={`${orderData.total}€` || ""}
+            paymentButtonText={getPhrase("PaymentButtonText", language)}
+            onPaymentButtonClick={() => {
+              setPaymentButtonLoading(true);
+              markAsPaid();
+            }}
+            isPaymentButtonDisabled={orderData.total !== 0 || orderData.paid}
+            isPaymentButtonLoading={paymentButtonLoading}
+          />
         ) : (
-          <p>Loading order...</p>
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: "1rem",
+              fontFamily: "Manrope",
+              fontSize: "24px",
+              fontWeight: "600",
+              color: colors.primary,
+            }}
+          >
+            {getPhrase("PaymentLoadingOrder", language)}
+          </div>
         )}
       </div>
 

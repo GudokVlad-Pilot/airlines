@@ -1,6 +1,7 @@
 import "./paymentInfo.css";
 import CustomButton from "@/components/atoms/customButton";
 import PaymentBox, { PaymentBoxProps } from "@/components/atoms/paymentBox";
+import CardMedia from "@mui/material/CardMedia";
 
 type Props = {
   paymentBox: PaymentBoxProps;
@@ -12,6 +13,9 @@ type Props = {
   onPaymentButtonClick: () => void;
   isPaymentButtonDisabled: boolean;
   isPaymentButtonLoading: boolean;
+  confimationMessage?: string;
+  confimationThanks?: string;
+  isPaid?: boolean;
 };
 
 export default function PaymentInfo({
@@ -24,6 +28,9 @@ export default function PaymentInfo({
   onPaymentButtonClick,
   isPaymentButtonLoading,
   isPaymentButtonDisabled,
+  isPaid,
+  confimationMessage,
+  confimationThanks,
 }: Props) {
   return (
     <div className="paymentInfoBox">
@@ -39,20 +46,39 @@ export default function PaymentInfo({
       </div>
 
       <div className="paymentInfoContent">
-        <PaymentBox {...paymentBox} />
+        {isPaid ? (
+          <div className="paymentInfoConfirmationBox">
+            <div className="paymentInfoConfirmationMessage">
+              {confimationMessage}
+            </div>
+            <div className="paymentInfoConfirmationThanks">
+              {confimationThanks}
+            </div>
+            <CardMedia
+              className="paymentInfoConfirmationImage"
+              component="img"
+              height="300"
+              image={"/assets/images/confirmation_fox.png"}
+            />
+          </div>
+        ) : (
+          <PaymentBox {...paymentBox} />
+        )}
       </div>
-      <div className="paymentInfoButtons">
-        {/* <CustomButton
+      {!isPaid && (
+        <div className="paymentInfoButtons">
+          {/* <CustomButton
           title={addPassangerButtonText}
           onClick={onAddPassangerButtonClick}
         /> */}
-        <CustomButton
-          title={paymentButtonText}
-          onClick={onPaymentButtonClick}
-          isDisabled={isPaymentButtonDisabled}
-          isLoading={isPaymentButtonLoading}
-        />
-      </div>
+          <CustomButton
+            title={paymentButtonText}
+            onClick={onPaymentButtonClick}
+            isDisabled={isPaymentButtonDisabled}
+            isLoading={isPaymentButtonLoading}
+          />
+        </div>
+      )}
     </div>
   );
 }

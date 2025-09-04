@@ -686,7 +686,7 @@ export default function FlightIdContent() {
                 "FlightInfoConfirmationInfoPricePlaceHolder",
                 language
               )}
-              price={`${grandTotal} €`}
+              price={`${grandTotal}€`}
             />
           </div>
           <div>Flight ID: {flightId}</div>
@@ -744,6 +744,6 @@ function buildSingleFlightCard(
         : `${hours}${mockDays.hours[language]}`;
     })(),
     connections: getPhrase("DirectFlights", language),
-    price: `${route.price} €`,
+    price: `${route.price}€`,
   };
 }

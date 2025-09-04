@@ -10,6 +10,7 @@ import {
   languages,
   loaderTextByLanguage,
   mockBottomBar,
+  pagePlaceholder,
   profilePlaceholder,
 } from "./[locale]/globalConsts";
 import { useStore } from "@/adapters/zustand/store";
@@ -136,7 +137,9 @@ export default function GlobalNotFound() {
             <SideBar
               pages={pages.map((p) => ({
                 title: p.title?.[locale] || "No Title",
-                onClick: () => router.push(`/${locale}/${p.slug}`),
+                // onClick: () => router.push(`/${locale}/${p.slug}`),
+                //TODO: return functionality
+                onClick: () => alert(pagePlaceholder[locale]),
               }))}
             />
           </div>

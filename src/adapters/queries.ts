@@ -78,10 +78,11 @@ export const flightQuery = `
 `;
 
 export const mealsQuery = `
-  *[_type == "food"]{
+  *[_type == "food"] 
+  | order(_createdAt asc) {
     _id,
     title,
-    "image": image.asset -> url,
+    "image": image.asset->url,
     isActive,
     ingredients[]->{
       _id,

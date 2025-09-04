@@ -8,6 +8,7 @@ import {
   languages,
   loaderTextByLanguage,
   mockBottomBar,
+  pagePlaceholder,
   profilePlaceholder,
 } from "../globalConsts";
 import { useEffect, useState } from "react";
@@ -161,7 +162,9 @@ export default function PaymentContent() {
             <SideBar
               pages={pages.map((p) => ({
                 title: p.title?.[language] || "No Title",
-                onClick: () => router.push(`/${language}/${p.slug}`),
+                // onClick: () => router.push(`/${language}/${p.slug}`),
+                //TODO: return functionality
+                onClick: () => alert(pagePlaceholder[language]),
               }))}
             />
           </div>

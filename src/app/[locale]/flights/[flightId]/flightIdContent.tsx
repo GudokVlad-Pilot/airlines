@@ -10,6 +10,7 @@ import {
   loaderTextByLanguage,
   mockBottomBar,
   mockDays,
+  pagePlaceholder,
   profilePlaceholder,
 } from "../../globalConsts";
 import SideBar from "@/components/molecules/sideBar";
@@ -547,7 +548,9 @@ export default function FlightIdContent() {
             <SideBar
               pages={pages.map((p) => ({
                 title: p.title?.[language] || "No Title",
-                onClick: () => router.push(`/${language}/${p.slug}`),
+                // onClick: () => router.push(`/${language}/${p.slug}`),
+                //TODO: return functionality
+                onClick: () => alert(pagePlaceholder[language]),
               }))}
             />
           </div>
@@ -689,7 +692,6 @@ export default function FlightIdContent() {
               price={`${grandTotal}€`}
             />
           </div>
-          <div>Flight ID: {flightId}</div>
         </div>
       )}
 

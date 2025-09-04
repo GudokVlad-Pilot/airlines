@@ -34,8 +34,15 @@ export const errorPlaceholder = {
   ru: "Что-то пошло не так, пожалуйста, обновите страницу.",
   fi: "Jotain meni pieleen, päivitä sivu.",
 };
+
 export const profilePlaceholder = {
   en: "Profile in progress...",
   ru: "Профиль в разработке...",
-  fi: "Profiili käynnissä...",
+  fi: "Profiili työn alla...",
+};
+
+export const pagePlaceholder = {
+  en: "Page in progress...",
+  ru: "Страница в разработке...",
+  fi: "Sivu työn alla...",
 };

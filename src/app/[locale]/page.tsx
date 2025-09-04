@@ -13,6 +13,7 @@ import {
   languages,
   loaderTextByLanguage,
   mockBottomBar,
+  pagePlaceholder,
   profilePlaceholder,
 } from "./globalConsts";
 import { useStore } from "@/adapters/zustand/store";
@@ -154,7 +155,8 @@ export default function Home() {
     image: page.image
       ? `${page.image}?w=300`
       : "/assets/images/placeholder-4-3.png",
-    onClick: () => router.push(`/${language}/${page.slug}`),
+    // onClick: () => router.push(`/${language}/${page.slug}`),
+    onClick: () => alert(pagePlaceholder[language]),
   }));
 
   return (
@@ -187,7 +189,9 @@ export default function Home() {
             <SideBar
               pages={pages.map((p) => ({
                 title: p.title?.[language] || "No Title",
-                onClick: () => router.push(`/${language}/${p.slug}`),
+                // onClick: () => router.push(`/${language}/${p.slug}`),
+                //TODO: return functionality
+                onClick: () => alert(pagePlaceholder[language]),
               }))}
             />
           </div>

@@ -1,3 +1,10 @@
 .paymentInfoBox {
   width: 900px;
+  display: flex;
+  flex-direction: column;
+}
+
+.paymentInfoButtons {
+  place-self: end;
+  margin: 25px;
 }

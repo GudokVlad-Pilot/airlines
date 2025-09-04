@@ -37,7 +37,7 @@ export default function CustomButton({
 }: CustomButtonProps) {
   return (
     <button
-      className="customButtonBox"
+      className={`customButtonBox ${isLoading ? "loading" : ""}`}
       onClick={() => {
         if (!isLoading && !isDisabled) onClick();
       }}

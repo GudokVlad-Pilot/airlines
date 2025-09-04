@@ -1,6 +1,6 @@
 import "./paymentInfo.css";
 import CustomButton from "@/components/atoms/customButton";
-import { PaymentBoxProps } from "@/components/atoms/paymentBox";
+import PaymentBox, { PaymentBoxProps } from "@/components/atoms/paymentBox";
 
 type Props = {
   paymentBox: PaymentBoxProps;
@@ -38,7 +38,9 @@ export default function PaymentInfo({
         </div>
       </div>
 
-      <div className="paymentInfoContent"></div>
+      <div className="paymentInfoContent">
+        <PaymentBox {...paymentBox} />
+      </div>
       <div className="paymentInfoButtons">
         {/* <CustomButton
           title={addPassangerButtonText}

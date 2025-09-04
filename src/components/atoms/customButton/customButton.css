@@ -27,3 +27,15 @@
   color: var(--btn-color-disabled, #777777);
   cursor: not-allowed;
 }
+
+.customButtonBox.loading:hover:not(:disabled) {
+  background-color: var(--btn-bg, #89b8e9);
+  color: var(--btn-color, white);
+  cursor: not-allowed;
+}
+
+.customButtonBox.loading:active:not(:disabled) {
+  background-color: var(--btn-bg, #89b8e9);
+  color: var(--btn-color, white);
+  cursor: not-allowed;
+}

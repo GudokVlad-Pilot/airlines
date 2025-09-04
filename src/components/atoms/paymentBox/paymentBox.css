@@ -2,7 +2,7 @@
 
 .paymentBoxBox {
   background-color: #393e46;
-  width: 100%;
+  width: 850px; /* TODO: Fix it later */
   display: flex;
   flex-direction: column;
   padding: 25px;

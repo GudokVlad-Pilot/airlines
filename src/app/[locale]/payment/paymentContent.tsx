@@ -16,6 +16,7 @@ import { adapters } from "@/adapters/adapter";
 import BottomBar from "@/components/molecules/bottomBar";
 import { colors } from "@/components/styles/colors";
 import "./payment.css";
+import PaymentInfo from "@/components/molecules/paymentLayout";
 
 const { getPages, getDictionary } = adapters.cms();
 const { getOrder, updateOrderPaid, applyOrderFullDiscount } =
@@ -163,6 +164,53 @@ export default function PaymentContent() {
 
       {/* Payment content */}
       <div className="paymentContent">
+        {orderData && orderId && flightId ? (
+          <PaymentInfo
+            paymentBox={{
+              title: getPhrase("PaymentBoxTitle", language),
+              codePlaceholder: getPhrase(
+                "PaymentCodePlaceholderTitle",
+                language
+              ),
+              codeValue: "",
+              onCodeValueChange: function (value: string): void {
+                throw new Error("Function not implemented.");
+              },
+              codeButtonTitle: getPhrase("PaymentBoxCodeButtonTitle", language),
+              onCodeButtonClick: function (): void {
+                throw new Error("Function not implemented.");
+              },
+              isCodeButtonDisabled: false,
+              isCodeButtonLoading: false,
+            }}
+            orderPlaceholder={getPhrase("PaymentOrderPlaceholder", language)}
+            orderId={orderId}
+            totalPlaceholder={getPhrase(
+              "FlightInfoConfirmationInfoPricePlaceHolder",
+              language
+            )}
+            total={`${orderData.total}€` || ""}
+            paymentButtonText={getPhrase("PaymentButtonText", language)}
+            onPaymentButtonClick={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+            isPaymentButtonDisabled={false}
+            isPaymentButtonLoading={false}
+          />
+        ) : (
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: "1rem",
+              fontFamily: "Manrope",
+              fontSize: "24px",
+              fontWeight: "600",
+              color: colors.primary,
+            }}
+          >
+            {getPhrase("PaymentLoadingOrder", language)}
+          </div>
+        )}
         <p>Order ID: {orderId}</p>
         {orderData ? (
           <>

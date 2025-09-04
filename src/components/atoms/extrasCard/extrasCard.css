@@ -1,30 +1,30 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
-.foodCardBox {
+.extrasCardBox {
   width: 270px;
-  height: 330px;
+  /* height: 330px; */
 }
 
-.foodCardBox.selected {
+.extrasCardBox.selected {
   border-radius: 20px;
 }
 
-.foodCardImageBox {
+.extrasCardImageBox {
   position: relative; /* make children absolute relative to this */
   overflow: hidden; /* ensure nothing spills out */
 }
 
-.foodCardImage {
+.extrasCardImage {
   border-radius: 20px;
   width: 270px;
   height: auto;
   aspect-ratio: 4/3;
 }
 
-.foodCardBox.selected .foodCardImage {
+.extrasCardBox.selected .extrasCardImage {
   opacity: 0.3;
 }
 
-.foodCardCheckmark {
+.extrasCardCheckmark {
   position: absolute;
   z-index: 5;
   top: 50%;
@@ -33,17 +33,23 @@
   color: #215e9e;
 }
 
-.foodCardText {
+.extrasCardText {
   color: white;
   font-family: "Manrope";
 }
 
-.foodCardTitle {
+.extrasCardTitle {
   padding-top: 20px;
   font-size: 24px;
 }
 
-.foodCardIngredients {
+.extrasCardDescription {
   padding-top: 10px;
   font-size: 14px;
+}
+
+.extrasCardPrice {
+  padding-top: 10px;
+  font-size: 24px;
+  font-weight: 600;
 }

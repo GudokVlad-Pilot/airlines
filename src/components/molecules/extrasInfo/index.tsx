@@ -1,9 +1,9 @@
-import "./foodInfo.css";
+import "./extrasInfo.css";
 import CustomButton from "@/components/atoms/customButton";
-import FoodCardsBox, { FoodCardsBoxProps } from "../foodCardsBox";
+import ExtrasCardsBox, { ExtrasCardsBoxProps } from "../extrasCardsBox";
 
 type Props = {
-  foodCardsBoxes: FoodCardsBoxProps[];
+  extrasCardsBoxes: ExtrasCardsBoxProps[];
   title: string;
   isOpened?: boolean;
   onClick: () => void;
@@ -11,10 +11,12 @@ type Props = {
   onNextButtonClick: () => void;
   isNextDisabled: boolean;
   isClickable?: boolean;
+  // continueWithoutExtrasText: string;
+  // onContinueWithoutExtrasButtonClick: () => void;
 };
 
-export default function FoodInfo({
-  foodCardsBoxes,
+export default function ExtrasInfo({
+  extrasCardsBoxes,
   title,
   isOpened,
   onClick,
@@ -25,27 +27,27 @@ export default function FoodInfo({
 }: Props) {
   return (
     <div
-      className={`foodInfoBox ${isOpened ? "opened" : ""}`}
+      className={`extrasInfoBox ${isOpened ? "opened" : ""}`}
       style={{ cursor: isClickable ? "pointer" : "default" }}
       onClick={() => {
         if (!isOpened && isClickable) onClick();
       }}
     >
-      <div className="foodInfoHeader">
-        <div className="foodInfoTitle">{title}</div>
+      <div className="extrasInfoHeader">
+        <div className="extrasInfoTitle">{title}</div>
       </div>
 
       {isOpened && (
-        <div className="foodInfoContent">
-          <div className="foodInfoData">
-            {foodCardsBoxes.map((f, index) => (
-              <FoodCardsBox key={index} {...f} />
+        <div className="extrasInfoContent">
+          <div className="extrasInfoData">
+            {extrasCardsBoxes.map((f, index) => (
+              <ExtrasCardsBox key={index} {...f} />
             ))}
           </div>
-          <div className="foodInfoButtons">
+          <div className="extrasInfoButtons">
             {/* <CustomButton
-              title={continueWithoutMealText}
-              onClick={oncontinueWithoutMealButtonClick}
+              title={continueWithoutExtrasText}
+              onClick={onContinueWithoutExtrasButtonClick}
             /> */}
             <CustomButton
               title={nextButtonText}

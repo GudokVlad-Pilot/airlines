@@ -46,6 +46,7 @@ export default function FlightControlPanel({
             flightTime={flightControlConfirmFlight.flightTime}
             connections={flightControlConfirmFlight.connections}
             buttonTitle={flightControlConfirmFlight.buttonTitle}
+            isLoading={flightControlConfirmFlight.isLoading}
           />
         );
       default:

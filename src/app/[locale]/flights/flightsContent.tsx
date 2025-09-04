@@ -68,6 +68,10 @@ export default function FlightsContent() {
   const [flightControlPanelState, setflightControlPanelState] =
     useState<FlightControlState>("select");
 
+  const [searchLoader, setSearchLoader] = useState<boolean>(false);
+  const [isConfirmationLoading, setIsConfimationLoading] =
+    useState<boolean>(false);
+
   const openSidebar = () => {
     setIsSidebarMounted(true);
     requestAnimationFrame(() => setIsSidebarVisible(true));
@@ -167,8 +171,10 @@ export default function FlightsContent() {
   /* Change flight functions */
 
   const onSearchClick = () => {
+    setSearchLoader(true);
     if (!originValue || !destinationValue || !startDateValue) {
       alert(getPhrase("SearchBoxAlert", language));
+      setSearchLoader(false);
       return;
     }
 
@@ -182,6 +188,7 @@ export default function FlightsContent() {
     setflightControlPanelState("select");
     setIsChanging(false);
     router.push(url);
+    setSearchLoader(false);
   };
 
   // ✅ Origins filtered by selected destination
@@ -380,6 +387,7 @@ export default function FlightsContent() {
               locale: language,
               airports: availableOrigins, // ✅ origins filtered by destination
               destinations: filteredDestinations, // ✅ destinations filtered by origin
+              isLoading: searchLoader,
             }}
             tabs={[
               {
@@ -492,10 +500,13 @@ export default function FlightsContent() {
             flightTime: selectedFlight?.flightTime || "",
             connections: selectedFlight?.connections || "",
             buttonTitle: getPhrase("FlightControlConfirmButton", language),
-            onClick: () =>
+            onClick: () => {
+              setIsConfimationLoading(true);
               router.push(
                 `/${language}/flights/${selectedRoute}?${searchParams}`
-              ),
+              );
+            },
+            isLoading: isConfirmationLoading,
           }}
         />
       </div>

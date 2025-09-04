@@ -10,6 +10,7 @@ export type FlightControlConfirmFlightProps = {
   connections: string;
   buttonTitle: string;
   onClick: () => void;
+  isLoading?: boolean;
 };
 
 export default function FlightControlConfirmFlight({
@@ -19,6 +20,7 @@ export default function FlightControlConfirmFlight({
   connections,
   buttonTitle,
   onClick,
+  isLoading,
 }: FlightControlConfirmFlightProps) {
   return (
     <div className="flightControlConfirmFlightBox">
@@ -41,7 +43,11 @@ export default function FlightControlConfirmFlight({
         </div>
       </div>
       <div className="flightControlConfirmFlightButton">
-        <CustomButton title={buttonTitle} onClick={onClick} />
+        <CustomButton
+          title={buttonTitle}
+          onClick={onClick}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );

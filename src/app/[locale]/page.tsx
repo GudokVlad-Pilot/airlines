@@ -43,6 +43,8 @@ export default function Home() {
   const [startDateValue, setStartDateValue] = useState<Dayjs | null>(null);
   const [endDateValue, setEndDateValue] = useState<Dayjs | null>(null);
 
+  const [searchLoading, setSearchLoading] = useState<boolean>(false);
+
   const openSidebar = () => {
     setIsSidebarMounted(true);
     requestAnimationFrame(() => setIsSidebarVisible(true));
@@ -59,8 +61,10 @@ export default function Home() {
   };
 
   const onSearchClick = () => {
+    setSearchLoading(true);
     if (!originValue || !destinationValue || !startDateValue) {
       alert(getPhrase("SearchBoxAlert", language));
+      setSearchLoading(false);
       return;
     }
 
@@ -143,7 +147,7 @@ export default function Home() {
     title: page.title?.[language] || "No Title",
     description: page.description?.[language] || "No Description",
     image: page.image
-      ? `${page.image}?w=100`
+      ? `${page.image}?w=300`
       : "/assets/images/placeholder-4-3.png",
     onClick: () => router.push(`/${language}/${page.slug}`),
   }));
@@ -236,6 +240,7 @@ export default function Home() {
             locale: language,
             airports: availableOrigins, // ✅ origins filtered by destination
             destinations: filteredDestinations, // ✅ destinations filtered by origin
+            isLoading: searchLoading,
           }}
           tabs={[
             {

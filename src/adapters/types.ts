@@ -60,7 +60,66 @@ export interface StaticRoute {
   _id: string;
 }
 
+export interface Category {
+  _id: string;
+  title: {
+    en: string;
+    ru: string;
+    fi: string;
+  };
+}
+
 export interface Ingredient {
-  title: string;
-  category: string[]; // e.g. ["Vegan", "Vegetarian", "Dairy-free"]
+  _id: string;
+  title: {
+    en: string;
+    ru: string;
+    fi: string;
+  };
+  category: Category[];
+}
+
+export interface Meal {
+  _id: string;
+  title: {
+    en: string;
+    ru: string;
+    fi: string;
+  };
+  image?: string;
+  isActive: boolean;
+  ingredients: Ingredient[];
+}
+
+export interface Extra {
+  _id: string;
+  title: {
+    en: string;
+    ru: string;
+    fi: string;
+  };
+  image?: string;
+  isActive: boolean;
+  description: {
+    en: string;
+    ru: string;
+    fi: string;
+  };
+  price: number;
+}
+
+export interface PassengerData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  meal: string;
+  extras: string[];
+}
+
+export interface PaymentData {
+  flightId: string;
+  passengers: PassengerData[];
+  total: number;
+  paid: boolean;
 }

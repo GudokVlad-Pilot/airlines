@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
 
-.foodInfoBox {
+.confirmationInfoBox {
   color: white;
   background-color: #393e46;
   height: 50px;
@@ -12,12 +12,12 @@
   cursor: pointer;
 }
 
-.foodInfoBox.opened {
+.confirmationInfoBox.opened {
   cursor: default;
   height: auto;
 }
 
-.foodInfoHeader {
+.confirmationInfoHeader {
   display: flex;
   align-items: center;
   height: 50px;
@@ -25,18 +25,29 @@
   justify-content: flex-start;
 }
 
-.foodInfoTitle {
+.confirmationInfoTitle {
   font-family: "Manrope";
   font-size: 24px;
   padding: 25px;
 }
 
-.foodInfoData {
-  padding: 0 25px;
-  place-self: center;
+.confirmationInfoData {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
+  gap: 0; /* no space between cards */
 }
 
-.foodInfoButtons {
+.confirmationInfoPrice {
+  font-family: "Manrope";
+  font-size: 24px;
+  font-weight: 600;
+  color: #89b8e9;
+  padding: 25px;
+  width: 850px;
+}
+
+.confirmationInfoButtons {
   display: flex;
   justify-content: flex-end;
   padding: 20px;

@@ -5,6 +5,7 @@ import LoaderWithText from "@/components/molecules/loaderWithText";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
+  errorPlaceholder,
   languages,
   loaderTextByLanguage,
   mockBottomBar,
@@ -663,12 +664,10 @@ export default function FlightIdContent() {
                 try {
                   const orderId = await saveOrder(flightId!, paymentData);
                   console.log("Order saved with ID:", orderId);
-                  alert("Success!");
+                  router.push(`/${language}/payment/?ref=${orderId}`);
                 } catch (err) {
                   console.error("Failed to save order:", err);
-                  alert(
-                    "Something went wrong saving your order, please refresh your page"
-                  );
+                  alert(errorPlaceholder[language]);
                 }
               }}
               isNextDisabled={false}

@@ -1,3 +1,26 @@
+.paymentInfoHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-family: "Manrope";
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.paymentInfoTitleBox {
+  display: flex;
+}
+
+.paymentInfoTitle {
+  font-weight: 400;
+  color: #393e46;
+}
+
+.paymentInfoSubtitle {
+  font-weight: 600;
+  color: #215e9e;
+}
+
 .paymentInfoBox {
   width: 900px;
   display: flex;
@@ -6,5 +29,5 @@
 
 .paymentInfoButtons {
   place-self: end;
-  margin: 25px;
+  margin: 25px 0;
 }

@@ -117,7 +117,7 @@ export interface PassengerData {
   extras: string[];
 }
 
-export interface PaymentData {
+export interface OrderData {
   flightId: string;
   passengers: PassengerData[];
   total: number;

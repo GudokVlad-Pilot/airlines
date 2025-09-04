@@ -32,8 +32,31 @@
   margin: 25px 0;
 }
 
+.paymentInfoContent {
+  display: flex;
+  justify-content: center;
+  font-family: "Manrope";
+  margin-top: 30px;
+}
+
+.paymentInfoConfirmationMessage {
+  justify-self: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #215e9e;
+}
+
+.paymentInfoConfirmationThanks {
+  justify-self: center;
+  font-size: 16px;
+  color: #393e46;
+}
+
 .paymentInfoConfirmationImage {
-  width: 300px;
-  height: 300px;
+  width: 300px !important;
+  height: 300px !important;
   aspect-ratio: 1/1;
+  margin-top: 25px;
+  justify-self: center;
 }

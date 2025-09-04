@@ -497,8 +497,7 @@ export default function FlightIdContent() {
     const selectedExtras =
       extrasPacks[i]?.extrasCards
         .map((c, idx) => (c.isSelected ? extras[idx]?.title?.["en"] : null))
-        .filter((x): x is string => !!x)
-        .join(", ") || "None";
+        .filter((x): x is string => !!x) || [];
 
     return {
       firstName: p.firstNameValue,

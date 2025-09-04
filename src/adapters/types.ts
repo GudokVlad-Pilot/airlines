@@ -107,3 +107,19 @@ export interface Extra {
   };
   price: number;
 }
+
+export interface PassengerData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  meal: string;
+  extras: string[];
+}
+
+export interface PaymentData {
+  flightId: string;
+  passengers: PassengerData[];
+  total: number;
+  paid: boolean;
+}

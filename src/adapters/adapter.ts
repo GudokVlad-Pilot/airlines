@@ -20,7 +20,14 @@ import {
   Route,
   StaticRoute,
 } from "./types";
-import { collection, doc, addDoc, Timestamp } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  addDoc,
+  Timestamp,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 export const adapters = {
   cms: () => {
@@ -149,6 +156,52 @@ export const adapters = {
         } catch (error) {
           console.error("Failed to save order:", error);
           throw error;
+        }
+      },
+      getOrder: async (flightId: string, orderId: string) => {
+        try {
+          const orderRef = doc(db, "flights", flightId, "orders", orderId);
+          const orderSnap = await getDoc(orderRef);
+          console.log("Getting order Snapshot");
+
+          if (!orderSnap.exists()) {
+            console.log("Order not found");
+            return null;
+          }
+
+          const data = orderSnap.data();
+          console.log("Got data about order");
+          return {
+            total: data.total,
+            paid: data.paid,
+          };
+        } catch (err) {
+          console.error("Failed to fetch order:", err);
+          return null;
+        }
+      },
+      updateOrderPaid: async (flightId: string, orderId: string) => {
+        try {
+          const orderRef = doc(db, "flights", flightId, "orders", orderId);
+          console.log("Got order to pay");
+          await updateDoc(orderRef, { paid: true });
+          console.log("Order marked as paid");
+          return true;
+        } catch (err) {
+          console.error("Failed to mark order as paid:", err);
+          return false;
+        }
+      },
+      applyOrderFullDiscount: async (flightId: string, orderId: string) => {
+        try {
+          const orderRef = doc(db, "flights", flightId, "orders", orderId);
+          console.log("Got order to for discount");
+          await updateDoc(orderRef, { total: 0 });
+          console.log("Order has 100% discount");
+          return true;
+        } catch (err) {
+          console.error("Failed to apply dicount:", err);
+          return false;
         }
       },
     };

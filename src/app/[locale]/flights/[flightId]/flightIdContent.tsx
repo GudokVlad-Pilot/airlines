@@ -664,7 +664,9 @@ export default function FlightIdContent() {
                 try {
                   const orderId = await saveOrder(flightId!, paymentData);
                   console.log("Order saved with ID:", orderId);
-                  router.push(`/${language}/payment/?ref=${orderId}`);
+                  router.push(
+                    `/${language}/payment/?flightId=${flightId}&ref=${orderId}`
+                  );
                 } catch (err) {
                   console.error("Failed to save order:", err);
                   alert(errorPlaceholder[language]);

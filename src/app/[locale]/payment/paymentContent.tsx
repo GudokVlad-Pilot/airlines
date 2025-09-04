@@ -18,10 +18,13 @@ import { colors } from "@/components/styles/colors";
 import "./payment.css";
 
 const { getPages, getDictionary } = adapters.cms();
+const { getOrder, updateOrderPaid, applyOrderFullDiscount } =
+  adapters.firebase();
 
 export default function PaymentContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("ref");
+  const flightId = searchParams.get("flightId");
   const params = useParams();
   const router = useRouter();
   const { pages, dictionary, setPages, setDictionary } = useStore();
@@ -31,6 +34,11 @@ export default function PaymentContent() {
   const [error, setError] = useState<string | null>(null);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isSidebarMounted, setIsSidebarMounted] = useState(false);
+  const [orderData, setOrderData] = useState<{
+    total: number;
+    paid: boolean;
+  } | null>(null);
+  const [updating, setUpdating] = useState(false);
 
   const openSidebar = () => {
     setIsSidebarMounted(true);
@@ -54,19 +62,52 @@ export default function PaymentContent() {
     }
   }, [params]);
 
+  // Fetch order data
+  useEffect(() => {
+    if (!orderId || !flightId) return;
+
+    setLoading(true);
+    getOrder(flightId, orderId)
+      .then((data) => {
+        if (data) setOrderData({ total: data.total, paid: !!data.paid });
+      })
+      .catch((err) => setError("Failed to fetch order"))
+      .finally(() => setLoading(false));
+  }, [orderId, flightId]);
+
+  // Fetch CMS content
   useEffect(() => {
     Promise.all([getPages(), getDictionary()])
       .then(([pages, dictionary]) => {
         setPages(pages);
         setDictionary(dictionary);
-        setLoading(false);
       })
-      .catch((err) => {
-        setError("Failed to load content");
-        setLoading(false);
-        console.error(err);
-      });
+      .catch((err) => setError("Failed to load content"));
   }, []);
+
+  const markAsPaid = async () => {
+    if (!orderId || !flightId || !orderData || orderData.paid) return;
+    setUpdating(true);
+    const success = await updateOrderPaid(flightId, orderId);
+    if (success) {
+      setOrderData((prev) => (prev ? { ...prev, paid: true } : prev));
+    } else {
+      alert("Failed to mark order as paid");
+    }
+    setUpdating(false);
+  };
+
+  const applyDiscount = async () => {
+    if (!orderId || !flightId || !orderData || orderData.paid) return;
+    setUpdating(true);
+    const success = await applyOrderFullDiscount(flightId, orderId);
+    if (success) {
+      setOrderData((prev) => (prev ? { ...prev, total: 0 } : prev));
+    } else {
+      alert("Failed to apply order discount");
+    }
+    setUpdating(false);
+  };
 
   if (loading) return <LoaderWithText text={loaderTextByLanguage[language]} />;
   if (error)
@@ -82,6 +123,7 @@ export default function PaymentContent() {
         backgroundColor: colors.background,
       }}
     >
+      {/* Navbar */}
       <div className={`navBar ${isSidebarVisible ? "narrowed" : ""}`}>
         <NavBar
           language={{
@@ -92,20 +134,17 @@ export default function PaymentContent() {
                 router.push(`/${newLang}/payment?${searchParams}`);
               }
             },
-            languages: languages,
+            languages,
           }}
           onLogoClick={() => router.push(`/${language}`)}
           onProfileClick={() => alert(profilePlaceholder[language])}
-          onMenuClick={() => {
-            if (isSidebarMounted) {
-              closeSidebar();
-            } else {
-              openSidebar();
-            }
-          }}
+          onMenuClick={() =>
+            isSidebarMounted ? closeSidebar() : openSidebar()
+          }
         />
       </div>
 
+      {/* Sidebar */}
       {isSidebarMounted && (
         <div className="sideBarOverlay" onClick={closeSidebar}>
           <div
@@ -122,7 +161,48 @@ export default function PaymentContent() {
         </div>
       )}
 
-      <div className="paymentContent">{orderId}</div>
+      {/* Payment content */}
+      <div className="paymentContent">
+        <p>Order ID: {orderId}</p>
+        {orderData ? (
+          <>
+            <p>Total: {orderData.total}</p>
+            <p>Paid: {orderData.paid ? "✅ Yes" : "❌ No"}</p>
+
+            {orderData.total !== 0 && (
+              <button
+                onClick={applyDiscount}
+                disabled={updating}
+                style={{
+                  marginTop: "10px",
+                  padding: "8px 16px",
+                  cursor: updating ? "not-allowed" : "pointer",
+                }}
+              >
+                {updating ? "Applying discount" : "Apply Discount"}
+              </button>
+            )}
+
+            {!orderData.paid && (
+              <button
+                onClick={markAsPaid}
+                disabled={updating}
+                style={{
+                  marginTop: "10px",
+                  padding: "8px 16px",
+                  cursor: updating ? "not-allowed" : "pointer",
+                }}
+              >
+                {updating ? "Marking as Paid..." : "Mark as Paid"}
+              </button>
+            )}
+          </>
+        ) : (
+          <p>Loading order...</p>
+        )}
+      </div>
+
+      {/* Bottom bar */}
       <BottomBar
         copyright={mockBottomBar.copyright[language]}
         createdby={mockBottomBar.createdBy[language]}

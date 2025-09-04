@@ -38,7 +38,9 @@ export default function CustomButton({
   return (
     <button
       className="customButtonBox"
-      onClick={onClick}
+      onClick={() => {
+        if (!isLoading && !isDisabled) onClick();
+      }}
       disabled={isDisabled}
       style={
         {

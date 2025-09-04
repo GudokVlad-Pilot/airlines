@@ -484,6 +484,41 @@ export default function FlightIdContent() {
     ? flight.price * passengers.length + extrasPrice
     : 0;
 
+  // Payment info
+  const passengerConfirmationData = passengers.map((p, i) => {
+    const selectedMealIndex = foodPacks[i]?.foodCards.findIndex(
+      (c) => c.isSelected
+    );
+    const selectedMeal =
+      selectedMealIndex !== undefined && selectedMealIndex >= 0
+        ? meals[selectedMealIndex]?.title?.["en"] || "None"
+        : "None";
+
+    const selectedExtras =
+      extrasPacks[i]?.extrasCards
+        .map((c, idx) => (c.isSelected ? extras[idx]?.title?.["en"] : null))
+        .filter((x): x is string => !!x)
+        .join(", ") || "None";
+
+    return {
+      firstName: p.firstNameValue,
+      lastName: p.lastNameValue,
+      email: p.emailValue,
+      phone: p.phoneValue,
+      meal: selectedMeal,
+      extras: selectedExtras,
+    };
+  });
+
+  const paymentData = {
+    flightId,
+    passengers: passengerConfirmationData,
+    total: grandTotal,
+    paid: false,
+  };
+
+  console.log(paymentData);
+
   if (loading) return <LoaderWithText text={loaderTextByLanguage[language]} />;
   if (error)
     return <div style={{ textAlign: "center", color: "red" }}>{error}</div>;

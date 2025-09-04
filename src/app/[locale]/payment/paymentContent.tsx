@@ -39,7 +39,13 @@ export default function PaymentContent() {
     total: number;
     paid: boolean;
   } | null>(null);
-  const [updating, setUpdating] = useState(false);
+
+  const codeToCheck = "BirthdaySpecia1";
+  const [code, setCode] = useState("");
+  const [codeBoxDisabled, setCodeButtonDisabled] = useState(false);
+  const [codeButtonLoading, setCodeButtonLoading] = useState(false);
+  const [paymentBoxDisabled, setPaymentButtonDisabled] = useState(false);
+  const [paymentButtonLoading, setPaymentButtonLoading] = useState(false);
 
   const openSidebar = () => {
     setIsSidebarMounted(true);
@@ -88,26 +94,26 @@ export default function PaymentContent() {
 
   const markAsPaid = async () => {
     if (!orderId || !flightId || !orderData || orderData.paid) return;
-    setUpdating(true);
     const success = await updateOrderPaid(flightId, orderId);
     if (success) {
       setOrderData((prev) => (prev ? { ...prev, paid: true } : prev));
+      setPaymentButtonDisabled(true);
     } else {
       alert("Failed to mark order as paid");
     }
-    setUpdating(false);
+    setPaymentButtonLoading(false);
   };
 
   const applyDiscount = async () => {
     if (!orderId || !flightId || !orderData || orderData.paid) return;
-    setUpdating(true);
     const success = await applyOrderFullDiscount(flightId, orderId);
     if (success) {
       setOrderData((prev) => (prev ? { ...prev, total: 0 } : prev));
+      setCodeButtonDisabled(true);
     } else {
       alert("Failed to apply order discount");
     }
-    setUpdating(false);
+    setCodeButtonLoading(false);
   };
 
   if (loading) return <LoaderWithText text={loaderTextByLanguage[language]} />;
@@ -166,22 +172,35 @@ export default function PaymentContent() {
       <div className="paymentContent">
         {orderData && orderId && flightId ? (
           <PaymentInfo
+            isPaid={orderData.paid}
+            confimationMessage={getPhrase(
+              "PaymentBoxConfirmationMessage",
+              language
+            )}
+            confimationThanks={getPhrase(
+              "PaymentBoxConfirmationThanks",
+              language
+            )}
             paymentBox={{
               title: getPhrase("PaymentBoxTitle", language),
               codePlaceholder: getPhrase(
                 "PaymentCodePlaceholderTitle",
                 language
               ),
-              codeValue: "",
-              onCodeValueChange: function (value: string): void {
-                throw new Error("Function not implemented.");
-              },
+              codeValue: code,
+              onCodeValueChange: setCode,
               codeButtonTitle: getPhrase("PaymentBoxCodeButtonTitle", language),
-              onCodeButtonClick: function (): void {
-                throw new Error("Function not implemented.");
+              onCodeButtonClick: () => {
+                setCodeButtonLoading(true);
+                if (code === codeToCheck) {
+                  applyDiscount();
+                } else {
+                  alert("Invalid code");
+                  setCodeButtonLoading(false);
+                }
               },
-              isCodeButtonDisabled: false,
-              isCodeButtonLoading: false,
+              isCodeButtonDisabled: orderData.total == 0 || codeBoxDisabled,
+              isCodeButtonLoading: codeButtonLoading,
             }}
             orderPlaceholder={getPhrase("PaymentOrderPlaceholder", language)}
             orderId={orderId}
@@ -191,11 +210,12 @@ export default function PaymentContent() {
             )}
             total={`${orderData.total}€` || ""}
             paymentButtonText={getPhrase("PaymentButtonText", language)}
-            onPaymentButtonClick={function (): void {
-              throw new Error("Function not implemented.");
+            onPaymentButtonClick={() => {
+              setPaymentButtonLoading(true);
+              markAsPaid();
             }}
-            isPaymentButtonDisabled={false}
-            isPaymentButtonLoading={false}
+            isPaymentButtonDisabled={orderData.total !== 0 || orderData.paid}
+            isPaymentButtonLoading={paymentButtonLoading}
           />
         ) : (
           <div
@@ -210,43 +230,6 @@ export default function PaymentContent() {
           >
             {getPhrase("PaymentLoadingOrder", language)}
           </div>
-        )}
-        <p>Order ID: {orderId}</p>
-        {orderData ? (
-          <>
-            <p>Total: {orderData.total}</p>
-            <p>Paid: {orderData.paid ? "✅ Yes" : "❌ No"}</p>
-
-            {orderData.total !== 0 && (
-              <button
-                onClick={applyDiscount}
-                disabled={updating}
-                style={{
-                  marginTop: "10px",
-                  padding: "8px 16px",
-                  cursor: updating ? "not-allowed" : "pointer",
-                }}
-              >
-                {updating ? "Applying discount" : "Apply Discount"}
-              </button>
-            )}
-
-            {!orderData.paid && (
-              <button
-                onClick={markAsPaid}
-                disabled={updating}
-                style={{
-                  marginTop: "10px",
-                  padding: "8px 16px",
-                  cursor: updating ? "not-allowed" : "pointer",
-                }}
-              >
-                {updating ? "Marking as Paid..." : "Mark as Paid"}
-              </button>
-            )}
-          </>
-        ) : (
-          <p>Loading order...</p>
         )}
       </div>
 

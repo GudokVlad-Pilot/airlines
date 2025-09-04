@@ -31,3 +31,9 @@
   place-self: end;
   margin: 25px 0;
 }
+
+.paymentInfoConfirmationImage {
+  width: 300px;
+  height: 300px;
+  aspect-ratio: 1/1;
+}

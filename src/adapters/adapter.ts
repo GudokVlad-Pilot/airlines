@@ -1,3 +1,4 @@
+import { db } from "./clients/firebase";
 import { sanityClient } from "./clients/sanity";
 import {
   airportsQuery,
@@ -14,10 +15,12 @@ import {
   Dictionary,
   Extra,
   Meal,
+  OrderData,
   Page,
   Route,
   StaticRoute,
 } from "./types";
+import { collection, doc, addDoc, Timestamp } from "firebase/firestore";
 
 export const adapters = {
   cms: () => {
@@ -114,6 +117,38 @@ export const adapters = {
         } catch (error) {
           console.error("Failed to fetch extras:", error);
           return [];
+        }
+      },
+    };
+  },
+  firebase: () => {
+    return {
+      saveOrder: async (flightId: string, order: OrderData) => {
+        try {
+          // Reference: flights/{flightId}/orders
+          const flightRef = doc(db, "flights", flightId);
+          const ordersRef = collection(flightRef, "orders");
+          console.log("Orders accessed");
+          // Create order document
+          const orderDocRef = await addDoc(ordersRef, {
+            total: order.total,
+            paid: order.paid,
+            createdAt: Timestamp.now(),
+          });
+          console.log("Order created");
+
+          // Add passengers inside: flights/{flightId}/orders/{orderId}/passengers
+          const passengersRef = collection(orderDocRef, "passengers");
+          for (const passenger of order.passengers) {
+            await addDoc(passengersRef, passenger);
+          }
+          console.log("Passengers created");
+
+          console.log(`Order Id: ${orderDocRef.id}`);
+          return orderDocRef.id;
+        } catch (error) {
+          console.error("Failed to save order:", error);
+          throw error;
         }
       },
     };

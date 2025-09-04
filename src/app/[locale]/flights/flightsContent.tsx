@@ -9,6 +9,7 @@ import {
   loaderTextByLanguage,
   mockBottomBar,
   mockDays,
+  profilePlaceholder,
 } from "../globalConsts";
 import { useEffect, useMemo, useState } from "react";
 import { useStore } from "@/adapters/zustand/store";
@@ -51,7 +52,6 @@ export default function FlightsContent() {
     ru: "Обратные рейсы в данный момент недоступны.",
     fi: "Paluulentoja ei ole saatavilla tällä hetkellä.",
   };
-
   const [language, setLanguage] = useState<"en" | "ru" | "fi">("en");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -306,7 +306,7 @@ export default function FlightsContent() {
             languages: languages,
           }}
           onLogoClick={() => router.push(`/${language}`)}
-          onProfileClick={() => alert("Profile is not ready")}
+          onProfileClick={() => alert(profilePlaceholder[language])}
           onMenuClick={() => {
             if (isSidebarMounted) {
               closeSidebar();

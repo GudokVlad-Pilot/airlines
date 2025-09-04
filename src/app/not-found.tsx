@@ -10,6 +10,7 @@ import {
   languages,
   loaderTextByLanguage,
   mockBottomBar,
+  profilePlaceholder,
 } from "./[locale]/globalConsts";
 import { useStore } from "@/adapters/zustand/store";
 import { adapters } from "@/adapters/adapter";
@@ -118,7 +119,7 @@ export default function GlobalNotFound() {
             languages: [...languages],
           }}
           onLogoClick={() => router.push(`/${locale}`)}
-          onProfileClick={() => alert("Profile is not ready")}
+          onProfileClick={() => alert(profilePlaceholder[locale])}
           onMenuClick={() =>
             isSidebarMounted ? closeSidebar() : openSidebar()
           }

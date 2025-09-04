@@ -9,6 +9,7 @@ import {
   loaderTextByLanguage,
   mockBottomBar,
   mockDays,
+  profilePlaceholder,
 } from "../../globalConsts";
 import SideBar from "@/components/molecules/sideBar";
 import NavBar from "@/components/molecules/navBar";
@@ -30,6 +31,7 @@ import ConfirmationInfo from "@/components/molecules/confirmationInfo";
 
 const { getPages, getFlight, getDictionary, getMeals, getExtras } =
   adapters.cms();
+const { saveOrder } = adapters.firebase();
 
 export default function FlightIdContent() {
   const searchParams = useSearchParams();
@@ -398,16 +400,6 @@ export default function FlightIdContent() {
 
   // Handle extras selection: multiple per passenger
   const handleExtraToggle = (passengerIndex: number, cardIndex: number) => {
-    // setExtrasPacks((prev) => {
-    //   const updated = [...prev];
-    //   updated[passengerIndex].extrasCards = updated[
-    //     passengerIndex
-    //   ].extrasCards.map((card, idx) => ({
-    //     ...card,
-    //     isSelected: idx === cardIndex,
-    //   }));
-    //   return updated;
-    // });
     const updatedExtras = [...extrasPacks];
     updatedExtras[passengerIndex] = {
       ...updatedExtras[passengerIndex],
@@ -510,13 +502,12 @@ export default function FlightIdContent() {
   });
 
   const paymentData = {
-    flightId,
     passengers: passengerConfirmationData,
     total: grandTotal,
     paid: false,
   };
 
-  console.log(paymentData);
+  // console.log(paymentData);
 
   if (loading) return <LoaderWithText text={loaderTextByLanguage[language]} />;
   if (error)
@@ -538,7 +529,7 @@ export default function FlightIdContent() {
             languages: languages,
           }}
           onLogoClick={() => router.push(`/${language}`)}
-          onProfileClick={() => alert("Profile is not ready")}
+          onProfileClick={() => alert(profilePlaceholder[language])}
           onMenuClick={() => {
             isSidebarMounted ? closeSidebar() : openSidebar();
           }}
@@ -667,10 +658,17 @@ export default function FlightIdContent() {
               }}
               isOpened={isConfirmationInfoOpened}
               nextButtonText={getPhrase("FlightInfoNextButtonTitle", language)}
-              onNextButtonClick={() => {
-                {
-                  setIsConfirmationInfoOpened(false);
-                  setIsConfirmationInfoClickable(true);
+              onNextButtonClick={async () => {
+                setLoading(true);
+                try {
+                  const orderId = await saveOrder(flightId!, paymentData);
+                  console.log("Order saved with ID:", orderId);
+                  alert("Success!");
+                } catch (err) {
+                  console.error("Failed to save order:", err);
+                  alert(
+                    "Something went wrong saving your order, please refresh your page"
+                  );
                 }
               }}
               isNextDisabled={false}
@@ -681,6 +679,7 @@ export default function FlightIdContent() {
               onContinueEditingButtonClick={() => {
                 setIsConfirmationInfoOpened(false);
                 setIsExtrasInfoOpened(true);
+                resetExtras();
               }}
               pricePlaceholder={getPhrase(
                 "FlightInfoConfirmationInfoPricePlaceHolder",
@@ -689,77 +688,7 @@ export default function FlightIdContent() {
               price={`${grandTotal} €`}
             />
           </div>
-
-          {/* Debug Section */}
-          <div
-            style={{
-              marginTop: "20px",
-              padding: "10px",
-              background: "#f4f4f4",
-              borderRadius: "8px",
-            }}
-          >
-            <h3>Passengers Debug</h3>
-            {passengers.map((p, i) => {
-              const selectedMeal =
-                foodPacks[i]?.foodCards.find((c) => c.isSelected)?.title ||
-                "None";
-
-              const selectedExtras =
-                extrasPacks[i]?.extrasCards
-                  .filter((c) => c.isSelected)
-                  .map((c) => c.title)
-                  .join(", ") || "None";
-
-              return (
-                <div key={i} style={{ marginBottom: "10px" }}>
-                  <strong>{p.title}</strong>
-                  <div>First Name: {p.firstNameValue}</div>
-                  <div>Last Name: {p.lastNameValue}</div>
-                  <div>Email: {p.emailValue}</div>
-                  <div>Phone: {p.phoneValue}</div>
-                  <div>Selected Meal: {selectedMeal}</div>
-                  <div>Selected Extras: {selectedExtras}</div>
-                </div>
-              );
-            })}
-
-            {/* Total Price */}
-            <h3>Total Price</h3>
-            <div>
-              Base Flight Price: {flight?.price} € x {passengers.length}{" "}
-              passengers = {flight ? flight.price * passengers.length : 0} €
-            </div>
-            <div>
-              Extras Price:{" "}
-              {extrasPacks
-                .flatMap((pack) =>
-                  pack.extrasCards
-                    .filter((c) => c.isSelected)
-                    .map((c) => parsePrice(c.price))
-                )
-                .reduce((sum, val) => sum + val, 0)}{" "}
-              €
-            </div>
-            <div style={{ fontWeight: "bold" }}>
-              Grand Total:{" "}
-              {flight
-                ? flight.price * passengers.length +
-                  extrasPacks
-                    .flatMap((pack) =>
-                      pack.extrasCards
-                        .filter((c) => c.isSelected)
-                        .map((c) => parsePrice(c.price))
-                    )
-                    .reduce((sum, val) => sum + val, 0)
-                : 0}{" "}
-              €
-            </div>
-          </div>
-
           <div>Flight ID: {flightId}</div>
-          <div>Flight: {flight?.origin.city.en}</div>
-          <div>Locale: {locale}</div>
         </div>
       )}
 

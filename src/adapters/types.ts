@@ -118,7 +118,6 @@ export interface PassengerData {
 }
 
 export interface OrderData {
-  flightId: string;
   passengers: PassengerData[];
   total: number;
   paid: boolean;

@@ -12,6 +12,7 @@ import NavCardsRow from "@/components/molecules/navCardsRow";
 import {
   languages,
   loaderTextByLanguage,
+  mobilePlaceholder,
   mockBottomBar,
   pagePlaceholder,
   profilePlaceholder,
@@ -160,118 +161,127 @@ export default function Home() {
   }));
 
   return (
-    <div className="landingBox" style={{ backgroundColor: colors.background }}>
-      <div className={`navBar ${isSidebarVisible ? "narrowed" : ""}`}>
-        <NavBar
-          language={{
-            selectedLanguage: language,
-            onChange: (newLang: string) => {
-              if (newLang === "en" || newLang === "ru" || newLang === "fi") {
-                setLanguage(newLang);
-                router.push(`/${newLang}`);
-              }
-            },
-            languages: languages,
-          }}
-          onLogoClick={() => router.push(`/${language}`)}
-          onProfileClick={() => alert(profilePlaceholder[language])}
-          onMenuClick={() => {
-            isSidebarMounted ? closeSidebar() : openSidebar();
-          }}
-        />
-      </div>
-      {isSidebarMounted && (
-        <div className="sideBarOverlay" onClick={closeSidebar}>
-          <div
-            className={`sideBar ${isSidebarVisible ? "visible" : ""}`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <SideBar
-              pages={pages.map((p) => ({
-                title: p.title?.[language] || "No Title",
-                // onClick: () => router.push(`/${language}/${p.slug}`),
-                //TODO: return functionality
-                onClick: () => alert(pagePlaceholder[language]),
-              }))}
-            />
-          </div>
-        </div>
-      )}
-
-      <VideoBackground />
-      <div className="contentBox">
-        <SearchBoxMain
-          bigSearchBox={{
-            isReturn: false,
-            originPlaceholder: getPhrase(
-              "SearchBoxOriginPlaceholder",
-              language
-            ),
-            destinationPlaceholder: getPhrase(
-              "SearchBoxDestinationPlaceholder",
-              language
-            ),
-            startPlaceholder: getPhrase("SearchBoxStartPlaceholder", language),
-            endPlaceholder: getPhrase("SearchBoxEndPlaceholder", language),
-            origin: originValue || "",
-            onOriginChange: (val) => {
-              setOrigin(val);
-
-              // Only validate/reset destination if a real origin is selected
-              if (val) {
-                const availableDestinations = routes
-                  .filter((r) => r.origin.iata === val)
-                  .map((r) => r.destination.iata);
-
-                if (!availableDestinations.includes(destinationValue)) {
-                  setDestination(""); // reset only if invalid
+    <div className="generalBox">
+      <div className="mobilePlaceholder">{mobilePlaceholder[language]}</div>
+      <div
+        className="landingBox"
+        style={{ backgroundColor: colors.background }}
+      >
+        <div className={`navBar ${isSidebarVisible ? "narrowed" : ""}`}>
+          <NavBar
+            language={{
+              selectedLanguage: language,
+              onChange: (newLang: string) => {
+                if (newLang === "en" || newLang === "ru" || newLang === "fi") {
+                  setLanguage(newLang);
+                  router.push(`/${newLang}`);
                 }
-              }
-            },
-            destination: destinationValue || "",
-            onDestinationChange: (val) => {
-              setDestination(val);
+              },
+              languages: languages,
+            }}
+            onLogoClick={() => router.push(`/${language}`)}
+            onProfileClick={() => alert(profilePlaceholder[language])}
+            onMenuClick={() => {
+              isSidebarMounted ? closeSidebar() : openSidebar();
+            }}
+          />
+        </div>
+        {isSidebarMounted && (
+          <div className="sideBarOverlay" onClick={closeSidebar}>
+            <div
+              className={`sideBar ${isSidebarVisible ? "visible" : ""}`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <SideBar
+                pages={pages.map((p) => ({
+                  title: p.title?.[language] || "No Title",
+                  // onClick: () => router.push(`/${language}/${p.slug}`),
+                  //TODO: return functionality
+                  onClick: () => alert(pagePlaceholder[language]),
+                }))}
+              />
+            </div>
+          </div>
+        )}
 
-              // ✅ check if current origin is still valid under the new destination
-              const availableOrigins = routes
-                .filter((r) => r.destination.iata === val)
-                .map((r) => r.origin.iata);
+        <VideoBackground />
+        <div className="contentBox">
+          <SearchBoxMain
+            bigSearchBox={{
+              isReturn: false,
+              originPlaceholder: getPhrase(
+                "SearchBoxOriginPlaceholder",
+                language
+              ),
+              destinationPlaceholder: getPhrase(
+                "SearchBoxDestinationPlaceholder",
+                language
+              ),
+              startPlaceholder: getPhrase(
+                "SearchBoxStartPlaceholder",
+                language
+              ),
+              endPlaceholder: getPhrase("SearchBoxEndPlaceholder", language),
+              origin: originValue || "",
+              onOriginChange: (val) => {
+                setOrigin(val);
 
-              if (!availableOrigins.includes(originValue)) {
-                setOrigin(""); // reset only if invalid
-              }
-            },
-            startDate: startDateValue,
-            onStartDateChange: (date) => setStartDateValue(date),
-            endDate: endDateValue,
-            onEndDateChange: (date) => setEndDateValue(date),
-            onClick: onSearchClick,
-            locale: language,
-            airports: availableOrigins, // ✅ origins filtered by destination
-            destinations: filteredDestinations, // ✅ destinations filtered by origin
-            isLoading: searchLoading,
-          }}
-          tabs={[
-            {
-              title: getPhrase("OneWayTab", language),
-              notSelected: false,
-              onClick: () => console.log("Flights tab clicked"),
-            },
-            {
-              title: getPhrase("ReturnTripTab", language),
-              notSelected: true,
-              onClick: () => alert(searchTabPlaceholder[language]),
-            },
-          ]}
-        />
-        <NavCardsRow navCards={navCards} />
-      </div>
-      <div className="bottomPart">
-        <PoweredBar title={getPhrase("PoweredBarPoweredBy", language)} />
-        <BottomBar
-          copyright={mockBottomBar.copyright[language]}
-          createdby={mockBottomBar.createdBy[language]}
-        />
+                // Only validate/reset destination if a real origin is selected
+                if (val) {
+                  const availableDestinations = routes
+                    .filter((r) => r.origin.iata === val)
+                    .map((r) => r.destination.iata);
+
+                  if (!availableDestinations.includes(destinationValue)) {
+                    setDestination(""); // reset only if invalid
+                  }
+                }
+              },
+              destination: destinationValue || "",
+              onDestinationChange: (val) => {
+                setDestination(val);
+
+                // ✅ check if current origin is still valid under the new destination
+                const availableOrigins = routes
+                  .filter((r) => r.destination.iata === val)
+                  .map((r) => r.origin.iata);
+
+                if (!availableOrigins.includes(originValue)) {
+                  setOrigin(""); // reset only if invalid
+                }
+              },
+              startDate: startDateValue,
+              onStartDateChange: (date) => setStartDateValue(date),
+              endDate: endDateValue,
+              onEndDateChange: (date) => setEndDateValue(date),
+              onClick: onSearchClick,
+              locale: language,
+              airports: availableOrigins, // ✅ origins filtered by destination
+              destinations: filteredDestinations, // ✅ destinations filtered by origin
+              isLoading: searchLoading,
+            }}
+            tabs={[
+              {
+                title: getPhrase("OneWayTab", language),
+                notSelected: false,
+                onClick: () => console.log("Flights tab clicked"),
+              },
+              {
+                title: getPhrase("ReturnTripTab", language),
+                notSelected: true,
+                onClick: () => alert(searchTabPlaceholder[language]),
+              },
+            ]}
+          />
+          <NavCardsRow navCards={navCards} />
+        </div>
+        <div className="bottomPart">
+          <PoweredBar title={getPhrase("PoweredBarPoweredBy", language)} />
+          <BottomBar
+            copyright={mockBottomBar.copyright[language]}
+            createdby={mockBottomBar.createdBy[language]}
+          />
+        </div>
       </div>
     </div>
   );

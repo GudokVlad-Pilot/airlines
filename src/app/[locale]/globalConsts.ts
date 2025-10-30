@@ -46,3 +46,9 @@ export const pagePlaceholder = {
   ru: "Страница в разработке...",
   fi: "Sivu työn alla...",
 };
+
+export const mobilePlaceholder = {
+  en: "Mobile version is in progress, please use the desktop version",
+  ru: "Мобильная версия в разработке, пожалуйста используйте версию для ПК",
+  fi: "Mobiili versio on työn alla, käyttäkä desktop versiota, kiitos!",
+};
